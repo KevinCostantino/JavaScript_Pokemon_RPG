@@ -1,0 +1,65 @@
+body {
+  background-color: darkblue;
+}
+
+#text {
+  background-color: black;
+  color: white;
+  padding: 10px;
+}
+#Inicial {
+  background-color: rgb(161, 197, 159);
+  color: white;
+  padding: 10px;
+}
+#game {
+  max-width: 500px;
+  max-height: 1000px;
+  background-color: rgb(75, 69, 69);
+  color: white;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+#controls {
+  border: 1px black solid;
+  padding: 5px;
+}
+
+#stats {
+  border: 1px black solid;
+  color: black;
+  padding: 5px;
+}
+
+#monsterStats {
+  display: none;
+  border: 1px black solid;
+  color: white;
+  padding: 5px;
+  background-color: red;
+}
+#PersonagemStats {
+  display: none;
+  border: 1px black solid;
+  color: white;
+  padding: 5px;
+  background-color: red;
+}
+.stat {
+  padding-right: 10px;
+}
+#battle-container {
+  display: flex;
+  justify-content: space-between; /* Espaço entre as áreas do jogador e do rival */
+  align-items: center; /* Alinha verticalmente no centro */
+}
+
+#player-area, #rival-area {
+  flex: 1; /* Faz cada área ocupar igual largura */
+  margin: 0 10px; /* Adiciona um pequeno espaço entre as áreas */
+}
+
+#rival {
+  text-align: center; /* Centraliza o texto do rival */
+}

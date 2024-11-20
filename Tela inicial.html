@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pokemon Text Adventure</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="game">
+    <div id="playerstats">
+      <span class="pstat">Nome: <strong><span id="NomeText">???</span></strong></span>
+      <span>|</span></strong></span>
+      <span class="pstat">Pokemon: <strong><span id="PokeN°Text">0</span></strong></span>
+      <span>|</span></strong></span>
+      <span class="pstat">Dinheiro: <strong><span id="goldText">1000R$</span></strong></span>
+    </div>
+
+    <div id="monsterStats">
+      <span class="stat">Monster Name: <strong><span id="monsterName"></span></strong></span>
+      <span class="stat">Health: <strong><span id="monsterHealth"></span></strong></span>
+    </div>
+    <div id="PersonagemStats">
+      <span class="stat">Name: <strong><span id="charName"></span></strong></span>
+    </div>
+    <div id="text">Bem vindo a Pokemon Text Adventure! Seja o campeão da regiâo! 
+      <br><br>Você está na sua cidade natal. Qual será o seu inicial? <br><br>Escolha clicando abaixo.</div>
+    
+    <div id="Inicial">
+      <button onclick="PokemonInicial(1)" id="button1">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="Bulbasaur" style="width:80px; height:auto;">
+        </button>
+      <button onclick="PokemonInicial(4)" id="button2">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" alt="Charmander" style="width:80px; height:auto;">
+        </button>
+      <button onclick="PokemonInicial(7)" id="button3">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" alt="Squirtle" style="width:80px; height:auto;">
+        </button>
+    </div>
+
+    <!-- Display selected Pokémon image -->
+    <div id="pokemonImage"></div>
+        <!-- Área da batalha que vamos exibir mais tarde -->
+        <div id="battle-area" style="display: none;">
+          <h2>Batalha!</h2>
+          <div id="battle-container" style="display: flex; justify-content: space-between;">
+              <div id="player-area">
+                  <h3>Seu Pokémon</h3>
+                  <div id="player-pokemon">
+                      <img id="player-pokemon-image" src="" alt="Seu Pokémon">
+                      <div id="player-pokemon-health">HP: 100%</div>
+                  </div>
+              </div>
+              
+              <div id="rival-area">
+                  <div id="rival">
+                      <img id="rival-sprite" src="Sprites/Green-transformed.png" alt="Rival" style="width: 80px; height: auto;">              
+                      <h3>Rival: Green</h3>
+                  </div>
+                  <div id="rival-pokemon">
+                      <img id="rival-pokemon-image" src="" alt="Rival Pokémon">
+                      <div id="rival-pokemon-health">HP: 100%</div>
+                  </div>
+              </div>
+          </div>
+          <button id="attack-button">Atacar</button>
+      </div>
+      
+
+
+
+
+  </div>
+  <script src="script.js" type="module">
+
+  </script>
+
+</body>
+
+</html>
