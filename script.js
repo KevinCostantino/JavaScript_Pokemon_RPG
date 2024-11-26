@@ -140,7 +140,7 @@ function pokeapiF1() {
 
 	let aux = 25;
 	PokemonInicial(1,aux);
-	console.log("sauy e "+ aux);
+	//console.log("sauy e "+ aux);
     //askForName(player)
 	if (aux < 1) {
 		update(locations[0]);
@@ -159,7 +159,7 @@ function pokeapiF4() {
 function pokeapiF7() {
 	let aux = 25;
 	PokemonInicial(7,aux);
-	console.log("sauy")
+	//console.log("sauy")
 	if (aux < 1) {
 		update(locations[0]);
 	}

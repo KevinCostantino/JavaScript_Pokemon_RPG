@@ -207,7 +207,7 @@
   "100": 800000
  },
  {
-  "Level": "T_medium Fast",
+  "Level": "T_medium-fast",
   "1": 0,
   "2": 8,
   "3": 27,
@@ -310,7 +310,7 @@
   "100": 1000000
  },
  {
-  "Level": "T_medium Slow",
+  "Level": "T_medium-slow",
   "1": 0,
   "2": 9,
   "3": 57,
@@ -825,7 +825,7 @@
   "100": "-"
  },
  {
-  "Level": "N_medium Fast",
+  "Level": "N_medium-fast",
   "1": 8,
   "2": 19,
   "3": 37,
@@ -928,7 +928,7 @@
   "100": "-"
  },
  {
-  "Level": "N_medium Slow",
+  "Level": "N_medium-slow",
   "1": 9,
   "2": 48,
   "3": 39,

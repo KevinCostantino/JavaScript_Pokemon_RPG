@@ -177,7 +177,7 @@ function getExperienceTable(NlevelType) {
 }
 
 // Função para calcular o nível com base na experiência atual
-function calculateLevel(currentXP, gainedXP, levelType,level) {
+function calculateLevel(currentXP, gainedXP, levelType, level) {
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);
@@ -187,21 +187,32 @@ function calculateLevel(currentXP, gainedXP, levelType,level) {
 
     // Verifica se o Pokémon já está no nível máximo
     if (level === 100) {
-        return 100; // Nível máximo
+        return {
+            level: 100,
+            remainingXP: 0,
+            totalXP: newXP,
+        }; // Nível máximo
     }
 
     // Pega os valores da tabela para o nível atual e o próximo
     const currentLevelXP = table[level.toString()];
     const nextLevelXP = table[(level + 1).toString()];
-
+   console.log('faf',gainedXP)
     // Verifica se a experiência acumulada ultrapassa o próximo nível
     if (newXP >= currentLevelXP) {
-        return calculateLevelSimplified(newXP, 0, levelType, currentLevel + 1); // Recursão para o próximo nível
+        // Aumenta o nível e continua recursivamente
+        console.log('Subiu de nível!');;
+        return calculateLevel(0, newXP-currentLevelXP, levelType, level+1);
     }
 
-    // Retorna o nível atual se não mudou
-    return level;
+    // Retorna o nível atualizado e a experiência restante para o próximo nível
+    return {
+        newLevel: level,
+        remainingXP: currentLevelXP - newXP,
+        totalXP: newXP,
+    };
 }
+
 
 // Função para adicionar XP e verificar se o nível mudou
 function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
@@ -211,9 +222,9 @@ function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
     }
 
     const xpFormula = Math.floor((gainedXP*(Elevel/7))*1.5); //1.5 é só contra treinador
+    console.log('xpFormula',xpFormula);
     const newXP = currentXP + xpFormula;
-    const newLevel = calculateLevel(currentXP, gainedXP, levelType, currentLevel);
-
+    const {newLevel,remainingXP,totalXP} = calculateLevel(currentXP, xpFormula, levelType, currentLevel);
     const levelsGained = newLevel - currentLevel;
 
     // Verifica se está no nível máximo
@@ -227,9 +238,10 @@ function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
         };
     }
 
-    const currentLevelXP = table[level.toString()];
+    const LevelUpXP = table[newLevel.toString()];
+    //console.log('adas',LevelUpXP,totalXP);
     const nextLevelXP = table[(newLevel + 1).toString()];
-    const xpToNextLevel = currentLevelXP - newXP;
+    const xpToNextLevel = LevelUpXP - totalXP;
 
     return {
         newXP,
@@ -267,7 +279,45 @@ try {
         console.log(`Faltam ${xpToNextLevel} XP para alcançar o próximo nível.`);
     }
 } catch (error) {
+    
     console.error(error.message);
 }
 }
 
+export async function getPokemonGrowthRate(pokemonId) {
+        // Faz a chamada à API para obter a espécie do Pokémon
+        const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
+        if (!speciesResponse.ok) {
+            throw new Error(`Erro ao buscar os dados da espécie do Pokémon. ID: ${pokemonId}`);
+        }
+
+        const speciesData = await speciesResponse.json();
+        
+        // Obtém a URL da taxa de crescimento
+        const growthRateUrl = speciesData.growth_rate.url;
+
+        // Faz a chamada para obter os dados da taxa de crescimento
+        const growthRateResponse = await fetch(growthRateUrl);
+        if (!growthRateResponse.ok) {
+            throw new Error('Erro ao buscar os dados da taxa de crescimento.');
+        }
+
+        const growthRateData = await growthRateResponse.json();
+        // Retorna o nome da taxa de crescimento
+        return growthRateData;
+    }
+
+export async function getXPGrowthRate(pokemonId) {
+            const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`);
+            const speciesData = await speciesResponse.json();
+            
+            const growthRateUrl = speciesData.growth_rate.url;
+            const growthRateResponse = await fetch(growthRateUrl);
+            const growthRateData = await growthRateResponse.json();
+            //console.log("BF",growthRateData.name);    
+
+            return growthRateData;
+
+    }
+
+    

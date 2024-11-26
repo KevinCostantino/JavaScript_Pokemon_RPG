@@ -7,7 +7,7 @@ import { rival } from './script.js';
 import { startBattle } from './Batalha.js';
 import { getPokemonStats } from './Batalha.js';
 import { XPDX } from './XPf.js';
-
+import { PBattle } from './Batalha.js';
 
 export async function PokemonInicial(pokemonId, aux) {
     let pokemonName = '';
@@ -30,7 +30,8 @@ export async function PokemonInicial(pokemonId, aux) {
             pokemonName = 'Unknown';
             pokemonImage = '';
     }
-  
+    document.getElementById("PokeN°Text").innerHTML = null;
+
 
 
     Poke(pokemonName.toLowerCase());
@@ -39,13 +40,15 @@ export async function PokemonInicial(pokemonId, aux) {
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
     const initialPokemon = await getPokemonStats(pokemonId); // Armazene o id do Pokémon
     
-    player.capturePokemon(initialPokemon);
-    
+    player.capturePokemon(initialPokemon,0,5,'tackle', 'swords-dance', 'vine-whip', 'splash');
+    console.log(player.party[0]);
+
     const initialRival = await getPokemonStats(inicialRival(player));
-    rival.capturePokemon(initialRival);
+    rival.capturePokemon(initialRival,0,5,"swords-dance","cut","ember","growl");
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
-
+    
+    console.log(rival.party[0]);
     // Capturando Pokémon aleatórios
     //const randomPokemonNames = ['Charmander', 'Squirtle', 'Pikachu', 'Jigglypuff', 'Meowth'];
     //for (let i = 0; i < 3; i++) { // Exemplo: captura de 3 Pokémon aleatórios
@@ -58,8 +61,11 @@ export async function PokemonInicial(pokemonId, aux) {
     document.getElementById("monsterName").textContent = pokemonName;
     document.getElementById("pokemonImage").innerHTML = `<img src="${pokemonImage}" alt="${pokemonName}">`;
     document.getElementById("text").textContent = `Você escolheu ${pokemonName}! Boa sorte na sua aventura!`;
-    document.getElementById("PokeN°Text").innerHTML = `${1}`;
-
+    document.getElementById("PokeN°Text").innerHTML = 
+    `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[0].name.id}.svg" 
+          style="width: 3%; height: auto;" alt=${pokemonName}>`;
+  
+  
     changeButtonsToInput(player,aux);
 }
 
@@ -104,14 +110,14 @@ export function askForName(player,aux) {
 }
 function rivalF(player) {
     // Esconde o sprite do rival antes da batalha
-    document.getElementById("rival-sprite").style.display = "none"; 
     document.getElementById("charName").textContent = 'Green';
     document.getElementById("pokemonImage").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
     document.getElementById("text").textContent = `Ei espera um momento ${player.name}! Não vai pensando que vai sair daqui sem uma batalha!`;
     const handleClick = () => {
         setTimeout(() => {
             startBattleF(player);  // Função que inicia a batalha
-        }, 1000); 
+        }, 1//1000
+        ); 
         button1.removeEventListener("click", handleClick); // Remove o evento após a execução
     };
     button1.addEventListener("click", handleClick);
@@ -123,58 +129,61 @@ function rivalF(player) {
 
 
 function startBattleF(player) {
+
+    document.getElementById("pokemonImage").style.display = "none"
+    PBattle(player);
     // Exibir a área de batalha 
-    button1.style.display = 'none';
-
-    document.getElementById("pokemonImage").style.display = "none"; 
-    document.getElementById("battle-area").style.display = "block";
-    document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
-    document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.party[0].id}.png`; // URL do sprite do Pokémon escolhido
-    document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].id}.png`; // URL do sprite do Pokémon escolhido
-    console.log("HP inicial:", player.party[0].hp);
-
-
-    
-    //console.log(player.party[0].id, rival.party[0].id);
-    //startBattle(player.party[0].id, rival.party[0].id);
-    
-
-    //console.log(player.party[0].id)
-    // Resete HP para 100
-    let playerPokemonHP = 100;
-    let rivalPokemonHP = 100;
-
-    updateHealth("player", 0,player.party[0].hp); // Atualiza HP inicial
-    updateHealth("rival", 0,rival.party[0].hp); // Atualiza HP inicial
-
-    const attackButton = document.getElementById("attack-button");
-    attackButton.onclick = function() {
-        let playerDamage = Math.floor(Math.random() * 10) + 5;
-        let rivalDamage = Math.floor(Math.random() * 10) + 5;
-
-        if (player.party[0].hp > 0) {
-            console.log(`HP ${rival.party[0].name}: ${rival.party[0].hp}%`);
-            rival.party[0].hp=updateHealth("rival", rivalDamage,rival.party[0].hp);
-        }
-
-        if (rival.party[0].hp > 0) {
-            console.log(`HP ${player.party[0].name}: ${player.party[0].hp}%`);
-            player.party[0].hp=updateHealth("player", playerDamage,player.party[0].hp);
-        }
-
-        console.log(`Ataque do ${player.party[0].name}: ${rivalDamage}`);
-        console.log(`Ataque do ${rival.party[0].name}: ${playerDamage}`);
-
-        document.getElementById("player-pokemon-health").innerText = `HP: ${Math.max(0, player.party[0].hp)}`;
-        document.getElementById("rival-pokemon-health").innerText = `HP: ${Math.max(0, rival.party[0].hp)}`;
-        if (player.party[0].hp <= 0 || rival.party[0].hp <= 0) {
-            if (rival.party[0].hp <= 0) {
-                XPDX(player.party[0].currentXP,player.party[0].levelType,rival.party[0].base_exp,player.party[0].level,rival.party[0].level);
-            }
-            setTimeout(endBattle, 100); // delay endBattle by 100ms
-        }
-        playerDamage, rivalDamage = 0;
-    };
+//    button1.style.display = 'none';
+//
+//    document.getElementById("pokemonImage").style.display = "none"; 
+//    document.getElementById("battle-area").style.display = "block";
+//    document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
+//    document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
+//    document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
+//    console.log("HP inicial:", player.party[0].name.hp);
+//
+//
+//    
+//    //console.log(player.party[0].id, rival.party[0].id);
+//    //startBattle(player.party[0].id, rival.party[0].id);
+//    
+//
+//    //console.log(player.party[0].id)
+//    // Resete HP para 100
+//    let playerPokemonHP = 100;
+//    let rivalPokemonHP = 100;
+//
+//    updateHealth("player", 0,player.party[0].name.hp); // Atualiza HP inicial
+//    updateHealth("rival", 0,rival.party[0].name.hp); // Atualiza HP inicial
+//
+//    const attackButton = document.getElementById("attack-button");
+//    attackButton.onclick = function() {
+//        let playerDamage = Math.floor(Math.random() * 10) + 5;
+//        let rivalDamage = Math.floor(Math.random() * 10) + 5;
+//
+//        if (player.party[0].name.hp > 0) {
+//            console.log(`HP ${rival.party[0].name.name}: ${rival.party[0].name.hp}%`);
+//            rival.party[0].name.hp=updateHealth("rival", rivalDamage,rival.party[0].name.hp);
+//        }
+//
+//        if (rival.party[0].name.hp > 0) {
+//            console.log(`HP ${player.party[0].name.name}: ${player.party[0].name.hp}%`);
+//            player.party[0].name.hp=updateHealth("player", playerDamage,player.party[0].name.hp);
+//        }
+//
+//        console.log(`Ataque do ${player.party[0].name.name}: ${rivalDamage}`);
+//        console.log(`Ataque do ${rival.party[0].name.name}: ${playerDamage}`);
+//
+//        document.getElementById("player-pokemon-health").innerText = `HP: ${Math.max(0, player.party[0].name.hp)}`;
+//        document.getElementById("rival-pokemon-health").innerText = `HP: ${Math.max(0, rival.party[0].name.hp)}`;
+//        if (player.party[0].name.hp <= 0 || rival.party[0].name.hp <= 0) {
+//            if (rival.party[0].name.hp <= 0) {
+//                XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level);
+//            }
+//            setTimeout(endBattle, 100); // delay endBattle by 100ms
+//        }
+//        playerDamage, rivalDamage = 0;
+//    };
 }
 
 
@@ -188,9 +197,9 @@ export function updateHealth(pokemon, damage,hp) {
 
     let healthElement;
     if (pokemon === "player") {
-        healthElement = document.getElementById("player-pokemon-health");
+        healthElement = document.getElementById("playerPokemonHealth");
     } else {
-        healthElement = document.getElementById("rival-pokemon-health");
+        healthElement = document.getElementById("rivalPokemonhealth");
     }
     if (healthElement) {
         healthElement.innerText = `HP: ${Math.max(0, hp)}`;
@@ -199,8 +208,8 @@ export function updateHealth(pokemon, damage,hp) {
       }
       return hp;
     }
-function endBattle() {
-    const winner = player.party[0].hp > rival.party[0].hp ? "Você venceu!" : "Você perdeu!";
+export function endBattle() {
+    const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
     alert(`A batalha terminou! ${winner}`);
     document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
     // Aqui você pode adicionar lógica para o que acontece após a batalha
@@ -279,7 +288,7 @@ async function getPokemonNameById(id) {
 
 function inicialRival(player) {
     let r =0;
-    switch (player.party[0].id) {
+    switch (player.party[0].name.id) {
         case 1:
             r = 4;
             return r;

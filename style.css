@@ -1,6 +1,14 @@
 body {
   background-color: darkblue;
+
+  /*background-color: #282c34; /* Fundo escuro para contraste */
+  color: white; /* Cor da fonte branca */
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
 }
+
 
 #text {
   background-color: black;
@@ -23,6 +31,7 @@ body {
 
 #controls {
   border: 1px black solid;
+  background-color: rgb(133, 206, 139);
   padding: 5px;
 }
 
@@ -62,4 +71,43 @@ body {
 
 #rival {
   text-align: center; /* Centraliza o texto do rival */
+}
+
+#rival-pokemon {
+  margin-top: -9px; /* Subir a imagem ajustando o valor negativo */
+  display: block; /* Garante que a imagem respeite a centralização do pai */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button {
+  background-color: #4CAF50; /* Cor do botão */
+  color: white; /* Cor do texto nos botões */
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+}
+#status {
+  margin-top: 20px;
+}
+#battle-log { /* A */
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid #444;
+  margin: 20px auto;
+  padding: 10px;
+  width: 80%;
+  background-color: #333;
+  border-radius: 8px;
+}
+
+
+
+
+
+button:hover {
+  background-color: #45a049; /* Cor do botão ao passar o mouse */
 }
