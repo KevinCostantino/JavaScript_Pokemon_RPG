@@ -12,19 +12,22 @@ import { PBattle } from './Batalha.js';
 export async function PokemonInicial(pokemonId, aux) {
     let pokemonName = '';
     let pokemonImage = '';
-
+    let M1 = ''; let M2 = ''; let M3 = ''; let M4 = '';
     switch (pokemonId) {
         case 1:
             pokemonName = 'Bulbasaur';
             pokemonImage = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
+            M1 ='tackle'; M2 = 'swords-dance'; M3 = 'vine-whip'; M4 = 'growl';
             break;
         case 4:
             pokemonName = 'Charmander';
             pokemonImage = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png';
+            M1 ='tackle'; M2 = 'swords-dance'; M3 = 'ember'; M4 = 'growl';
             break;
         case 7:
             pokemonName = 'Squirtle';
             pokemonImage = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png';
+            M1 ='tackle'; M2 = 'swords-dance'; M3 = 'water-gun'; M4 = 'splash';
             break;
         default:
             pokemonName = 'Unknown';
@@ -40,11 +43,12 @@ export async function PokemonInicial(pokemonId, aux) {
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
     const initialPokemon = await getPokemonStats(pokemonId); // Armazene o id do Pokémon
     
-    player.capturePokemon(initialPokemon,0,5,'tackle', 'swords-dance', 'vine-whip', 'splash');
+    player.capturePokemon(initialPokemon,0,5,M1, M2, M3, M4);
     console.log(player.party[0]);
 
     const initialRival = await getPokemonStats(inicialRival(player));
-    rival.capturePokemon(initialRival,0,5,"swords-dance","cut","ember","growl");
+    const [MR1, MR2, MR3, MR4] = MovRival(player);
+    rival.capturePokemon(initialRival, 0, 5, MR1, MR2, MR3, MR4);    
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
     
@@ -291,13 +295,36 @@ function inicialRival(player) {
     switch (player.party[0].name.id) {
         case 1:
             r = 4;
-            return r;
+            return (r);
         case 4:
             r = 7;
-            return r;
+            return (r);
         case 7:
             r = 1;
-            return r;
+            return (r);
 
     }
+}
+
+function MovRival(player) {
+    let r = 0;
+    let MR1 = '', MR2 = '', MR3 = '', MR4 = '';
+
+    switch (player.party[0].name.id) {
+        case 1:
+            MR1 = 'tackle'; MR2 = 'swords-dance'; MR3 = 'ember'; MR4 = 'splash';
+            r = 4;
+            break;
+        case 4:
+            MR1 = 'tackle'; MR2 = 'swords-dance'; MR3 = 'water-gun'; MR4 = 'splash';
+            r = 7;
+            break;
+        case 7:
+            MR1 = 'tackle'; MR2 = 'swords-dance'; MR3 = 'vine-whip'; MR4 = 'splash';
+            r = 1;
+            break;
+    }
+
+    // Return the moves as an array
+    return [MR1, MR2, MR3, MR4];
 }

@@ -98,31 +98,46 @@ export async function getPokemonStats(pokemonId,nível) {
     }
    try {
     // Aguarda o resultado da taxa de crescimento
+    console.log("BD: ",pokemonId);
     const data2 = await getXPGrowthRate(pokemonId);
 
     // Busca os tipos do Pokémon
     const typesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
     const typesData = await typesResponse.json();
-
+    let modifiers = {   AtkMod: 1,  SpaAtkMod: 1,  DefMod: 1,  SpaDefMod: 1,  SpeMod: 1 };
     // Função auxiliar para pegar os stats do Pokémon
     const pokemonStats = await getPokemonStatsAux(pokemonId);
 
+    function calculateHP(baseHP, level) {
+      // Fórmula especial para HP
+      return Math.floor(((2 * baseHP + 31 + Math.floor(0 / 4)) * level) / 100) + level + 10;
+  }
+  function calculateStat(baseStat, level) {
+    // Fórmula para Status Físicos e Especiais
+    const stat = Math.floor(
+        Math.floor(((2 * baseStat + 31 + Math.floor(0 / 4)) * level) / 100) + 5
+    );
+
+    // Aplicar modificador de natureza
+    return Math.floor(stat);
+}
     if (pokemonStats) {
       const initialPokemon = {
         name: pokemonStats.name,
         level: 5,
         id: pokemonId,
-        hp: pokemonStats.stats[0].base_stat, // HP
-        attack: pokemonStats.stats[1].base_stat, // Attack
-        defense: pokemonStats.stats[2].base_stat, // Defense
-        special_attack: pokemonStats.stats[3].base_stat, // Special Attack
-        special_defense: pokemonStats.stats[4].base_stat, // Special Defense
-        speed: pokemonStats.stats[5].base_stat, // Speed
+        hp: calculateHP(pokemonStats.stats[0].base_stat,5), // HP
+        attack: calculateStat(pokemonStats.stats[1].base_stat,5), // Attack
+        defense: calculateStat(pokemonStats.stats[2].base_stat,5), // Defense
+        special_attack: calculateHP(pokemonStats.stats[3].base_stat,5), // Special Attack
+        special_defense: calculateHP(pokemonStats.stats[4].base_stat,5), // Special Defense
+        speed: calculateHP(pokemonStats.stats[5].base_stat,5), // Speed
         base_exp: pokemonStats.base_experience, // Base Experience
         currentXP: 0,
         levelType: data2.name, // Aqui agora funciona porque data2 foi aguardado
         type1: typesData.types[0]?.type?.name || null, // Tipo 1
-        type2: typesData.types[1]?.type?.name || null // Tipo 2
+        type2: typesData.types[1]?.type?.name || null, // Tipo 2
+        mod: modifiers
       };
 
       console.log('Initial Pokémon:', initialPokemon);
@@ -162,6 +177,11 @@ export async function getPokemonStats(pokemonId,nível) {
           power: data.power || 0,
           type: data.type.name, // Tipo do movimento
           isStatus: data.damage_class.name === 'status', // Identificar se é movimento de status
+          accuracy: data.accuracy || 0,
+          damage_class: data.damage_class.name,
+          pp: data.pp,
+          priority: data.priority,
+
         };
       } catch (error) {
         console.error(`Erro ao buscar detalhes do movimento ${moveName}:`, error);
@@ -182,7 +202,7 @@ export async function getPokemonStats(pokemonId,nível) {
     async function getTypeMultiplier(moveType, defenderTypes) {
       const typeData = await getTypeData(moveType);
       let multiplier = 1;
-
+      console.log("typeData:", typeData);
       defenderTypes.forEach(defenderType => {
         if (typeData.damage_relations.double_damage_to.some(type => type.name === defenderType)) {
           multiplier *= 2; // Super-efetivo
@@ -209,30 +229,63 @@ export async function getPokemonStats(pokemonId,nível) {
         }
         else if (move.name === 'swords-dance') {
           logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque aumentou muito.`);
-          attacker.name.extra.attackModifier =attacker.name.extra.attackModifier*2;
+          attacker.name.mod.AtkMod =attacker.name.mod.AtkMod*2;
           return { damage: 0 };
         }
         else if (move.name === 'growl') {
-          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque aumentou muito.`);
-          defender.name.extra.attackModifier =defender.name.extra.attackModifier*0.5;
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque diminuiu um pouco.`);
+          defender.name.mod.AtkMod =defender.name.name.mod.AtkMod*0.5;
           return { damage: 0 };
         }
         else{
-          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, mas não sou burro porque 
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, mas sou burro porque 
             não programei`);
           return { damage: 0, effect: move.name + ' não causa dano direto.' };
         }
       }
+      async function TotalDamageAndClass(move, attacker, defender) {
+        const basePower = move.power;
+        const critical = Math.random() < 0.042 ? 1.5 : 1; // Crítico
+        const randomFactor = Math.random() * (1 - 0.85) + 0.85; // Aleatório entre 0.85 e 1.00
+        const stab = attacker.name.extra.types.includes(move.type) ? 1.5 : 1;
+        const otherModifiers = 1; // Exemplo: Itens, clima, etc.
+        const IV = 31
+        const EV = 0
 
-    const basePower = move.power;
-    const baseDamage = Math.floor(basePower * attacker.name.extra.attackModifier); // Modificador de ataque 
+      
+
+
+        switch (move.damage_class) {
+            case "physical":
+                console.log("P");
+                //const baseDamage = Math.floor(((2 * level) / 5 + 2) * basePower * attacker.name.attack / defender.name.defense / 50) + 2;
+                const PbaseDamage = Math.floor((((((2 * attacker.name.level) / 5 + 2) * basePower * ((attacker.name.attack* attacker.name.mod.AtkMod) / defender.name.defense)) / 50)+2)); // Modificador de ataque
+                const PtypeMultiplier = await getTypeMultiplier(move.type, defender.name.extra.types);
+                console.log("PtypeMultiplier:", PtypeMultiplier);
+                const PtotalDamage = Math.floor(PbaseDamage * critical * randomFactor * stab * PtypeMultiplier);
+                return [Math.round(PtotalDamage), PtypeMultiplier]; // Return an array
+            case "special":
+                console.log("S");
+                const SbaseDamage = Math.floor((((((2 * attacker.name.level) / 5 + 2) * basePower * ((attacker.name.special_attack* attacker.name.mod.SpaAtkMod) / defender.name.special_defense)) / 50)+2)); // Modificador de ataque
+                //const SbaseDamage = Math.floor(basePower * attacker.name.extra.attackModifier); // Modificador de ataque
+                const StypeMultiplier = await getTypeMultiplier(move.type, defender.name.extra.types);
+                console.log("StypeMultiplier:", StypeMultiplier);
+                const StotalDamage = Math.floor(SbaseDamage * critical * randomFactor * stab * StypeMultiplier);
+                return [Math.round(StotalDamage), StypeMultiplier]; // Return an array
+            default:
+                throw new Error(`Unknown damage class: ${move.damage_class}`);
+        }
+    }
+    
+    
+const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, defender);
+console.log("typeMultiplier:", typeMultiplier);
+
+
 //era pra ser attacker.attackModifier aí em cima
-    console.log("baseDamage",baseDamage * attacker.name.extra.attackModifier);
+    //console.log("baseDamage",baseDamage * attacker.name.extra.attackModifier);
 
-    const typeMultiplier = await getTypeMultiplier(move.type, defender.name.extra.types);
-    console.log("typeMultiplier",typeMultiplier)
-  
-    const totalDamage = Math.max(baseDamage * typeMultiplier - defender.name.defense / 2, 0);
+
 
     let effectivenessMessage = ''; 
     if (typeMultiplier > 1) effectivenessMessage = 'É super-efetivo!';
@@ -261,10 +314,10 @@ export async function getPokemonStats(pokemonId,nível) {
           const status = document.getElementById('status');
           status.style.display = 'block';
           playerPokemonHealth.innerHTML = `
-          <p><strong>Bulbasaur:</strong> ${Math.max(player.hp, 0)} HP</p>
+          <p><strong>${player.name[0].toUpperCase()+player.name.substring(1)}:</strong> ${Math.max(player.hp, 0)} HP</p>
         `;
           rivalPokemonHealth.innerHTML = `
-          <p><strong>Charmander:</strong> ${Math.max(opponent.hp, 0)} HP</p>
+          <p><strong>${opponent.name[0].toUpperCase()+opponent.name.substring(1)}:</strong> ${Math.max(opponent.hp, 0)} HP</p>
         `;
 
           //console.log(`Status Atual - Jogador: ${player} HP: ${player.hp}, Rival: ${opponent} HP: ${opponent.hp}`);
@@ -390,7 +443,8 @@ export async function getPokemonStats(pokemonId,nível) {
           console.log("Jogador ataca primeiro");
           await executeAttack(player.party[0], rival.party[0], playerMove);
           if (!isBattleOver()) { // Se a batalha não acabou, o rival ataca
-            const rivalMove = getRandomMove(rival.party[0].moves);
+            //console.log("Movimentos do rival:", rival.party[0].moves);
+            const rivalMove = getRandomMove(rival.party[0]);
             await executeAttack(rival.party[0], player.party[0], rivalMove);
             updateStatus(player.party[0].name, rival.party[0].name);
 
@@ -461,7 +515,7 @@ export async function getPokemonStats(pokemonId,nível) {
       function updateStatuss(playerPokemon, rivalPokemon) {
         // Atualize o status dos Pokémon (por exemplo, HP)
       }
-      
+
     }      
 
     
