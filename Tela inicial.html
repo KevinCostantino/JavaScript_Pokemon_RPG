@@ -48,8 +48,11 @@
               <div id="player-area">
                   <h3>Seu Pokémon</h3>
                   <div id="player-pokemon">
+                  <div container>
                       <img id="player-pokemon-image" src="" alt="Seu Pokémon">
-                      <div id="playerPokemonHealth"></div>
+                      <div id="playerProgressBar" style="width: 100%;" style="transition: width 1.5s ease;"></div>
+                      <div id="playerPokemonHealth"  style="transition: width 2s all;"></div>
+                    </div>
                   </div>
               </div>
               
@@ -60,12 +63,16 @@
                   </div>
                   <div id="rival-pokemon">
                       <img id="rival-pokemon-image" src="" alt="Rival Pokémon">
+                      <div id="opponentProgressBar"></div>
                       <div id="rivalPokemonHealth"></div>
                   </div>
               </div>
           </div>
       </div>
       <div id="status" style="display: none;">
+
+        <!-- <button id="decreaseButton">Diminuir Barra</button>
+        <button id="resetButton">Recuperar Barra</button> -->
 
       </div>
       <div id="controls" style="display: none;">

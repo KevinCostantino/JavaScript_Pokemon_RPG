@@ -6,6 +6,7 @@ import { getXPGrowthRate } from './XPf.js';
 import { Pokemon } from './Pokémon.js'
 import { rival } from './script.js';
 import { player } from './script.js';
+import { initializeProgressBar } from './HPbar.js';
 
 // Define a Battle class
 class Battle {
@@ -137,7 +138,8 @@ export async function getPokemonStats(pokemonId,nível) {
         levelType: data2.name, // Aqui agora funciona porque data2 foi aguardado
         type1: typesData.types[0]?.type?.name || null, // Tipo 1
         type2: typesData.types[1]?.type?.name || null, // Tipo 2
-        mod: modifiers
+        mod: modifiers,
+        TotalHP: calculateHP(pokemonStats.stats[0].base_stat,5),
       };
 
       console.log('Initial Pokémon:', initialPokemon);
@@ -309,21 +311,160 @@ console.log("typeMultiplier:", typeMultiplier);
     }
 
     // Função para mostrar o status dos Pokémon 
-    function updateStatus(player, opponent) {
+    function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
 
           const status = document.getElementById('status');
           status.style.display = 'block';
-          playerPokemonHealth.innerHTML = `
-          <p><strong>${player.name[0].toUpperCase()+player.name.substring(1)}:</strong> ${Math.max(player.hp, 0)} HP</p>
-        `;
-          rivalPokemonHealth.innerHTML = `
-          <p><strong>${opponent.name[0].toUpperCase()+opponent.name.substring(1)}:</strong> ${Math.max(opponent.hp, 0)} HP</p>
-        `;
 
-          //console.log(`Status Atual - Jogador: ${player} HP: ${player.hp}, Rival: ${opponent} HP: ${opponent.hp}`);
+    // Selecionando os elementos da barra de progresso
+     console.log(atacante)
+     
 
-        }
+document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.name[0].toUpperCase() + player.name.substring(1)}:</strong></p>
+<div class="container">
+  <div id="${playerProgressBar}" class="progress-bar" style="width: style="transition ${100}%;"></div>
+</div>
+<p>${Math.max(player.hp, 0)}/${player.TotalHP} HP</p>
 
+`;
+
+      document.getElementById('rivalPokemonHealth').innerHTML = `<p><strong>${opponent.name[0].toUpperCase() + opponent.name.substring(1)}:</strong></p>
+       <div class="container">
+         <div id="${opponentProgressBar}" class="progress-bar" style="width: ${100}%;"></div>
+       </div>
+       <p>${Math.max(opponent.hp, 0)}/${opponent.TotalHP} HP</p>
+     `;
+    // Inicializando as barras de progresso
+    if (vidaAntigaP != null && dano != null && atacante == "rival") {
+      updateRivalHealth(player, dano, atacante,opponent);
+      console.log("HA")
+      console.log(dano)
+      updatePlayerHealth(player, dano, atacante,opponent);
+      return;
+    } else if (vidaAntigaO != null && dano != null && atacante == "player") {
+      updatePlayerHealth(player, dano, atacante,opponent);
+      updateRivalHealth(player, dano, atacante,opponent);
+      return;
+    }
+  }
+
+  function updatePlayerHealth(player, dano, atacante,opponent) {
+    const playerProgressBar = document.getElementById('playerProgressBar');
+    const opponentProgressBar = document.getElementById('opponentProgressBar');
+    var Bar,hp,hpt,pokename,Id = null;
+    let ps = null; 
+    if (atacante == "rival") {
+    
+      console.log("player.hp!: ",player.hp)
+      ps = Math.round(((player.hp) / player.TotalHP) * 100);
+      if (ps < 0) {
+        ps = 0
+      }
+      playerProgressBar.style.width = `${ps}%`;
+      playerProgressBar.transition = `width 1.5s ease`
+
+      console.log("ps0!: ",ps)
+      Id = 'playerPokemonHealth'
+      pokename = player
+      Bar = playerProgressBar;
+      hp = player.hp;
+      hpt = player.TotalHP;
+      document.getElementById(Id).innerHTML = `
+      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
+      <div class="container">
+        <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
+      </div>
+      <p>${Math.max(hp, 0)}/${hpt} HP</p>
+    `;
+
+
+    }else if (atacante == "player") {
+      console.log("player.hp!: ",player.hp)
+       ps = Math.round(((player.hp) / player.TotalHP) * 100);
+       if (ps < 0) {
+        ps = 0
+      }
+       playerProgressBar.style.width = `${ps}%`;
+       console.log("ps0!: ",ps)
+       Id = 'playerPokemonHealth'
+       pokename = player
+       Bar = playerProgressBar;
+       hp = player.hp;
+       hpt = player.TotalHP;
+       document.getElementById(Id).innerHTML = `
+       <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
+       <div class="container">
+         <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
+       </div>
+       <p>${Math.max(hp, 0)}/${hpt} HP</p>
+     `;
+
+    }
+    console.log("vida:",player.hp);
+    
+    console.log("ps1!: ",ps)
+
+  }
+  
+  function updateRivalHealth(player, dano, atacante,opponent) {
+    const opponentProgressBar = document.getElementById('opponentProgressBar');
+    const playerProgressBar = document.getElementById('playerProgressBar');
+    var Bar,hp,hpt,pokename,Id = null;
+    let ps = null; 
+    if (atacante == "rival") {
+      ps = Math.round(((opponent.hp) / opponent.TotalHP) * 100);
+      if (ps < 0) {
+        ps = 0
+      }
+      opponentProgressBar.style.width = `${ps}%`;
+      opponentProgressBar.style.transition = `width 1.5s ease`
+
+      console.log("opponent.hp!: ",opponent.hp)
+      Id = 'rivalPokemonHealth'
+      pokename = opponent
+      Bar = opponentProgressBar;
+      hp = opponent.hp;
+      hpt = opponent.TotalHP;
+      console.log("ps0!: ",ps)
+      document.getElementById(Id).innerHTML = `
+      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
+      <div class="container">
+        <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
+      </div>
+      <p>${Math.max(hp, 0)}/${hpt} HP</p>
+    `;
+   }else if (atacante == "player") {
+  ps = Math.round(((opponent.hp) / opponent.TotalHP) * 100);
+  if (ps < 0) {
+    ps = 0
+  }
+  opponentProgressBar.style.width = `${ps}%`;
+  opponentProgressBar.style.transition = `width 1.5s ease`
+
+  console.log("opponent.hp!: ",opponent.hp)
+  console.log("pss!: ",ps)
+
+  Id = 'rivalPokemonHealth'
+  pokename = opponent
+  Bar = opponentProgressBar;
+  hp = opponent.hp;
+  hpt = opponent.TotalHP;
+  console.log("ps0!: ",dano)
+  document.getElementById(Id).innerHTML = `
+  <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
+  <div class="container">
+    <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
+  </div>
+  <p>${Math.max(hp, 0)}/${hpt} HP</p>
+`;
+ }
+   console.log("vidsa:",player.hp);
+
+
+
+
+console.log("af",Math.max(ps, 0))
+  }
 
         async function getPokemonData(pokemonName) {
           const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
@@ -350,6 +491,7 @@ console.log("typeMultiplier:", typeMultiplier);
         }
     // Função de batalha
     export async function PBattle(player) {
+
       (rivalSprite).style.display = "block";
 
       document.getElementById('text').style.display = 'none';
@@ -365,8 +507,11 @@ console.log("typeMultiplier:", typeMultiplier);
       document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
       
       //console.log("HP inicial:", player.party[0].name.hp);
-    
-      updateStatus(player.party[0].name, rival.party[0].name); // Atualize o status no início
+      let vidaAntigaP = player.party[0].name.hp;
+      let vidaAntigaO = rival.party[0].name.hp;
+
+
+      updateStatus(player.party[0].name, rival.party[0].name, null, vidaAntigaP,vidaAntigaO);      // Atualize o status no início
 
     
 
@@ -437,46 +582,75 @@ console.log("typeMultiplier:", typeMultiplier);
         console.log(playerSpeed);
         const rivalSpeed = rival.party[0].name.extra.stats.Speed;
       
+        let dano, vidaAntiga, atacante;
+
         // Determina quem ataca primeiro
         if (playerSpeed >= rivalSpeed) {
           // Jogador ataca primeiro
           console.log("Jogador ataca primeiro");
-          await executeAttack(player.party[0], rival.party[0], playerMove);
-          if (!isBattleOver()) { // Se a batalha não acabou, o rival ataca
-            //console.log("Movimentos do rival:", rival.party[0].moves);
+        
+          // Executa o ataque do jogador
+          const dano = await executeAttack(player.party[0], rival.party[0], playerMove);
+          //dano = result.damage;
+          //vidaAntigaO = result.vidaAntiga;
+          atacante = "player";
+        
+          // Atualiza o status após o ataque do jogador
+          updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
+        
+          // Verifica se a batalha não acabou, então o rival ataca
+          if (!isBattleOver()) {
             const rivalMove = getRandomMove(rival.party[0]);
-            await executeAttack(rival.party[0], player.party[0], rivalMove);
-            updateStatus(player.party[0].name, rival.party[0].name);
-
+            const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
+            //dano = resultRival.damage;
+            //vidaAntigaP = resultRival.vidaAntiga;
+            atacante = "rival";
+        
+            // Atualiza o status após o ataque do rival
+            updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
           }
         } else {
           // Rival ataca primeiro
           console.log("Rival ataca primeiro");
           const rivalMove = getRandomMove(rival.party[0]);
-          console.log(rivalMove);
-          await executeAttack(rival.party[0], player.party[0], rivalMove);
-          if (!isBattleOver()) { // Se a batalha não acabou, o jogador ataca
-            await executeAttack(player.party[0], rival.party[0], playerMove);
-            updateStatus(player.party[0].name, rival.party[0].name);
+          const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
+          //dano = result.damage;
+          //vidaAntigaP = result.vidaAntiga;
+          atacante = "rival";
+        
+          // Atualiza o status após o ataque do rival
+          updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
+        
+          // Verifica se a batalha não acabou, então o jogador ataca
+          if (!isBattleOver()) {
+            const dano = await executeAttack(player.party[0], rival.party[0], playerMove);
+            //dano = resultPlayer.damage;
+            //vidaAntigaO = resultPlayer.vidaAntiga;
+            
+
+            atacante = "player";
+        
+            // Atualiza o status após o ataque do jogador
+            updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
           }
         }
-      
         // Aumenta o turno para a próxima rodada
         turnoAtual++;
-
-        updateStatus(player.party[0].name, rival.party[0].name); // Atualize o status no início
-
+        console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+        
         // Verifica o status da batalha no final do turno
         checkBattleStatus();
       }
       
       async function executeAttack(attacker, defender, move) {
         const { damage } = await calculateDamage(attacker, defender, move);
+        //const vidaAntiga = defender.name.hp;
         defender.name.hp -= damage;
             
         if (defender.name.hp <= 0) {
           logMessage(`${LetraM1(defender.name.name)} foi derrotado!`);
         }
+        return damage;
       }
       
       function getRandomMove(pokemon) {

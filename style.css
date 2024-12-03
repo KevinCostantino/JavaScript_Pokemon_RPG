@@ -104,10 +104,69 @@ button {
   border-radius: 8px;
 }
 
-
-
-
-
 button:hover {
   background-color: #45a049; /* Cor do botão ao passar o mouse */
 }
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  height: 30px;
+  border: 2px solid #f0e1e1;
+  border-radius: 5px;
+  margin: 20px auto;
+  overflow: hidden;
+  position: relative;
+}
+.progress-bar {
+  width: 100%;
+  height: 100%;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  transform-origin: right center;
+  border: 2px solid;
+  border-image: linear-gradient(to right, #b0b0b0, #f0f0f0, #b0b0b0);
+  border-image-slice: 1;
+  transition: width 2.5s ease-in-out; /* Animação suave */
+
+}
+
+
+
+.playerProgressBar {
+  width: 100%;
+  height: 100%;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  transform-origin: right center;
+  border: 2px solid;
+  border-image: linear-gradient(to right, #b0b0b0, #f0f0f0, #b0b0b0);
+  border-image-slice: 1;
+  transition: width 1.5s ease;
+}
+
+button.container {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+button.container:hover {
+  background-color: #0056b3;
+}
+
