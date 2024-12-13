@@ -170,6 +170,7 @@ export function goTown() {
 }
 
 export function goStore() {
+	console.log("tamo aqui");
     update(locations[1]);
 }
 

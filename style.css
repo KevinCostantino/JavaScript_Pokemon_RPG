@@ -64,22 +64,31 @@ body {
   align-items: center; /* Alinha verticalmente no centro */
 }
 
-#player-area, #rival-area {
+#player-area {
   flex: 1; /* Faz cada área ocupar igual largura */
-  margin: 0 10px; /* Adiciona um pequeno espaço entre as áreas */
+  margin: 0px; /* Adiciona um pequeno espaço entre as áreas */
 }
-
+#rival-area {
+  flex: 1; /* Faz cada área ocupar igual largura */
+  margin:10px; /* Adiciona um pequeno espaço entre as áreas */
+  margin-bottom: 16.8px;
+}
 #rival {
   text-align: center; /* Centraliza o texto do rival */
 }
 
 #rival-pokemon {
-  margin-top: -9px; /* Subir a imagem ajustando o valor negativo */
+  margin-top: -23px; /* Subir a imagem ajustando o valor negativo */
   display: block; /* Garante que a imagem respeite a centralização do pai */
   margin-left: auto;
   margin-right: auto;
 }
-
+#player-pokemon {
+  margin-top: -23px; /* Subir a imagem ajustando o valor negativo */
+  display: block; /* Garante que a imagem respeite a centralização do pai */
+  margin-left: auto;
+  margin-right: auto;
+}
 button {
   background-color: #4CAF50; /* Cor do botão */
   color: white; /* Cor do texto nos botões */
@@ -109,18 +118,14 @@ button:hover {
 }
 
 .container {
-  width: 100%;
-  max-width: 500px;
-  height: 30px;
-  border: 2px solid #f0e1e1;
-  border-radius: 5px;
-  margin: 20px auto;
-  overflow: hidden;
-  position: relative;
+  border: 2px solid;
+  border-image: linear-gradient(to right, #b0b0b0, #f0f0f0, #b0b0b0);
+  border-image-slice: 1;
 }
 .progress-bar {
   width: 100%;
-  height: 100%;
+  max-width: 500px;
+  height: 30px;
   background-color: green;
   display: flex;
   align-items: center;
@@ -129,10 +134,8 @@ button:hover {
   font-weight: bold;
   font-size: 16px;
   transform-origin: right center;
-  border: 2px solid;
-  border-image: linear-gradient(to right, #b0b0b0, #f0f0f0, #b0b0b0);
-  border-image-slice: 1;
-  transition: width 2.5s ease-in-out; /* Animação suave */
+
+  transition: width 1.5s ease;
 
 }
 
@@ -152,7 +155,6 @@ button:hover {
   border: 2px solid;
   border-image: linear-gradient(to right, #b0b0b0, #f0f0f0, #b0b0b0);
   border-image-slice: 1;
-  transition: width 1.5s ease;
 }
 
 button.container {
@@ -170,3 +172,34 @@ button.container:hover {
   background-color: #0056b3;
 }
 
+#playerInfo {
+  display: flex; /* Exibe os elementos em linha */
+  align-items: center; /* Alinha verticalmente */
+  margin-left: 60px; /* Move todo o bloco mais para a direita */
+
+}
+#opponentInfo {
+  display: flex; /* Exibe os elementos em linha */
+  align-items: center; /* Alinha verticalmente */
+  margin-left: 60px; /* Move todo o bloco mais para a direita */
+
+}
+
+#playerName {
+  font-size: 18px; /* Ajuste o tamanho conforme necessário */
+}
+#opponentName {
+  font-size: 18px; /* Ajuste o tamanho conforme necessário */
+}
+#pokeLv {
+  font-size: 12px; /* Menor tamanho que o playerName */
+  margin-left: 5px; /* Espaço entre playerName e pokeLv */
+  position: relative;
+  top: -2px; /* Move ligeiramente para cima */
+}
+#RpokeLv {
+  font-size: 12px; /* Menor tamanho que o playerName */
+  margin-left: 5px; /* Espaço entre playerName e pokeLv */
+  position: relative;
+  top: -2px; /* Move ligeiramente para cima */
+}

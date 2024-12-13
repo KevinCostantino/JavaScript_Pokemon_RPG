@@ -136,58 +136,7 @@ function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
     PBattle(player);
-    // Exibir a área de batalha 
-//    button1.style.display = 'none';
-//
-//    document.getElementById("pokemonImage").style.display = "none"; 
-//    document.getElementById("battle-area").style.display = "block";
-//    document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
-//    document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
-//    document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
-//    console.log("HP inicial:", player.party[0].name.hp);
-//
-//
-//    
-//    //console.log(player.party[0].id, rival.party[0].id);
-//    //startBattle(player.party[0].id, rival.party[0].id);
-//    
-//
-//    //console.log(player.party[0].id)
-//    // Resete HP para 100
-//    let playerPokemonHP = 100;
-//    let rivalPokemonHP = 100;
-//
-//    updateHealth("player", 0,player.party[0].name.hp); // Atualiza HP inicial
-//    updateHealth("rival", 0,rival.party[0].name.hp); // Atualiza HP inicial
-//
-//    const attackButton = document.getElementById("attack-button");
-//    attackButton.onclick = function() {
-//        let playerDamage = Math.floor(Math.random() * 10) + 5;
-//        let rivalDamage = Math.floor(Math.random() * 10) + 5;
-//
-//        if (player.party[0].name.hp > 0) {
-//            console.log(`HP ${rival.party[0].name.name}: ${rival.party[0].name.hp}%`);
-//            rival.party[0].name.hp=updateHealth("rival", rivalDamage,rival.party[0].name.hp);
-//        }
-//
-//        if (rival.party[0].name.hp > 0) {
-//            console.log(`HP ${player.party[0].name.name}: ${player.party[0].name.hp}%`);
-//            player.party[0].name.hp=updateHealth("player", playerDamage,player.party[0].name.hp);
-//        }
-//
-//        console.log(`Ataque do ${player.party[0].name.name}: ${rivalDamage}`);
-//        console.log(`Ataque do ${rival.party[0].name.name}: ${playerDamage}`);
-//
-//        document.getElementById("player-pokemon-health").innerText = `HP: ${Math.max(0, player.party[0].name.hp)}`;
-//        document.getElementById("rival-pokemon-health").innerText = `HP: ${Math.max(0, rival.party[0].name.hp)}`;
-//        if (player.party[0].name.hp <= 0 || rival.party[0].name.hp <= 0) {
-//            if (rival.party[0].name.hp <= 0) {
-//                XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level);
-//            }
-//            setTimeout(endBattle, 100); // delay endBattle by 100ms
-//        }
-//        playerDamage, rivalDamage = 0;
-//    };
+
 }
 
 
@@ -212,14 +161,17 @@ export function updateHealth(pokemon, damage,hp) {
       }
       return hp;
     }
-export function endBattle() {
-    const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
-    alert(`A batalha terminou! ${winner}`);
-    document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
+export function endBattleF() {
+    //const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
+    setTimeout(2000);
+    alert(`EAE`);
+    //document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
     // Aqui você pode adicionar lógica para o que acontece após a batalha
+    vaiproScript()
 }
 
 function vaiproScript() {
+    button1.style.display = 'inline-block';
     button1.onclick = update(locations[0]);  // Atualiza para a próxima fase do jogo no script.js
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';

@@ -1,6 +1,6 @@
 import { Poke } from './pokeapi.js';
 import { updateHealth } from './pokeapiF.js';
-import { endBattle } from './pokeapiF.js'; 
+import { endBattleF } from './pokeapiF.js'; 
 import { XPDX } from './XPf.js';
 import { getXPGrowthRate } from './XPf.js';
 import { Pokemon } from './Pokémon.js'
@@ -28,16 +28,16 @@ class Battle {
       // Determine which Pokémon attacks first based on speed
       if (this.pokemon1.speed > this.pokemon2.speed) {
         this.pokemon1.attackOpponent(this.pokemon2);
-        console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
+        //console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
         if (!this.pokemon2.isAlive()) break;
         this.pokemon2.attackOpponent(this.pokemon1);
-        console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
+        //console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
       } else {
         this.pokemon2.attackOpponent(this.pokemon1);
-        console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
+        //console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
         if (!this.pokemon1.isAlive()) break;
         this.pokemon1.attackOpponent(this.pokemon2);
-        console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
+        //console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
       }
     }
         // Update the HP values of the Pokémon objects
@@ -49,7 +49,7 @@ class Battle {
 
 // Fetch data from the PokeAPI and create Pokemon instances
 async function createPokemon(name) {
-  console.log("as: ", name);
+  //console.log("as: ", name);
   const data = await Poke(name);
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
   const stats = await response.json();
@@ -99,7 +99,7 @@ export async function getPokemonStats(pokemonId,nível) {
     }
    try {
     // Aguarda o resultado da taxa de crescimento
-    console.log("BD: ",pokemonId);
+    //console.log("BD: ",pokemonId);
     const data2 = await getXPGrowthRate(pokemonId);
 
     // Busca os tipos do Pokémon
@@ -204,7 +204,7 @@ export async function getPokemonStats(pokemonId,nível) {
     async function getTypeMultiplier(moveType, defenderTypes) {
       const typeData = await getTypeData(moveType);
       let multiplier = 1;
-      console.log("typeData:", typeData);
+      //console.log("typeData:", typeData);
       defenderTypes.forEach(defenderType => {
         if (typeData.damage_relations.double_damage_to.some(type => type.name === defenderType)) {
           multiplier *= 2; // Super-efetivo
@@ -259,7 +259,7 @@ export async function getPokemonStats(pokemonId,nível) {
 
         switch (move.damage_class) {
             case "physical":
-                console.log("P");
+                //console.log("P");
                 //const baseDamage = Math.floor(((2 * level) / 5 + 2) * basePower * attacker.name.attack / defender.name.defense / 50) + 2;
                 const PbaseDamage = Math.floor((((((2 * attacker.name.level) / 5 + 2) * basePower * ((attacker.name.attack* attacker.name.mod.AtkMod) / defender.name.defense)) / 50)+2)); // Modificador de ataque
                 const PtypeMultiplier = await getTypeMultiplier(move.type, defender.name.extra.types);
@@ -267,11 +267,11 @@ export async function getPokemonStats(pokemonId,nível) {
                 const PtotalDamage = Math.floor(PbaseDamage * critical * randomFactor * stab * PtypeMultiplier);
                 return [Math.round(PtotalDamage), PtypeMultiplier]; // Return an array
             case "special":
-                console.log("S");
+                //console.log("S");
                 const SbaseDamage = Math.floor((((((2 * attacker.name.level) / 5 + 2) * basePower * ((attacker.name.special_attack* attacker.name.mod.SpaAtkMod) / defender.name.special_defense)) / 50)+2)); // Modificador de ataque
                 //const SbaseDamage = Math.floor(basePower * attacker.name.extra.attackModifier); // Modificador de ataque
                 const StypeMultiplier = await getTypeMultiplier(move.type, defender.name.extra.types);
-                console.log("StypeMultiplier:", StypeMultiplier);
+                //console.log("StypeMultiplier:", StypeMultiplier);
                 const StotalDamage = Math.floor(SbaseDamage * critical * randomFactor * stab * StypeMultiplier);
                 return [Math.round(StotalDamage), StypeMultiplier]; // Return an array
             default:
@@ -281,7 +281,7 @@ export async function getPokemonStats(pokemonId,nível) {
     
     
 const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, defender);
-console.log("typeMultiplier:", typeMultiplier);
+//console.log("typeMultiplier:", typeMultiplier);
 
 
 //era pra ser attacker.attackModifier aí em cima
@@ -317,28 +317,41 @@ console.log("typeMultiplier:", typeMultiplier);
           status.style.display = 'block';
 
     // Selecionando os elementos da barra de progresso
-     console.log(atacante)
+     //console.log(atacante)
      
 
-document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.name[0].toUpperCase() + player.name.substring(1)}:</strong></p>
-<div class="container">
-  <div id="${playerProgressBar}" class="progress-bar" style="width: style="transition ${100}%;"></div>
-</div>
+     document.getElementById('playerName').innerHTML = 
+ `<p><strong>${player.name[0].toUpperCase()  + 
+  player.name.substring(1)}</strong></p>
+  `
+  document.getElementById('pokeLv').innerHTML = 
+  `<p><strong>Lv.${player.level}</strong></p>
+   `;
+
+document.getElementById('playerPokemonHealth').innerHTML = 
+`
 <p>${Math.max(player.hp, 0)}/${player.TotalHP} HP</p>
 
-`;
-
-      document.getElementById('rivalPokemonHealth').innerHTML = `<p><strong>${opponent.name[0].toUpperCase() + opponent.name.substring(1)}:</strong></p>
-       <div class="container">
-         <div id="${opponentProgressBar}" class="progress-bar" style="width: ${100}%;"></div>
-       </div>
-       <p>${Math.max(opponent.hp, 0)}/${opponent.TotalHP} HP</p>
+`;playerInfo
+document.getElementById('opponentName').innerHTML = 
+`<p><strong>${opponent.name[0].toUpperCase()  + 
+  opponent.name.substring(1)}</strong></p>
+  `
+  //console.log("ALOUQ",opponent.level)
+  document.getElementById('RpokeLv').innerHTML = 
+  `<p><strong>Lv.${opponent.level}</strong></p>
+   `;
+      document.getElementById('rivalPokemonHealth').innerHTML = 
+`
+      <p>${Math.max(opponent.hp, 0)}/${opponent.TotalHP} HP</p>
      `;
+
+     
     // Inicializando as barras de progresso
     if (vidaAntigaP != null && dano != null && atacante == "rival") {
       updateRivalHealth(player, dano, atacante,opponent);
-      console.log("HA")
-      console.log(dano)
+      //console.log("HA")
+      //console.log(dano)
       updatePlayerHealth(player, dano, atacante,opponent);
       return;
     } else if (vidaAntigaO != null && dano != null && atacante == "player") {
@@ -349,8 +362,24 @@ document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.
   }
 
   function updatePlayerHealth(player, dano, atacante,opponent) {
-    const playerProgressBar = document.getElementById('playerProgressBar');
-    const opponentProgressBar = document.getElementById('opponentProgressBar');
+
+    const playerProgressBar = document.getElementById("PprogressBar");
+
+
+    let pap = 845; // Porcentagem máxima
+    let progressa = 200; // Porcentagem inicial da barra
+    let pa = Math.round((progressa / pap) * 100); // Porcentagem inicial ajustada para 100%
+
+    updateProgressBar(100,playerProgressBar); // Inicializa a barra
+    //setTimeout(20000);
+    //updateProgressBar(pa); // Inicializa a porcentagem da barra
+
+    //console.log("pa",pa);
+    
+    // Função para atualizar a barra e o texto
+
+    
+    //const playerProgressBar = document.getElementById('playerProgressBar');
     var Bar,hp,hpt,pokename,Id = null;
     let ps = null; 
     if (atacante == "rival") {
@@ -363,55 +392,68 @@ document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.
       playerProgressBar.style.width = `${ps}%`;
       playerProgressBar.transition = `width 1.5s ease`
 
-      console.log("ps0!: ",ps)
+      //console.log("ps0!: ",ps)
       Id = 'playerPokemonHealth'
       pokename = player
       Bar = playerProgressBar;
       hp = player.hp;
       hpt = player.TotalHP;
+      document.getElementById("playerName").innerHTML = `
+      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}</strong></p>`
       document.getElementById(Id).innerHTML = `
-      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
-      <div class="container">
-        <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
-      </div>
+        <p><div id="${Bar}" style="width: ${ps}%;"></div></p>
       <p>${Math.max(hp, 0)}/${hpt} HP</p>
-    `;
+      
+    `
+    updateProgressBar(ps,Bar);
 
 
     }else if (atacante == "player") {
+
+
       console.log("player.hp!: ",player.hp)
        ps = Math.round(((player.hp) / player.TotalHP) * 100);
        if (ps < 0) {
         ps = 0
       }
-       playerProgressBar.style.width = `${ps}%`;
-       console.log("ps0!: ",ps)
+      playerProgressBar.style.width = `${ps}%`;
+       //console.log("ps0!: ",ps)
        Id = 'playerPokemonHealth'
        pokename = player
-       Bar = playerProgressBar;
+       Bar = opponentProgressBar;
        hp = player.hp;
        hpt = player.TotalHP;
+       document.getElementById("playerName").innerHTML = `
+       <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}</strong></p>`
        document.getElementById(Id).innerHTML = `
-       <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
-       <div class="container">
-         <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
-       </div>
+         <p><div id="${Bar}" style="width: ${ps}%;"></div></p>
        <p>${Math.max(hp, 0)}/${hpt} HP</p>
      `;
 
     }
-    console.log("vida:",player.hp);
+    //console.log("vida:",player.hp);
     
-    console.log("ps1!: ",ps)
+    //console.log("ps1!: ",ps)
+    updateProgressBar(ps,Bar);
 
   }
   
   function updateRivalHealth(player, dano, atacante,opponent) {
-    const opponentProgressBar = document.getElementById('opponentProgressBar');
-    const playerProgressBar = document.getElementById('playerProgressBar');
+    const opponentProgressBar = document.getElementById("OprogressBar");
     var Bar,hp,hpt,pokename,Id = null;
     let ps = null; 
+
+    //console.log("ata",atacante )
+    updateProgressBar(100,playerProgressBar); // Inicializa a barra
+    //setTimeout(20000);
+    //updateProgressBar(pa); // Inicializa a porcentagem da barra
+
     if (atacante == "rival") {
+
+      // Define a animação da barra
+      opponentProgressBar.style.transition = "width 10.5s ease"; 
+
+
       ps = Math.round(((opponent.hp) / opponent.TotalHP) * 100);
       if (ps < 0) {
         ps = 0
@@ -425,14 +467,15 @@ document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.
       Bar = opponentProgressBar;
       hp = opponent.hp;
       hpt = opponent.TotalHP;
-      console.log("ps0!: ",ps)
+      //console.log("ps0!: ",ps)
+      
+      document.getElementById("opponentName").innerHTML = `
+      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}</strong></p>`
       document.getElementById(Id).innerHTML = `
-      <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
-      <div class="container">
-        <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
-      </div>
+        <p><div id="${Bar}" style="width: ${ps}%;"></div></p>
       <p>${Math.max(hp, 0)}/${hpt} HP</p>
-    `;
+    `  ; 
+    updateProgressBar(ps,Bar);
    }else if (atacante == "player") {
   ps = Math.round(((opponent.hp) / opponent.TotalHP) * 100);
   if (ps < 0) {
@@ -442,28 +485,28 @@ document.getElementById('playerPokemonHealth').innerHTML = `<p><strong>${player.
   opponentProgressBar.style.transition = `width 1.5s ease`
 
   console.log("opponent.hp!: ",opponent.hp)
-  console.log("pss!: ",ps)
+  //console.log("pss!: ",ps)
 
   Id = 'rivalPokemonHealth'
   pokename = opponent
   Bar = opponentProgressBar;
   hp = opponent.hp;
   hpt = opponent.TotalHP;
-  console.log("ps0!: ",dano)
+  //console.log("ps0!: ",dano)
+  document.getElementById("opponentName").innerHTML = `
+  <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}</strong></p>`
   document.getElementById(Id).innerHTML = `
-  <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}:</strong></p>
-  <div class="container">
-    <div id="${Bar}" class="progress-bar" style="width: ${ps}%;"></div>
-  </div>
+    <p><div id="${Bar}" style="width: ${ps}%;"></div></p>
   <p>${Math.max(hp, 0)}/${hpt} HP</p>
-`;
+`  ;
  }
-   console.log("vidsa:",player.hp);
+   //console.log("vidsa:",player.hp);
 
 
+   updateProgressBar(ps,Bar);
 
 
-console.log("af",Math.max(ps, 0))
+//console.log("af",Math.max(ps, 0))
   }
 
         async function getPokemonData(pokemonName) {
@@ -488,6 +531,12 @@ console.log("af",Math.max(ps, 0))
         }
     function LetraM1(str) {
           return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function updateProgressBar(pa,Bar) {
+          //console.log("Bar",Bar);
+          Bar.style.width = `${pa}%`; // Atualiza a largura da barra dinamicamente
+
         }
     // Função de batalha
     export async function PBattle(player) {
@@ -678,7 +727,9 @@ console.log("af",Math.max(ps, 0))
         setTimeout(() => {
           console.log(winner === 'player' ? 'Você venceu!' : 'Você perdeu!');
           alert(winner === 'player' ? 'Você venceu!' : 'Você perdeu!');
-        }, 1000);
+          return endBattleF();}, 1000);
+
+        
       }
       
       // Função para exibir mensagens no log
@@ -689,6 +740,7 @@ console.log("af",Math.max(ps, 0))
       function updateStatuss(playerPokemon, rivalPokemon) {
         // Atualize o status dos Pokémon (por exemplo, HP)
       }
+
 
     }      
 

@@ -47,12 +47,19 @@
           <div id="battle-container" style="display: flex; justify-content: space-between;">
               <div id="player-area">
                   <h3>Seu Pokémon</h3>
+                  <div id="playerInfo">
+                    <span id="playerName"></span>
+                    <span id="pokeLv"></span>
+                  </div>
                   <div id="player-pokemon">
-                  <div container>
                       <img id="player-pokemon-image" src="" alt="Seu Pokémon">
-                      <div id="playerProgressBar" style="width: 100%;" style="transition: width 1.5s ease;"></div>
-                      <div id="playerPokemonHealth"  style="transition: width 2s all;"></div>
+                      <div class="container">
+                      <div class="progress-bar" id="PprogressBar"style="width: 100%; height: 16px; transition: width 2.5s;"></div>
                     </div>
+                      <div id="playerProgressBar"></div>
+                      <div id="playerPokemonHealth">
+                        
+                      </div>
                   </div>
               </div>
               
@@ -61,9 +68,17 @@
                       <img id="rivalSprite" src="Sprites/Green-transformed.png" alt="Rival" style="width: 80px; height: auto;">              
                       <h3>Rival: Green</h3>
                   </div>
+                  <div id="opponentInfo">
+                    <span id="opponentName"></span>
+                    <span id="RpokeLv"></span>
+                  </div>
                   <div id="rival-pokemon">
                       <img id="rival-pokemon-image" src="" alt="Rival Pokémon">
+                      <div class="container">
+                      <div class="progress-bar" id="OprogressBar"style="width: 100%; height: 16px; transition: width 2.5s; border-width: 2px;"></div>
+                      </div>
                       <div id="opponentProgressBar"></div>
+                      <div id="rivalPokemonName"></div>
                       <div id="rivalPokemonHealth"></div>
                   </div>
               </div>
