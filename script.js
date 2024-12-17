@@ -1,6 +1,7 @@
 import { PokemonInicial } from './pokeapiF.js';
 import Player from './player.js';
 import { askForName } from './pokeapiF.js';
+import { locations } from './location.js';
 
 let xp = 0;
 let health = 100;
@@ -13,6 +14,9 @@ let inventory = ["stick"];
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
 const button3 = document.querySelector("#button3");
+const button4 = document.querySelector("#button4");
+const button5 = document.querySelector("#button5");
+const button6 = document.querySelector("#button6");
 const text = document.querySelector("#text");
 const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
@@ -21,6 +25,8 @@ const monsterStats = document.querySelector("#monsterStats");
 const PersonagemStats = document.querySelector("#PersonagemStats");
 const monsterNameText = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
+const rivalIMAGE = document.querySelector("#rivalSprite");
+const OakIMAGE = document.querySelector("#pokemonImage");
 
 const weapons = [
 	{
@@ -59,61 +65,24 @@ const monsters = [
   }
 ];
 
-export const locations = [
-    {
-        name: "town square",
-        "button text": ["Go to store", "Go to cave", "Fight dragon"],
-        "button functions": [goStore, goCave, fightDragon],
-        text: "You are in the town square. You see a sign that says \"Store.\""
-    },
-	{
-		name: "store",
-		"button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
-		"button functions": [buyHealth, buyWeapon, goTown],
-		text: "You enter the store."
-	},
-	{
-		name: "cave",
-		"button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
-		"button functions": [fightSlime, fightBeast, goTown],
-		text: "You enter the cave. You see some monsters."
-	},
-	{
-		name: "fight",
-		"button text": ["Attack", "Dodge", "Run"],
-		"button functions": [attack, dodge, goTown],
-		text: "You are fighting a monster."
-	},
-	{
-		name: "kill monster",
-		"button text": ["Go to town square", "Go to town square", "Go to town square"],
-		"button functions": [goTown, goTown, easterEgg],
-		text: 'The monster screams "Arg!" as it dies. You gain experience points and find gold.'
-	},
-	{
-		name: "lose",
-		"button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
-		"button functions": [restart, restart, restart],
-		text: "You die. ☠️"
-	},
-	{
-		name: "win",
-		"button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
-		"button functions": [restart, restart, restart],
-		text: "You defeat the dragon! YOU WIN THE GAME! 🎉"
-    },
-	{
-		name: "easter egg",
-		"button text": ["2", "8", "Go to town square?"],
-		"button functions": [pickTwo, pickEight, goTown],
-		text: "You find a secret game. Pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches one of the random numbers, you win!"
-	}
-]
+
 
 
 // initialize buttons
 export const player = new Player();
 export const rival = new Player();
+
+export const Poke1 = new Player();
+export const Poke2 = new Player();
+export const Poke3 = new Player();
+export const Poke4 = new Player();
+export const Poke5 = new Player();
+export const treinador1 = new Player();
+export const treinador2 = new Player();
+export const treinador3 = new Player();
+export const treinadorBrock = new Player();
+
+
 button1.onclick = pokeapiF1;
 button2.onclick = pokeapiF4;
 button3.onclick = pokeapiF7;
@@ -124,18 +93,66 @@ button3.onclick = pokeapiF7;
 	//document.querySelector(`button[onclick="PokemonInicial(${id})"]`).onclick = () => PokemonInicial(id);});
 
 export function update(location) {
+	button5.style.display = "";
+	button6.style.display = "";
+
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
-    button1.innerText = location["button text"][0];
-    button2.innerText = location["button text"][1];
-    button3.innerText = location["button text"][2];
-    button1.onclick = location["button functions"][0];
-    button2.onclick = location["button functions"][1];
-    button3.onclick = location["button functions"][2];
+    button4.innerText = location["button text"][0];
+    button5.innerText = location["button text"][1];
+    button6.innerText = location["button text"][2];
+    button4.onclick = location["button functions"][0];
+    button5.onclick = location["button functions"][1];
+    button6.onclick = location["button functions"][2];
     text.innerText = location.text;    
 }
 
+export function UniOp(location) {
+	button5.style.display = "none";
+	button6.style.display = "none";
 
+    monsterStats.style.display = "none";
+	PersonagemStats.style.display = "none";
+    button4.innerText = location["button text"][0];
+    button4.onclick = location["button functions"][0];
+    text.innerText = location.text;    
+}
+export function DiOp(location) {
+    monsterStats.style.display = "none";
+	PersonagemStats.style.display = "none";
+    button4.innerText = location["button text"][0];
+    button5.innerText = location["button text"][1];
+    button4.onclick = location["button functions"][0];
+    button5.onclick = location["button functions"][1];
+
+    text.innerText = location.text;    
+}
+export function TriOp(location) {
+    monsterStats.style.display = "none";
+	PersonagemStats.style.display = "none";
+    button4.innerText = location["button text"][0];
+    button5.innerText = location["button text"][1];
+    button6.innerText = location["button text"][2];
+    button4.onclick = location["button functions"][0];
+    button5.onclick = location["button functions"][1];
+    button6.onclick = location["button functions"][2];
+    text.innerText = location.text;    
+}
+export function QuadOp(location) {
+    monsterStats.style.display = "none";
+	PersonagemStats.style.display = "none";
+    button4.innerText = location["button text"][0];
+    button5.innerText = location["button text"][1];
+    button6.innerText = location["button text"][2];
+	button3.innerText = location["button text"][3];
+
+    button4.onclick = location["button functions"][0];
+    button5.onclick = location["button functions"][1];
+    button6.onclick = location["button functions"][2];
+	button3.onclick = location["button functions"][3];
+
+    text.innerText = location.text;    
+}
 function pokeapiF1() {
 
 	let aux = 25;
@@ -172,14 +189,15 @@ export function goTown() {
 export function goStore() {
 	console.log("tamo aqui");
     update(locations[1]);
+	document.getElementById('pokemonImage').style.display = 'none'
 }
 
-function goCave() {
+export function goCave() {
 	console.log("afa");
     update(locations[2]);
 }
 
-function buyHealth() {
+export function buyHealth() {
     if (gold >= 10) {
         gold -= 10;
         health += 10;
@@ -191,7 +209,7 @@ function buyHealth() {
 
 }
 
-function buyWeapon() {
+export function buyWeapon() {
     if (currentWeapon < weapons.length - 1) {
     	if (gold >= 30) {
             gold -= 30;
@@ -211,7 +229,7 @@ function buyWeapon() {
 	}
 }
 
-function sellWeapon() {
+export function sellWeapon() {
 	if (inventory.length > 1) {
 		gold += 15;
 		goldText.innerText = gold;
@@ -223,22 +241,22 @@ function sellWeapon() {
   	}
 }
 
-function fightSlime() {
+export function fightSlime() {
 	fighting = 0;
 	goFight();
 }
 
-function fightBeast() {
+export function fightBeast() {
 	fighting = 1;
 	goFight();    
 }
 
-function fightDragon() {
+export function fightDragon() {
 	fighting = 2;
 	goFight();
 }
 
-function goFight() {
+export function goFight() {
     update(locations[3]);
     monsterHealth = monsters[fighting].health;
     monsterStats.style.display = "block";
@@ -246,7 +264,7 @@ function goFight() {
 	monsterHealthText.innerText = monsterHealth;
 }
 
-function attack() {
+export function attack() {
     text.innerText = "The " + monsters[fighting].name + " attacks.";
     text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
     if (isMonsterHit()) {
@@ -270,22 +288,22 @@ function attack() {
 	}
 }
 
-function getMonsterAttackValue(level) {
+export function getMonsterAttackValue(level) {
     let hit = (level * 5) - (Math.floor(Math.random() * xp));
     console.log(hit);
     return hit;
 }
 
-function isMonsterHit() {
+export function isMonsterHit() {
 	return Math.random() > .2 || health < 20;
 }
 
 
-function dodge() {
+export function dodge() {
     text.innerText = "You dodge the attack from the " + monsters[fighting].name + ".";
 }
 
-function defeatMonster() {
+export function defeatMonster() {
     gold += Math.floor(monsters[fighting].level * 6.7)
     xp += monsters[fighting].level;
     goldText.innerText = gold;
@@ -293,15 +311,15 @@ function defeatMonster() {
     update(locations[4]);
 }
 
-function lose() {
+export function lose() {
     update(locations[5]);
 }
 
-function winGame() {
+export function winGame() {
   update(locations[6]);
 }
 
-function restart() {
+export function restart() {
 	xp = 0;
 	health = 100;
 	gold = 50;
@@ -313,19 +331,20 @@ function restart() {
 	goTown();
 }
 
-function easterEgg() {
+export function easterEgg() {
 	update(locations[7]);
 }
 
-function pickTwo() {
+
+export function pickTwo() {
  pick(2);
 }
 
-function pickEight() {
+export function pickEight() {
  pick(8);
 }
 
-function pick(guess) {
+export function pick(guess) {
     let numbers = [];
     while (numbers.length < 10) {
         numbers.push(Math.floor(Math.random() * 11));
@@ -350,3 +369,51 @@ function pick(guess) {
         }
     }
 }
+
+export async function IMFREE(A, elementId,a) {
+    // Dynamically update the target element with starter Pokémon buttons
+	document.getElementById('text').style.display = 'block';
+	document.getElementById('battle-area').style.display = 'none';
+	document.getElementById('status').style.display = 'none';
+	document.getElementById('controls').style.display = 'none';
+	document.getElementById('battle-log').style.display = 'none';
+	
+
+	document.getElementById(elementId).style.display = 'block'
+
+	
+	button4.onclick = goStore;  //Troca o botão pra ser a loja
+	button5.onclick = goStore;  //Troca o botão pra ser a loja
+	button6.onclick = goStore;  //Troca o botão pra ser a loja
+
+    // Call goStore() if A == 1
+    if (A === 1) {
+        PósInitB(a);
+    }
+}
+
+export async function PósInitB(a) {
+	document.getElementById('pokemonImage').style.display = 'block'
+console.log("sfsf");
+	update(locations[8]);
+
+	rivalIMAGE.innerHTML = `<img src="Sprites/Green-transformed.png" />`;
+	if (a == 1) {
+		text.innerText = "Fracote! Tente me derrotar após obter uma insígia."}
+	    else{
+		text.innerText = "Droga! Te venceirei na próxima vez"}
+	
+	}
+
+
+export async function PósInitProf() {
+		document.getElementById('pokemonImage').style.display = 'block'
+		UniOp(locations[9]);
+		OakIMAGE.innerHTML = `<img src="Sprites/Oak-transformed.png" />`;
+
+		text.innerText = "Meu neto foi até a cidade de Pewter atrás da insígnia de ginásio, por quê não ir lá também?"
+	}
+
+export async function goFlorest() {
+	QuadOp(locations[11]);
+	}

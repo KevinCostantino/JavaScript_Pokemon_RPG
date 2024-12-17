@@ -1,3 +1,5 @@
+import { player } from './script.js';
+
 async function loadXPData() {
     try {
         const response = await fetch('./XP.json');
@@ -162,7 +164,7 @@ try {
 }
 }
 
-export async function XPDX(currentXP,levelType,gainedXP,level,Elevel){
+export async function XPDX(currentXP,levelType,gainedXP,level,Elevel,N0){
 // Função para encontrar a tabela de experiência pelo tipo de nível
 
 console.log(`Bora ver: ${Elevel}`);
@@ -252,7 +254,10 @@ function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
     };
 }
 
-
+function upou(Nup) {
+    player.party[Nup].name.level = player.party[Nup].name.level + 1
+    console.log(player.party[Nup].name.level);
+}
 // Testando com valores de exemplo
 //const levelType = 'T_Fast'; // Tipo da tabela de experiência
 //let currentXP = 2195; // Experiência atual do Pokémon
@@ -269,6 +274,7 @@ try {
     if (levelsGained > 0) {
         console.log(`O Pokémon subiu ${levelsGained} nível(is)!`);
         console.log(`Novo nível: ${newLevel}`);
+        upou(N0);
     } else {
         console.log('O Pokémon não subiu de nível.');
     }

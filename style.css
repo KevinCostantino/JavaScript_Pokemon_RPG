@@ -15,7 +15,7 @@ body {
   color: white;
   padding: 10px;
 }
-#Inicial {
+#Inicial,#Options {
   background-color: rgb(161, 197, 159);
   color: white;
   padding: 10px;

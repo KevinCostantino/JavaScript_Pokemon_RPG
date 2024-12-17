@@ -1,88 +1,12 @@
-import { Poke } from './pokeapi.js';
-import { updateHealth } from './pokeapiF.js';
 import { endBattleF } from './pokeapiF.js'; 
 import { XPDX } from './XPf.js';
 import { getXPGrowthRate } from './XPf.js';
 import { Pokemon } from './Pokémon.js'
-import { rival } from './script.js';
+//import { rival } from './script.js';
 import { player } from './script.js';
-import { initializeProgressBar } from './HPbar.js';
 
-// Define a Battle class
-class Battle {
-  constructor(pokemon1, pokemon2) {
-    this.pokemon1 = pokemon1;
-    this.pokemon2 = pokemon2;
-    this.turn = 0;
-  }
 
-  startBattle() {
- 
-    while (this.pokemon1.isAlive() && this.pokemon2.isAlive()) {
-      this.turn++;
-      console.log(`Turn ${this.turn}:`);
-      const attackModifierP = 1
-      const attackModifierR = 1
 
-      
-      // Determine which Pokémon attacks first based on speed
-      if (this.pokemon1.speed > this.pokemon2.speed) {
-        this.pokemon1.attackOpponent(this.pokemon2);
-        //console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
-        if (!this.pokemon2.isAlive()) break;
-        this.pokemon2.attackOpponent(this.pokemon1);
-        //console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
-      } else {
-        this.pokemon2.attackOpponent(this.pokemon1);
-        //console.log(`${this.pokemon2.name} attacks ${this.pokemon1.name} for ${this.pokemon1.hp} damage!`);
-        if (!this.pokemon1.isAlive()) break;
-        this.pokemon1.attackOpponent(this.pokemon2);
-        //console.log(`${this.pokemon1.name} attacks ${this.pokemon2.name} for ${this.pokemon2.hp} damage!`);
-      }
-    }
-        // Update the HP values of the Pokémon objects
-        updateHealth(this.pokemon1, damage);
-        updateHealth(this.pokemon2, damage);
-    console.log(`Battle ended! ${this.pokemon1.isAlive() ? this.pokemon1.name : this.pokemon2.name} wins!`);
-  }
-}
-
-// Fetch data from the PokeAPI and create Pokemon instances
-async function createPokemon(name) {
-  //console.log("as: ", name);
-  const data = await Poke(name);
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-  const stats = await response.json();
-  const hp = stats.stats.find(stat => stat.stat.name === 'hp').base_stat;
-  const attack = stats.stats.find(stat => stat.stat.name === 'attack').base_stat;
-  const defense = stats.stats.find(stat => stat.stat.name === 'defense').base_stat;
-  const specialAttack = stats.stats.find(stat => stat.stat.name === 'special-attack').base_stat;
-  const specialDefense = stats.stats.find(stat => stat.stat.name === 'special-defense').base_stat;
-  const speed = stats.stats.find(stat => stat.stat.name === 'speed').base_stat;
-  const basexp = XPFiltro(name);
-  const currentXP = 0
-
-  const response2 = await fetch(`https://pokeapi.co/api/v2/growth-rate/${name}`);
-  const stats2 = await response2.json();
-  const levelType = "wt"
-  const types = await fetch(`https://pokeapi.co/api/v2/type/${types}`);
-
-  return new Pokemon(data.name, hp, attack, defense, specialAttack, specialDefense, speed, basexp,currentXP,level,levelType,types[0],types[1]);
-}
-
-export async function startBattle(playerPokemon, trainerPokemon) {
-    // Create Pokémon instances
-    const [playerPokemonInstance, trainerPokemonInstance] = await Promise.all([
-      createPokemon(playerPokemon),
-      createPokemon(trainerPokemon)
-    ]);
-  
-    // Create a Battle instance
-    const battle = new Battle(playerPokemonInstance, trainerPokemonInstance);
-  
-    // Start the battle
-    battle.startBattle();
-  }
 export async function getPokemonStats(pokemonId,nível) {
     async function getPokemonStatsAux(pokemonId) {
       try {
@@ -150,28 +74,12 @@ export async function getPokemonStats(pokemonId,nível) {
 
   }
 }
-  function XPFiltro(id)
-{
-  fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Erro ao buscar os dados da API');
-    }
-    return response.json();
-  })
-  .then(data => {
-    const baseExperience = data.base_experience;
-    console.log('Base Experience:', baseExperience);
-    return baseExperience;s
-  })
-  .catch(error => {
-    console.error('Erro:', error);
-  });
-}
+
 
     // Função para buscar detalhes de um movimento específico
-    export async function getMoveDetails(moveName) {
+export async function getMoveDetails(moveName) {
       try {
+        console.log(`Buscando detalhes do movimentodS: ${moveName}`);
         const response = await fetch(`https://pokeapi.co/api/v2/move/${moveName}`);
         const data = await response.json();
         return {
@@ -194,14 +102,14 @@ export async function getPokemonStats(pokemonId,nível) {
 
 
     // Função para buscar informações sobre um tipo
-    async function getTypeData(typeName) {
+async function getTypeData(typeName) {
       const response = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`);
     
       return response.json();
     }
 
         // Função para calcular vantagem de tipos
-    async function getTypeMultiplier(moveType, defenderTypes) {
+async function getTypeMultiplier(moveType, defenderTypes) {
       const typeData = await getTypeData(moveType);
       let multiplier = 1;
       //console.log("typeData:", typeData);
@@ -221,7 +129,7 @@ export async function getPokemonStats(pokemonId,nível) {
     }
 
     // Função para calcular dano
-    async function calculateDamage(attacker, defender, move) {
+async function calculateDamage(attacker, defender, move) {
 
       if (move.isStatus) 
         {
@@ -236,7 +144,9 @@ export async function getPokemonStats(pokemonId,nível) {
         }
         else if (move.name === 'growl') {
           logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque diminuiu um pouco.`);
-          defender.name.mod.AtkMod =defender.name.name.mod.AtkMod*0.5;
+          defender.name.mod.AtkMod =defender.name.mod.AtkMod*0.7072;
+          console.log("sfSsw",defender.name.mod.AtkMod);
+
           return { damage: 0 };
         }
         else{
@@ -301,7 +211,7 @@ const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, 
       
 
     // Função para log de mensagens
-    function logMessage(message) {
+function logMessage(message) {
       const log = document.getElementById('battle-log');
       document.getElementById('battle-log').style.display = 'block';
       const newMessage = document.createElement('p');
@@ -311,7 +221,7 @@ const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, 
     }
 
     // Função para mostrar o status dos Pokémon 
-    function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
+function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
 
           const status = document.getElementById('status');
           status.style.display = 'block';
@@ -360,8 +270,7 @@ document.getElementById('opponentName').innerHTML =
       return;
     }
   }
-
-  function updatePlayerHealth(player, dano, atacante,opponent) {
+function updatePlayerHealth(player, dano, atacante,opponent) {
 
     const playerProgressBar = document.getElementById("PprogressBar");
 
@@ -438,7 +347,7 @@ document.getElementById('opponentName').innerHTML =
 
   }
   
-  function updateRivalHealth(player, dano, atacante,opponent) {
+function updateRivalHealth(player, dano, atacante,opponent) {
     const opponentProgressBar = document.getElementById("OprogressBar");
     var Bar,hp,hpt,pokename,Id = null;
     let ps = null; 
@@ -467,8 +376,9 @@ document.getElementById('opponentName').innerHTML =
       Bar = opponentProgressBar;
       hp = opponent.hp;
       hpt = opponent.TotalHP;
+
       //console.log("ps0!: ",ps)
-      
+      console.log("pokename.name[0]: ",pokename)
       document.getElementById("opponentName").innerHTML = `
       <p><strong>${pokename.name[0].toUpperCase() + pokename.name.substring(1)}</strong></p>`
       document.getElementById(Id).innerHTML = `
@@ -479,8 +389,10 @@ document.getElementById('opponentName').innerHTML =
    }else if (atacante == "player") {
   ps = Math.round(((opponent.hp) / opponent.TotalHP) * 100);
   if (ps < 0) {
+
     ps = 0
   }
+
   opponentProgressBar.style.width = `${ps}%`;
   opponentProgressBar.style.transition = `width 1.5s ease`
 
@@ -509,7 +421,7 @@ document.getElementById('opponentName').innerHTML =
 //console.log("af",Math.max(ps, 0))
   }
 
-        async function getPokemonData(pokemonName) {
+async function getPokemonData(pokemonName) {
           const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
           const data = await response.json();
   
@@ -529,20 +441,21 @@ document.getElementById('opponentName').innerHTML =
             attackModifier: 1, // Modificador de ataque inicial
           };
         }
-    function LetraM1(str) {
+function LetraM1(str) {
           return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
-        function updateProgressBar(pa,Bar) {
+function updateProgressBar(pa,Bar) {
           //console.log("Bar",Bar);
           Bar.style.width = `${pa}%`; // Atualiza a largura da barra dinamicamente
 
         }
     // Função de batalha
-    export async function PBattle(player) {
+export async function PBattle(player, rival) {
+  console.log("rival.party[0]: e player.party[0]",rival,player);
 
-      (rivalSprite).style.display = "block";
-
+      //(rivalSprite).style.display = "block";
+     
       document.getElementById('text').style.display = 'none';
       document.getElementById('Inicial').style.display = 'none';
 
@@ -571,14 +484,20 @@ document.getElementById('opponentName').innerHTML =
       
 
         const movim = [];  // Cria o array para armazenar os detalhes dos movimentos
+        const sd = []; // Declara e inicializa o array `a` vazio
+ 
         for (let index = 0; index < player.party[0].moves.length; index++) {
-          player.party[0].moves[index]= await getMoveDetails(player.party[0].moves[index]);
+          console.log(":V",player.party[0])
+          sd[index] = player.party[0].moves[index]
+          sd[index]= await getMoveDetails(sd[index]);
         }
-      
+      console.log("rival.party[0].moves",rival.party[0].moves);
+rival.party[0].moves = await Promise.all(
+  rival.party[0].moves.slice(0, 4) // Limita a 4 movimentos
+    .filter(moveName => moveName != null) // Filtra movimentos nulos
+    .map(async moveName => await getMoveDetails(moveName)) // Busca os detalhes dos movimentos
+);
 
-      rival.party[0].moves = await Promise.all(
-        rival.party[0].moves.slice(0, 4).map(async moveName => await getMoveDetails(moveName))
-      );      
 
       let turn = 0;
 
@@ -600,7 +519,8 @@ document.getElementById('opponentName').innerHTML =
       controls.style.display = 'block';
       document.getElementById('battle-log').style.display = 'block';
 
-      player.party[0].moves.forEach((move, index) => {
+      sd.forEach((move, index) => {
+        console.log(player);
         const button = document.createElement('button');
         button.textContent = formatString(move.name);
         button.addEventListener('click', () => playerTurn(index));
@@ -611,19 +531,20 @@ document.getElementById('opponentName').innerHTML =
 
       async function playerTurn(choice) {
         if (isBattleOver()) return; // Verifica se a batalha já acabou
-      
+
         // Player escolhe o movimento
-        const playerMove = player.party[0].moves[choice];
+        const playerMove = sd[choice];
         if (!playerMove) return;
       
         // Exibe o turno da batalha
         logMessage(`Turno ${turnoAtual}:`);
-      
+
         // Resolve o turno
         await resolveTurn(playerMove);
       }
       
       async function resolveTurn(playerMove) {
+
         (player.party[0].name, rival.party[0].name);
         if (isBattleOver()) return; // Verifica novamente se a batalha já acabou
       
@@ -643,7 +564,7 @@ document.getElementById('opponentName').innerHTML =
           //dano = result.damage;
           //vidaAntigaO = result.vidaAntiga;
           atacante = "player";
-        
+
           // Atualiza o status após o ataque do jogador
           updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
         
@@ -654,12 +575,16 @@ document.getElementById('opponentName').innerHTML =
             //dano = resultRival.damage;
             //vidaAntigaP = resultRival.vidaAntiga;
             atacante = "rival";
-        
+
             // Atualiza o status após o ataque do rival
+            console.log("rival.party[0]: e player.party[0]",rival.party[0],player.party[0]);
+
             updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
+
           }
         } else {
           // Rival ataca primeiro
+          console.log("rival.party[0]: e player.party[0]",rival.party[0],player.party[0]);
           console.log("Rival ataca primeiro");
           const rivalMove = getRandomMove(rival.party[0]);
           const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
@@ -680,9 +605,11 @@ document.getElementById('opponentName').innerHTML =
             atacante = "player";
         
             // Atualiza o status após o ataque do jogador
+
             updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
           }
         }
+
         // Aumenta o turno para a próxima rodada
         turnoAtual++;
         console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
@@ -709,12 +636,38 @@ document.getElementById('opponentName').innerHTML =
       function checkBattleStatus() {
         if (player.party[0].name.hp <= 0) {
           logMessage('Você perdeu a batalha!');
+
           endBattle('rival');
         } else if (rival.party[0].name.hp <= 0) {
-          logMessage('Você venceu a batalha!');
+
+        console.log("rival.party.length:",rival.party.length);
+          if (rival.party.length > 1) {
+            XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
+            console.log("rival.party[0]:",rival.party[0],player.party[0]);
+
+            rival.party[0] = rival.party[1];
+            rival.party[1] = null;
+            console.log("rival.party[0]:",rival.party[0],player.party[0]);
+
+            const div = document.getElementById("controls");
+            const buttonsA = div.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
+            buttonsA.forEach(button => button.remove()); // Remove cada botão encontrado
+
+            setTimeout(() => updateRivalHealth(null, null, "rival",rival.party[0].name), 1500);
+            setTimeout(() => PBattle(player,rival), 1500);
+            
+          }
+          else{
+            console.log("player.party[0]",player.party[0]);
+
+
+
+            XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,1)
+            logMessage('Você venceu a batalha!');
+            endBattle('player');
+          }
           //console.log("XP inicial:",player.party[0]);
-          XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level)
-          endBattle('player');
+         
         }
       }
       
@@ -723,23 +676,31 @@ document.getElementById('opponentName').innerHTML =
         return player.party[0].name.hp <= 0 || rival.party[0].name.hp <= 0;
       }
       
-      function endBattle(winner) {
-        setTimeout(() => {
-          console.log(winner === 'player' ? 'Você venceu!' : 'Você perdeu!');
-          alert(winner === 'player' ? 'Você venceu!' : 'Você perdeu!');
-          return endBattleF();}, 1000);
+function endBattle(winner) {
+    // Atualiza o nível do Pokémon do jogador com um pequeno atraso
+    setTimeout(() => updateLV(player.party[0].name), 100);
 
-        
-      }
-      
-      // Função para exibir mensagens no log
-      function logMessages(message) {
-        console.log(message); // Aqui você pode implementar um sistema de log para mostrar na interface do jogo
-      }
-      
-      function updateStatuss(playerPokemon, rivalPokemon) {
-        // Atualize o status dos Pokémon (por exemplo, HP)
-      }
+    // Exibe o resultado da batalha após 1 segundo
+    setTimeout(() => {
+        const message = winner === 'player' ? 'Você venceu!' : 'Você perdeu!';
+        console.log(message);
+        alert(message);
+
+        // Chama a função de finalização com base no vencedor
+        if (winner === 'player') {
+            endBattleF(0); // Finalização para jogador
+        } else {
+            endBattleF(1); // Finalização para rival
+        }
+    }, 1000);
+}
+
+      function updateLV(PokeP) {
+        console.log("UH?:",player.party[0].name.level);
+        document.getElementById('pokeLv').innerHTML = 
+        `<p><strong>Lv.${PokeP.level}</strong></p>
+         `;
+}
 
 
     }      

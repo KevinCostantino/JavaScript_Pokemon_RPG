@@ -1,13 +1,17 @@
 import { update } from './script.js';
-import { locations } from './script.js';
+import { locations } from './location.js';
 import { goStore } from './script.js';
 import { Poke } from './pokeapi.js';
 import { player } from './script.js';
 import { rival } from './script.js';
-import { startBattle } from './Batalha.js';
+import { Poke1, Poke2, Poke3, Poke4, Poke5,treinador1,treinador2,treinador3,treinadorBrock } from './script.js';
+
+//import { startBattle } from './Batalha.js';
 import { getPokemonStats } from './Batalha.js';
 import { XPDX } from './XPf.js';
 import { PBattle } from './Batalha.js';
+import { IMFREE } from './script.js';
+import { moves } from './moves.js';
 
 export async function PokemonInicial(pokemonId, aux) {
     let pokemonName = '';
@@ -43,15 +47,34 @@ export async function PokemonInicial(pokemonId, aux) {
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
     const initialPokemon = await getPokemonStats(pokemonId); // Armazene o id do Pokémon
     
-    player.capturePokemon(initialPokemon,0,5,M1, M2, M3, M4);
+    player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,4);
     console.log(player.party[0]);
 
     const initialRival = await getPokemonStats(inicialRival(player));
     const [MR1, MR2, MR3, MR4] = MovRival(player);
-    rival.capturePokemon(initialRival, 0, 5, MR1, MR2, MR3, MR4);    
+    rival.capturePokemon(player.name,initialRival, 0, 5, MR1, MR2, MR3, MR4,4);    
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
     
+    async function BatalhaSetup(id) {
+        return await getPokemonStats(id)
+    }
+
+
+    Poke1.capturePokemon("",await BatalhaSetup(10),0,getRandomInt(2,4),moves[0], moves[6], moves[7],null,3);
+    Poke2.capturePokemon("",await BatalhaSetup(13),0,getRandomInt(2,4),moves[8], moves[6], moves[7]);
+    Poke3.capturePokemon("",await BatalhaSetup(16),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
+    Poke4.capturePokemon("",await BatalhaSetup(19),0,getRandomInt(2,6),moves[0], moves[11], moves[12]);
+    Poke5.capturePokemon("",await BatalhaSetup(114),0,getRandomInt(7,8),moves[4], moves[3]);
+
+    treinador1.capturePokemon("John",await BatalhaSetup(21),0,4,moves[13], moves[14], moves[15]);
+    treinador2.capturePokemon("Maria",await BatalhaSetup(23),0,6,moves[15], moves[8], moves[12]);
+    treinador3.capturePokemon("Leon",await BatalhaSetup(25),0,7,moves[16], moves[17], moves[14]);
+    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74),0,8,moves[0], moves[23], moves[24]);
+    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95),0,10,moves[1], moves[2], moves[23], moves[0]);
+    console.log(treinadorBrock.party);
+
+
     console.log(rival.party[0]);
     // Capturando Pokémon aleatórios
     //const randomPokemonNames = ['Charmander', 'Squirtle', 'Pikachu', 'Jigglypuff', 'Meowth'];
@@ -135,7 +158,7 @@ function rivalF(player) {
 function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
-    PBattle(player);
+    PBattle(player,treinadorBrock);
 
 }
 
@@ -161,28 +184,31 @@ export function updateHealth(pokemon, damage,hp) {
       }
       return hp;
     }
-export function endBattleF() {
+export function endBattleF(a) {
     //const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
     setTimeout(2000);
     alert(`EAE`);
     //document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
     // Aqui você pode adicionar lógica para o que acontece após a batalha
-    vaiproScript()
+    vaiproScript(a)
 }
 
-function vaiproScript() {
+function vaiproScript(a) {
     button1.style.display = 'inline-block';
     button1.onclick = update(locations[0]);  // Atualiza para a próxima fase do jogo no script.js
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';
-    vaiproScript2();
+    vaiproScript2(a);
 }
 
-function vaiproScript2() {
+function vaiproScript2(a) {
     button1.onclick = goStore;  //Troca o botão pra ser a loja
+    button2.onclick = goStore;  //Troca o botão pra ser a loja
+    button3.onclick = goStore;  //Troca o botão pra ser a loja
+
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';
-
+    IMFREE(1,"Options",a);
 }
 function askForAge() {
     const playerAge = prompt("Digite sua idade:");
@@ -214,7 +240,7 @@ async function captureRandomPokemon(player) {
     if (pokemonName) {
         const randomLevel = Math.floor(Math.random() * 10) + 1; // Nível aleatório entre 1 e 10
         const newPokemon = { name: pokemonName, level: randomLevel };
-        player.capturePokemon(newPokemon);
+        player.capturePokemon(player.name,newPokemon);
         
         // Exibe o nível do Pokémon capturado
         console.log(`${newPokemon.name.charAt(0).toUpperCase() + newPokemon.name.slice(1)} (Nível ${newPokemon.level}) foi capturado!`);
@@ -280,3 +306,13 @@ function MovRival(player) {
     // Return the moves as an array
     return [MR1, MR2, MR3, MR4];
 }
+
+function getRandomInt(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+  }
+  
+
+//console.log(getRandomInt(2,8))
+

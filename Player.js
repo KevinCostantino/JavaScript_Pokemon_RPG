@@ -3,13 +3,17 @@ import { Pokemon } from './Pokémon.js';
 class Player {
 
         constructor() {
+            this.treinador = null;
             this.name = null;
             this.party = []; // Inicializa a party como um array vazio
         }
 
-    capturePokemon(pokemon,currentTotalXP,move1,move2,move3,move4,type1,type2) {
+    capturePokemon(treinador,pokemon,currentTotalXP,move1,move2,move3,move4,type1,type2,NdeMov) {
+        this.treinador = treinador;
+        this.NdeMov = NdeMov
         if (this.party.length < 6) {
             this.party.push(new Pokemon(pokemon, currentTotalXP,move1,move2,move3,move4,type1,type2)); // Adiciona o Pokémon à party
+            //console.log(treinador, " e ",pokemon," e ",pokemon.name)
             console.log(`${pokemon.name} foi adicionado à sua equipe!`);
         } else {
             console.log("Sua equipe está cheia! Você precisa substituir um Pokémon.");
