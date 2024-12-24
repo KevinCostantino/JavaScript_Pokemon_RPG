@@ -3,7 +3,9 @@ import { XPDX } from './XPf.js';
 import { getXPGrowthRate } from './XPf.js';
 import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
-import { player } from './script.js';
+import { menu, goStore,player,captura, troca, bolsaPotion } from './script.js';
+
+
 
 
 
@@ -64,6 +66,7 @@ export async function getPokemonStats(pokemonId,nível) {
         type2: typesData.types[1]?.type?.name || null, // Tipo 2
         mod: modifiers,
         TotalHP: calculateHP(pokemonStats.stats[0].base_stat,5),
+        NdeMov: 4,
       };
 
       console.log('Initial Pokémon:', initialPokemon);
@@ -129,7 +132,7 @@ async function getTypeMultiplier(moveType, defenderTypes) {
     }
 
     // Função para calcular dano
-async function calculateDamage(attacker, defender, move) {
+async function calculateDamage(attacker, defender, move,turnoAtual) {
 
       if (move.isStatus) 
         {
@@ -163,7 +166,6 @@ async function calculateDamage(attacker, defender, move) {
         const otherModifiers = 1; // Exemplo: Itens, clima, etc.
         const IV = 31
         const EV = 0
-
       
 
 
@@ -184,12 +186,15 @@ async function calculateDamage(attacker, defender, move) {
                 //console.log("StypeMultiplier:", StypeMultiplier);
                 const StotalDamage = Math.floor(SbaseDamage * critical * randomFactor * stab * StypeMultiplier);
                 return [Math.round(StotalDamage), StypeMultiplier]; // Return an array
+            case undefined:
+              let aux = 0;
+              return [0, 1];
             default:
                 throw new Error(`Unknown damage class: ${move.damage_class}`);
         }
     }
     
-    
+
 const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, defender);
 //console.log("typeMultiplier:", typeMultiplier);
 
@@ -205,6 +210,11 @@ const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, 
     if (typeMultiplier === 0) effectivenessMessage = 'Não teve efeito.';
     //console.log("hsdh",LetraM1(move.name))
 
+  if (move.damage_class === undefined) {
+    logMessage(`Turno ${turnoAtual}:`);
+    logMessage(`${LetraM1(attacker.name.name)} trocou! Causou 0 de dano!`);
+    return { damage: 0 };
+  }
     logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}! Causou ${totalDamage} de dano! ${effectivenessMessage}`);
     return { damage: totalDamage };
       }  
@@ -220,6 +230,11 @@ function logMessage(message) {
       log.scrollTop = log.scrollHeight;
     }
 
+function clearLog() {
+      const log = document.getElementById('battle-log');
+      log.innerHTML = ''; // Remove todo o conteúdo
+      log.style.display = 'none'; // Opcional: Esconde o log novamente
+    }
     // Função para mostrar o status dos Pokémon 
 function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
 
@@ -450,14 +465,29 @@ function updateProgressBar(pa,Bar) {
           Bar.style.width = `${pa}%`; // Atualiza a largura da barra dinamicamente
 
         }
+
+function removeAllButtons() {
+          const buttons = controls.querySelectorAll('button');
+          buttons.forEach(button => button.remove()); // Remove todos os botões
+        }
+
+
+
     // Função de batalha
 export async function PBattle(player, rival) {
   console.log("rival.party[0]: e player.party[0]",rival,player);
 
       //(rivalSprite).style.display = "block";
-     
+      clearLog(); // Limpa o log após 5 segundos
+
       document.getElementById('text').style.display = 'none';
       document.getElementById('Inicial').style.display = 'none';
+      document.getElementById('Options').style.display = 'none';
+      document.getElementById('pokemonImage').style.display = 'none';
+
+      removeAllButtons();
+
+      updateRivalHealth(null, null, "rival",rival.party[0].name)
 
       player.party[0].name.extra = await getPokemonData(player.party[0].name.name);
       rival.party[0].name.extra = await getPokemonData(rival.party[0].name.name);
@@ -467,15 +497,57 @@ export async function PBattle(player, rival) {
       document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
       document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
       document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
-      
+
       //console.log("HP inicial:", player.party[0].name.hp);
       let vidaAntigaP = player.party[0].name.hp;
       let vidaAntigaO = rival.party[0].name.hp;
+      let aux = 25;
 
 
-      updateStatus(player.party[0].name, rival.party[0].name, null, vidaAntigaP,vidaAntigaO);      // Atualize o status no início
+      updateStatus(player.party[0].name, rival.party[0].name, null, vidaAntigaP,vidaAntigaO);   
+         // Atualize o status no início
+         const menuButton = document.getElementById("menuID");
 
-    
+         if (menuButton) {
+           menuButton.onclick = menu; // Garante que o evento está associado ao botão
+         } else {
+           console.error("O botão 'menu' não foi encontrado!");
+         }
+
+         const btn1 = document.getElementById("btn1");
+         const btn2 = document.getElementById("btn2");
+         const btn3 = document.getElementById("btn3");
+
+         if (btn3) {
+           btn3.onclick = () => captura(rival.party[0]); // Função anônima garante que 'captura' será chamada apenas no clique
+         } else {
+           console.error("O botão 'menu' não foi encontrado!");
+         }
+         if (btn2) {
+          // Associa a função 'bolsaPotion' ao evento de clique
+          btn2.addEventListener("click", () => bolsaPotion(player.party[0]));
+        
+          // Associa a função 'updatePlayerHealth' ao evento de clique
+          btn2.addEventListener("click", () => updatePlayerHealth(player.party[0].name, null, "rival", rival.party[0].name));
+        } else {
+          console.error("O botão btn2 não foi encontrado!");
+        }
+        
+         if (btn1) {
+          btn1.onclick = () => troca(player.party); // Função anônima garante que 'captura' será chamada apenas no clique
+          exampleUsage("");
+
+        } else {
+          console.error("O botão 'menu' não foi encontrado!");
+        }
+        if (aux === 0) {
+          aux = 25;
+          console.log("TurnoOOOO")
+          console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+          turnoAtual++;
+        }
+
+
 
       //const bulbasaur = await getPokemonData('bulbasaur');
       //const charmander = await getPokemonData('charmander');
@@ -491,6 +563,8 @@ export async function PBattle(player, rival) {
           sd[index] = player.party[0].moves[index]
           sd[index]= await getMoveDetails(sd[index]);
         }
+
+
       console.log("rival.party[0].moves",rival.party[0].moves);
 rival.party[0].moves = await Promise.all(
   rival.party[0].moves.slice(0, 4) // Limita a 4 movimentos
@@ -526,6 +600,7 @@ rival.party[0].moves = await Promise.all(
         button.addEventListener('click', () => playerTurn(index));
         controls.appendChild(button);
       });
+      
 
       let turnoAtual = 1; // Controla o número do turno
 
@@ -611,15 +686,15 @@ rival.party[0].moves = await Promise.all(
         }
 
         // Aumenta o turno para a próxima rodada
-        turnoAtual++;
         console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+        turnoAtual++;
         
         // Verifica o status da batalha no final do turno
         checkBattleStatus();
       }
       
       async function executeAttack(attacker, defender, move) {
-        const { damage } = await calculateDamage(attacker, defender, move);
+        const { damage } = await calculateDamage(attacker, defender, move,turnoAtual);
         //const vidaAntiga = defender.name.hp;
         defender.name.hp -= damage;
             
@@ -640,8 +715,10 @@ rival.party[0].moves = await Promise.all(
           endBattle('rival');
         } else if (rival.party[0].name.hp <= 0) {
 
+         
         console.log("rival.party.length:",rival.party.length);
           if (rival.party.length > 1) {
+            
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
 
@@ -652,8 +729,12 @@ rival.party[0].moves = await Promise.all(
             const div = document.getElementById("controls");
             const buttonsA = div.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
             buttonsA.forEach(button => button.remove()); // Remove cada botão encontrado
+            
+
 
             setTimeout(() => updateRivalHealth(null, null, "rival",rival.party[0].name), 1500);
+            rival.party.pop();
+
             setTimeout(() => PBattle(player,rival), 1500);
             
           }
@@ -662,12 +743,13 @@ rival.party[0].moves = await Promise.all(
 
 
 
-            XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,1)
+            XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             logMessage('Você venceu a batalha!');
+
             endBattle('player');
           }
           //console.log("XP inicial:",player.party[0]);
-         
+
         }
       }
       
@@ -702,7 +784,33 @@ function endBattle(winner) {
          `;
 }
 
-
+async function exampleUsage(he) {
+  console.log("Aguardando clique no botão btn1...");
+  await waitForClick("btn1"); // Aguarda o clique no botão btn1
+  console.log("Botão btn1 clicado! Agora a próxima ação será liberada.");
+  
+  // Ação a ser executada após o clique
+  console.log("Ação executada!");
+  resolveTurn(he); // Substitua por sua lógica
+} 
     }      
 
-    
+// Função que aguarda o clique no botão btn1
+function waitForClick(buttonId) {
+  return new Promise((resolve) => {
+    const button = document.getElementById(buttonId);
+    if (!button) {
+      console.error(`Botão com ID "${buttonId}" não encontrado!`);
+      return;
+    }
+
+    // Adiciona um evento de clique que resolve a Promise
+    const handleClick = () => {
+      button.removeEventListener("click", handleClick); // Remove o listener após o clique
+      resolve(); // Libera a execução
+    };
+
+    button.addEventListener("click", handleClick);
+  });
+}
+

@@ -12,7 +12,7 @@ class Player {
         this.treinador = treinador;
         this.NdeMov = NdeMov
         if (this.party.length < 6) {
-            this.party.push(new Pokemon(pokemon, currentTotalXP,move1,move2,move3,move4,type1,type2)); // Adiciona o Pokémon à party
+            this.party.push(new Pokemon(pokemon, currentTotalXP,move1,move2,move3,move4,type1,type2,4)); // Adiciona o Pokémon à party
             //console.log(treinador, " e ",pokemon," e ",pokemon.name)
             console.log(`${pokemon.name} foi adicionado à sua equipe!`);
         } else {

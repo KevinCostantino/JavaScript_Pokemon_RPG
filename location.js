@@ -13,6 +13,9 @@ import { restart } from './script.js';
 import { PósInitProf } from './script.js';
 import { pickTwo } from './script.js';
 import { pickEight } from './script.js';
+import { PBattle } from './Batalha.js';
+import { player } from './script.js';
+import { rival } from './script.js';
 
 
 export const locations = [
@@ -73,10 +76,10 @@ export const locations = [
 	},
 	{
 		name: "Prof_Carvalho",
-		"button text": ["Floresta"],
-		"button functions": [goStore],
+		"button text": ["Batalha rival"],
+		"button functions": [() => PBattle(player, rival)],
 		text: "",
-		img : `./Sprites/Oak-transformed.png`
+		img: `./Sprites/Oak-transformed.png`
 	},
     {
 		name: "Floresta0",
@@ -97,4 +100,5 @@ export const locations = [
 		"button functions": [goTown],
 		text: "",
 	},
+	
 ]

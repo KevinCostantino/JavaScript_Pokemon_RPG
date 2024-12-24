@@ -255,6 +255,7 @@ function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
 }
 
 function upou(Nup) {
+    console.log("OLE",player.party[Nup].name);
     player.party[Nup].name.level = player.party[Nup].name.level + 1
     console.log(player.party[Nup].name.level);
 }

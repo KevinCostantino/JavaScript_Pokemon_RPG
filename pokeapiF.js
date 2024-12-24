@@ -1,4 +1,4 @@
-import { update } from './script.js';
+import { evento, update } from './script.js';
 import { locations } from './location.js';
 import { goStore } from './script.js';
 import { Poke } from './pokeapi.js';
@@ -47,7 +47,7 @@ export async function PokemonInicial(pokemonId, aux) {
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
     const initialPokemon = await getPokemonStats(pokemonId); // Armazene o id do Pokémon
     
-    player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,4);
+    player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,initialPokemon.type1,initialPokemon.type2,4);
     console.log(player.party[0]);
 
     const initialRival = await getPokemonStats(inicialRival(player));
@@ -159,6 +159,7 @@ function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
     PBattle(player,treinadorBrock);
+    //evento()
 
 }
 

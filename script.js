@@ -2,10 +2,13 @@ import { PokemonInicial } from './pokeapiF.js';
 import Player from './player.js';
 import { askForName } from './pokeapiF.js';
 import { locations } from './location.js';
+import { PBattle } from './Batalha.js';
+
+
 
 let xp = 0;
 let health = 100;
-let gold = 50;
+let gold = 1000;
 let currentWeapon = 0;
 let fighting;
 let monterHealth;
@@ -27,6 +30,12 @@ const monsterNameText = document.querySelector("#monsterName");
 const monsterHealthText = document.querySelector("#monsterHealth");
 const rivalIMAGE = document.querySelector("#rivalSprite");
 const OakIMAGE = document.querySelector("#pokemonImage");
+//const menu = document.querySelector("#menuID");
+
+const button1S = document.querySelector("#btn1");
+const button2S = document.querySelector("#btn2");
+const button3S = document.querySelector("#btn3");
+const button4S = document.querySelector("#btn4");
 
 const weapons = [
 	{
@@ -87,6 +96,7 @@ button1.onclick = pokeapiF1;
 button2.onclick = pokeapiF4;
 button3.onclick = pokeapiF7;
 
+//button1S.onclick = goStore();
 
 //Mostrar os sprite iniciais ao clicar
 //[1, 4, 7].forEach(id => { ;
@@ -417,3 +427,87 @@ export async function PósInitProf() {
 export async function goFlorest() {
 	QuadOp(locations[11]);
 	}
+export async function evento() {
+    goldText.innerHTML = gold+200;
+    text.innerText = "Achou 200 conto karai"
+        }
+
+export async function menu() {
+    const buttonBox = document.getElementById("button-box");
+    const displayStyle = buttonBox.style.display;
+  
+    if (displayStyle === 'grid') {
+      buttonBox.style.display = 'none';
+    } else {
+      buttonBox.style.display = 'grid';
+    }
+  }
+
+  export async function troca(fh) {
+    //player.party = fh;
+    const aux = fh[0];
+    fh[0] = fh[1];
+    fh[1] = aux;
+    document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${fh[0].name.id}.png`; // URL do sprite do Pokémon escolhido
+
+
+  }
+  export async function bolsaPotion(fh) {
+//player.party[0]
+console.log("sdsdd",fh.name.hp);
+   fh.name.hp = fh.name.hp+20;
+   document.getElementById('playerPokemonHealth').innerHTML = `
+   <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
+ <p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
+`;
+
+  }
+
+  export async function captura(fh) {
+  //rival.party[0] = fh;
+  console.log("ds",player.party);
+    player.capturePokemon(player.name,fh.name,0,fh.name.level,
+        fh.moves[0], fh.moves[1], fh.moves[2], fh.moves[3],fh.NdeMov);
+        
+  }
+  export async function fugir() {
+    const buttonBox = document.getElementById("button-box");
+    const displayStyle = buttonBox.style.display;
+  
+    if (displayStyle === 'grid') {
+      buttonBox.style.display = 'none';
+    } else {
+      buttonBox.style.display = 'grid';
+    }
+  }
+  export async function S_Actions() {
+    const btn1 = document.getElementById("btn1");
+    console.log("btn1",btn1);
+    if (btn1) {
+     btn1.onclick = troca; // Garante que o evento está associado ao botão
+   } else {
+     console.error("O botão 'troca' não foi encontrado!");
+   }
+   const btn2 = document.getElementById("btn2");
+   console.log("btn2",btn2);
+   if (btn2) {
+    btn2.onclick = bolsaPotion; // Garante que o evento está associado ao botão
+  } else {
+    console.error("O botão 'bolsaPotion' não foi encontrado!");
+  }
+  const btn3 = document.getElementById("btn3");
+  console.log("btn3",btn3);
+  if (btn3) {
+    btn3.onclick = captura; // Garante que o evento está associado ao botão
+ } else {
+   console.error("O botão 'captura' não foi encontrado!");
+ }
+ const btn4 = document.getElementById("btn4");
+ console.log("btn4",btn4);
+ if (btn4) {
+    btn4.onclick = fugir; // Garante que o evento está associado ao botão
+} else {
+  console.error("O botão 'fugir' não foi encontrado!");
+}
+    
+  }
