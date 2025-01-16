@@ -1,8 +1,8 @@
 import { PokemonInicial } from './pokeapiF.js';
-import Player from './player.js';
+import Player from './Player.js';
 import { askForName } from './pokeapiF.js';
 import { locations } from './location.js';
-import { PBattle } from './Batalha.js';
+import { PBattle,updatePlayerHealth,logMessage } from './Batalha.js';
 
 
 
@@ -86,6 +86,8 @@ export const Poke2 = new Player();
 export const Poke3 = new Player();
 export const Poke4 = new Player();
 export const Poke5 = new Player();
+export const Poke6 = new Player();
+
 export const treinador1 = new Player();
 export const treinador2 = new Player();
 export const treinador3 = new Player();
@@ -443,32 +445,62 @@ export async function menu() {
     }
   }
 
-  export async function troca(fh) {
+  export async function troca(fh,playerTroca,rival) {
     //player.party = fh;
+    console.log("playerTroca:",fh[0],fh[1]);
     const aux = fh[0];
+    if (fh.length > 1) {
+    
     fh[0] = fh[1];
     fh[1] = aux;
     document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${fh[0].name.id}.png`; // URL do sprite do Pokémon escolhido
+    const divtroca = document.getElementById("controls");
+    const buttonsAtroca = divtroca.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
+    buttonsAtroca.forEach(button => button.remove()); // Remove cada botão encontrado
+    
+    //setTimeout(() => updatePlayerHealth(null, null, "player",player.party[0].name), 1500);
+    setTimeout(() => PBattle(playerTroca,rival,0), 1500);
+    console.log("playerTroca:",fh[0],fh[1]);
+    }else{
+      logMessage("Pokémon insuficientes pra trocar");
+      return;
+    }
 
 
   }
   export async function bolsaPotion(fh) {
 //player.party[0]
 console.log("sdsdd",fh.name.hp);
+ if (fh.name.hp+20 <= fh.name.TotalHP) {
    fh.name.hp = fh.name.hp+20;
    document.getElementById('playerPokemonHealth').innerHTML = `
    <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
  <p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
-`;
-
-  }
+`;}
+else{
+  fh.name.hp = fh.name.TotalHP;
+  document.getElementById('playerPokemonHealth').innerHTML = `
+  <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
+<p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
+`;}
+}
 
   export async function captura(fh) {
   //rival.party[0] = fh;
   console.log("ds",player.party);
     player.capturePokemon(player.name,fh.name,0,fh.name.level,
         fh.moves[0], fh.moves[1], fh.moves[2], fh.moves[3],fh.NdeMov);
-        
+  
+  //para adaptar a estrutura dos movimentos do npc pro player
+  //lenght é temporário, não vai funcionar quando for capturar mais de
+  //6 pokémon
+  const moves = player.party[player.party.length-1].moves;
+  const filteredMoves = moves.filter(
+    move => typeof move === "object" && move !== null && !Array.isArray(move)
+  );
+  const moveNames = filteredMoves.map(move => move.name); 
+  player.party[1].moves = moveNames;
+  console.log("Switch",moveNames);    
   }
   export async function fugir() {
     const buttonBox = document.getElementById("button-box");

@@ -8,16 +8,18 @@ class Player {
             this.party = []; // Inicializa a party como um array vazio
         }
 
-    capturePokemon(treinador,pokemon,currentTotalXP,move1,move2,move3,move4,type1,type2,NdeMov) {
+    capturePokemon(treinador,pokemon,currentTotalXP,level,move1,move2,move3,move4,type1,type2,NdeMov) {
         this.treinador = treinador;
         this.NdeMov = NdeMov
         if (this.party.length < 6) {
-            this.party.push(new Pokemon(pokemon, currentTotalXP,move1,move2,move3,move4,type1,type2,4)); // Adiciona o Pokémon à party
+            this.party.push(new Pokemon(pokemon, currentTotalXP,level,move1,move2,move3,move4,type1,type2,4)); // Adiciona o Pokémon à party
             //console.log(treinador, " e ",pokemon," e ",pokemon.name)
             console.log(`${pokemon.name} foi adicionado à sua equipe!`);
         } else {
             console.log("Sua equipe está cheia! Você precisa substituir um Pokémon.");
             this.replacePokemon(pokemon);
+            
+        
         }
     }
 

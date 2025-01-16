@@ -4,7 +4,7 @@ import { goStore } from './script.js';
 import { Poke } from './pokeapi.js';
 import { player } from './script.js';
 import { rival } from './script.js';
-import { Poke1, Poke2, Poke3, Poke4, Poke5,treinador1,treinador2,treinador3,treinadorBrock } from './script.js';
+import { Poke1, Poke2, Poke3, Poke4, Poke5,Poke6,treinador1,treinador2,treinador3,treinadorBrock } from './script.js';
 
 //import { startBattle } from './Batalha.js';
 import { getPokemonStats } from './Batalha.js';
@@ -45,33 +45,35 @@ export async function PokemonInicial(pokemonId, aux) {
     //const player = new Player();
     
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
-    const initialPokemon = await getPokemonStats(pokemonId); // Armazene o id do Pokémon
+    const initialPokemon = await getPokemonStats(pokemonId,5); // Armazene o id do Pokémon
     
     player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,initialPokemon.type1,initialPokemon.type2,4);
     console.log(player.party[0]);
 
-    const initialRival = await getPokemonStats(inicialRival(player));
+    const initialRival = await getPokemonStats(inicialRival(player),5);
     const [MR1, MR2, MR3, MR4] = MovRival(player);
     rival.capturePokemon(player.name,initialRival, 0, 5, MR1, MR2, MR3, MR4,4);    
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
     
-    async function BatalhaSetup(id) {
-        return await getPokemonStats(id)
+    async function BatalhaSetup(id,lv) {
+        return await getPokemonStats(id,lv)
     }
 
 
-    Poke1.capturePokemon("",await BatalhaSetup(10),0,getRandomInt(2,4),moves[0], moves[6], moves[7],null,3);
-    Poke2.capturePokemon("",await BatalhaSetup(13),0,getRandomInt(2,4),moves[8], moves[6], moves[7]);
-    Poke3.capturePokemon("",await BatalhaSetup(16),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
-    Poke4.capturePokemon("",await BatalhaSetup(19),0,getRandomInt(2,6),moves[0], moves[11], moves[12]);
-    Poke5.capturePokemon("",await BatalhaSetup(114),0,getRandomInt(7,8),moves[4], moves[3]);
+    Poke1.capturePokemon("",await BatalhaSetup(10,getRandomInt(2,4)),0,getRandomInt(2,4),moves[0], moves[6], moves[7],null,3);
+    Poke2.capturePokemon("",await BatalhaSetup(13,getRandomInt(2,4)),0,getRandomInt(2,4),moves[8], moves[6], moves[7]);
+    Poke3.capturePokemon("",await BatalhaSetup(16,getRandomInt(3,6)),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
+    Poke4.capturePokemon("",await BatalhaSetup(19,getRandomInt(2,6)),0,getRandomInt(2,6),moves[0], moves[11], moves[12]);
+    Poke5.capturePokemon("",await BatalhaSetup(114,getRandomInt(7,8)),0,getRandomInt(7,8),moves[4], moves[3]);
 
-    treinador1.capturePokemon("John",await BatalhaSetup(21),0,4,moves[13], moves[14], moves[15]);
-    treinador2.capturePokemon("Maria",await BatalhaSetup(23),0,6,moves[15], moves[8], moves[12]);
-    treinador3.capturePokemon("Leon",await BatalhaSetup(25),0,7,moves[16], moves[17], moves[14]);
-    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74),0,8,moves[0], moves[23], moves[24]);
-    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95),0,10,moves[1], moves[2], moves[23], moves[0]);
+    Poke6.capturePokemon("",await BatalhaSetup(74,getRandomInt(4,6)),0,getRandomInt(7,8),moves[0], moves[23]);
+
+    treinador1.capturePokemon("John",await BatalhaSetup(21,4),0,4,moves[13], moves[14], moves[15]);
+    treinador2.capturePokemon("Maria",await BatalhaSetup(23,9),0,6,moves[15], moves[8], moves[12]);
+    treinador3.capturePokemon("Leon",await BatalhaSetup(25,7),0,7,moves[16], moves[17], moves[14]);
+    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74,8),0,8,moves[0], moves[23], moves[24]);
+    treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95,10),0,10,moves[1], moves[2], moves[23], moves[0]);
     console.log(treinadorBrock.party);
 
 
@@ -158,7 +160,7 @@ function rivalF(player) {
 function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
-    PBattle(player,treinadorBrock);
+    PBattle(player,Poke6);
     //evento()
 
 }
