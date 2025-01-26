@@ -3,6 +3,7 @@ import Player from './Player.js';
 import { askForName } from './pokeapiF.js';
 import { locations } from './location.js';
 import { PBattle,updatePlayerHealth,logMessage } from './Batalha.js';
+import { options } from './Opções.js';
 
 
 
@@ -445,10 +446,15 @@ export async function menu() {
     }
   }
 
-  export async function troca(fh,playerTroca,rival) {
+  export async function troca(fh,playerTroca,rival,ajuda) {
     //player.party = fh;
-    console.log("playerTroca:",fh[0],fh[1]);
+    console.log("playerTroca antes:",fh[0],fh[1]);
+    //console.log("inimigo antes:",rival);
+    //await new Promise(resolve => setTimeout(resolve, 150000));
     const aux = fh[0];
+    const TURNO = ajuda;
+    const sla = 0
+    //await new Promise(resolve => setTimeout(resolve, 15000));
     if (fh.length > 1) {
     
     fh[0] = fh[1];
@@ -457,10 +463,10 @@ export async function menu() {
     const divtroca = document.getElementById("controls");
     const buttonsAtroca = divtroca.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
     buttonsAtroca.forEach(button => button.remove()); // Remove cada botão encontrado
-    
+
     //setTimeout(() => updatePlayerHealth(null, null, "player",player.party[0].name), 1500);
-    setTimeout(() => PBattle(playerTroca,rival,0), 1500);
-    console.log("playerTroca:",fh[0],fh[1]);
+    setTimeout(() => PBattle(playerTroca,rival,0,TURNO,sla), 1500);
+    console.log("playerTroca depois:",fh[0],fh[1]);
     }else{
       logMessage("Pokémon insuficientes pra trocar");
       return;
@@ -468,8 +474,8 @@ export async function menu() {
 
 
   }
-  export async function bolsaPotion(fh) {
-//player.party[0]
+export async function bolsaPotion(fh) {
+    //player.party[0]
 console.log("sdsdd",fh.name.hp);
  if (fh.name.hp+20 <= fh.name.TotalHP) {
    fh.name.hp = fh.name.hp+20;
@@ -543,3 +549,5 @@ else{
 }
     
   }
+
+  

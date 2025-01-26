@@ -47,7 +47,7 @@ export async function PokemonInicial(pokemonId, aux) {
     //const initialPokemon = { name: pokemonName, level: 5, id: pokemonId }; // Armazene o id do Pokémon
     const initialPokemon = await getPokemonStats(pokemonId,5); // Armazene o id do Pokémon
     
-    player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,initialPokemon.type1,initialPokemon.type2,4);
+    player.capturePokemon(player.name,initialPokemon,0,5,M1, M2, M3, M4,initialPokemon.type1,initialPokemon.type2,null,null,4);
     console.log(player.party[0]);
 
     const initialRival = await getPokemonStats(inicialRival(player),5);
@@ -75,6 +75,8 @@ export async function PokemonInicial(pokemonId, aux) {
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74,8),0,8,moves[0], moves[23], moves[24]);
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95,10),0,10,moves[1], moves[2], moves[23], moves[0]);
     console.log(treinadorBrock.party);
+    console.log(Poke6.party);
+
 
 
     console.log(rival.party[0]);

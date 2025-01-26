@@ -1,10 +1,13 @@
 import { endBattleF } from './pokeapiF.js'; 
 import { XPDX } from './XPf.js';
 import { getXPGrowthRate } from './XPf.js';
+import { options } from './Opções.js';
 import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
-import { menu, goStore,player,captura, troca, bolsaPotion } from './script.js';
+import { menu} from './script.js';
 
+//btn2.addEventListener("click", () => exampleUsage("btn2"));
+btn2.addEventListener("click", () => console.log("OSJDODJ"));
 
 
 
@@ -83,7 +86,11 @@ export async function getPokemonStats(pokemonId,nível) {
     // Função para buscar detalhes de um movimento específico
 export async function getMoveDetails(moveName) {
       try {
-        //console.log(`Buscando detalhes do movimentodS: ${moveName}`);
+        console.log(`Buscando detalhes do movimentodS: ${moveName}`);
+        if (moveName == "[object Object]") {
+          console.log("Objeto");
+          return null;
+        }
         const response = await fetch(`https://pokeapi.co/api/v2/move/${moveName}`);
         const data = await response.json();
         return {
@@ -133,21 +140,9 @@ async function getTypeMultiplier(moveType, defenderTypes) {
     }
 
     // Função para calcular dano
-async function calculateDamage(attacker, defender, move,turnoAtual) {
-     console.log("move",move);
-     if (move == ("btn1"||"btn2"||"btn3")) {
-      console.log("HUH?",move.name);
-      if (move.name === "btn2" || "btn3") {
-        logMessage(`Turno ${turnoAtual}:`);
-        logMessage(`${LetraM1(attacker.name.name)} curou ou capturou!`);
-        return { damage: 0 };
-      }
-      else {
-      logMessage(`Turno ${turnoAtual}:`);
-      logMessage(`${LetraM1(attacker.name.name)} trocou!`);
-      return { damage: 0 };
-      }
-    } 
+export async function calculateDamage(attacker, defender, move,turnoAtual) {
+    console.log("move",move,attacker.name.name);
+    console.log("move",move.isStatus,attacker.name.name);
       if (move.isStatus) 
         {
         if (move.name === 'splash') {
@@ -172,8 +167,11 @@ async function calculateDamage(attacker, defender, move,turnoAtual) {
           return { damage: 0, effect: move.name + ' não causa dano direto.' };
         }
       }
+      else{
+        console.log("ok",move);
+      }
+      
       async function TotalDamageAndClass(move, attacker, defender) {
-        if (move != ("btn1"||"btn2"||"btn3")) {
           const basePower = move.power;
           const critical = Math.random() < 0.042 ? 1.5 : 1; // Crítico
           const randomFactor = Math.random() * (1 - 0.85) + 0.85; // Aleatório entre 0.85 e 1.00
@@ -207,7 +205,7 @@ async function calculateDamage(attacker, defender, move,turnoAtual) {
             default:
                 throw new Error(`Unknown damage class: ${move.damage_class}`);
         }
-    }else{return [0, 1];}        }
+           }
     
 
 const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, defender);
@@ -225,19 +223,7 @@ const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, 
     if (typeMultiplier === 0) effectivenessMessage = 'Não teve efeito.';
     //console.log("hsdh",LetraM1(move.name))
 
-  if (move.damage_class === undefined) {
-    console.log("HUH?",move.name);
-    if (move.name === "btn2" || "btn3") {
-      logMessage(`Turno ${turnoAtual}:`);
-      logMessage(`${LetraM1(attacker.name.name)} curou ou capturou!`);
-      return { damage: 0 };
-    }
-    else {
-    logMessage(`Turno ${turnoAtual}:`);
-    logMessage(`${LetraM1(attacker.name.name)} trocou!`);
-    return { damage: 0 };
-    }
-  }
+
     logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}! Causou ${totalDamage} de dano! ${effectivenessMessage}`);
     return { damage: totalDamage };
       }  
@@ -259,8 +245,9 @@ function clearLog() {
       log.style.display = 'none'; // Opcional: Esconde o log novamente
     }
     // Função para mostrar o status dos Pokémon 
-function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante,opponentLV) {
-    
+export function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante,opponentLV) {
+  //btn1.removeEventListener("click", handleBtn1Click);
+
           const status = document.getElementById('status');
           status.style.display = 'block';
           //opponent.level=opponentLV
@@ -498,8 +485,15 @@ function removeAllButtons() {
 
 
     // Função de batalha
-export async function PBattle(player, rival,auxo) {
-  console.log("rival.party[0]: e player.party[0]",rival,player);
+export async function PBattle(player, rival,auxo,TURNO,sla) {
+  let turnoAtual
+
+if (TURNO != undefined) {
+  turnoAtual = TURNO; // Controla o número do turno
+}else{
+   turnoAtual = 1; // Controla o número do turno
+}
+      
       //var AM = 1; //Adapatador de movimento
       //(rivalSprite).style.display = "block";
       clearLog(); // Limpa o log após 5 segundos
@@ -510,7 +504,6 @@ export async function PBattle(player, rival,auxo) {
       document.getElementById('pokemonImage').style.display = 'none';
 
       removeAllButtons();
-
       updatePlayerHealth(player.party[0].name, null, "rival", rival.party[0].name)
       updateRivalHealth(null, null, "rival",rival.party[0].name)
 
@@ -539,61 +532,45 @@ export async function PBattle(player, rival,auxo) {
          } else {
            console.error("O botão 'menu' não foi encontrado!");
          }
-
          const btn1 = document.getElementById("btn1");
          const btn2 = document.getElementById("btn2");
          const btn3 = document.getElementById("btn3");
-         var AM = 1; //Adapatador de movimento
-         if (btn3) {
-          btn3.onclick = () => captura(rival.party[0]); // Chama a função captura
-
-          btn3.addEventListener("click", () => {
-            const a = player.party.length; // Calcula o comprimento da party no momento do clique
-            console.log("dsSF", player.party[a - 1].name); // Exibe o nome do Pokémon recém-adicionado
-            
-            setTimeout(() => {rival.party[0].moves = movimentosEnemyDebug;}, 100)
-         })
-         btn3.addEventListener("click", () => exampleUsage("btn3")
-        );
-         exampleUsage("btn3");
-
-        }
-          else {
-           console.error("O botão 'menu' não foi encontrado!");
-         }
-         if (btn2) {
-          btn2.onclick = () => bolsaPotion(player.party[0]); // Chama a função captura
-
-          // Associa a função 'bolsaPotion' ao evento de clique
-          //btn2.addEventListener("click", () => bolsaPotion(player.party[0]));
         
-          // Associa a função 'updatePlayerHealth' ao evento de clique
-          btn2.addEventListener("click", () => updatePlayerHealth(player.party[0].name, null, "rival", rival.party[0].name));
 
-          btn2.addEventListener("click", () => exampleUsage("btn2"));
-          setTimeout(() => {}, 100)
-          exampleUsage("btn2");
+         const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
+         const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
+         const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
 
-        } else {
-          console.error("O botão btn2 não foi encontrado!");
-        }
-        
-         if (btn1) {
-          //btn1.addEventListener("click", () => exampleUsage("btn1"));
-          btn1.onclick = () => troca(player.party,player, rival); // Função anônima garante que 'captura' será chamada apenas no clique
-          setTimeout(() => {}, 100)
-          btn1.addEventListener("click", () => AM = 0);
-          btn1.addEventListener("click", () => exampleUsage("btn1"));
-          exampleUsage("btn1");
+         btn1.removeEventListener("click", handleBtn1Click);
+         btn2.removeEventListener("click", handleBtn2Click);
+         btn3.removeEventListener("click", handleBtn3Click);
+         
+         //var AM = 1; //Adapatador de movimento
+         let handleBtn1ClickAdded = sla;
+         let handleBtn2ClickAdded = sla;
 
-        } else {
-          console.error("O botão 'menu' não foi encontrado!");
-        }
+         if (handleBtn1ClickAdded == undefined) {
+           btn1.addEventListener("click", handleBtn1Click);
+           handleBtn1ClickAdded = undefined;
+         }    
+
+         if (handleBtn2ClickAdded == undefined) {
+          btn2.addEventListener("click", handleBtn2Click);
+          handleBtn2ClickAdded = undefined;
+        }       
+        btn3.addEventListener("click", handleBtn3Click);
+
+         btn1.addEventListener("click", () => turnoAtual++);
+         btn2.addEventListener("click", () => turnoAtual++);
+         btn3.addEventListener("click", () => turnoAtual++);
+
+
         if (aux === 0) {
-          aux = 25;
-          console.log("TurnoOOOO")
-          console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
-          turnoAtual++;
+          //aux = 25;
+          //console.log("TurnoOOOO")
+          //console.log(`ATurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+          //turnoAtual++;
+
         }
 
 
@@ -617,14 +594,16 @@ export async function PBattle(player, rival,auxo) {
           
 
         }
-        if (AM === 1 && (auxo === 1 || auxo === undefined)) {
+if (auxo === undefined) {
           //console.log("Analisando movimentos do "+rival.party[0].name.name+" rival");
 rival.party[0].moves = await Promise.all(
   rival.party[0].moves.slice(0, 4) // Limita a 4 movimentos
     .filter(moveName => moveName != null) // Filtra movimentos nulos
     .map(async moveName => await getMoveDetails(moveName)) // Busca os detalhes dos movimentos
 );
-        }
+}
+console.log("1 rival.party[0]: e player.party[0]",rival,player);
+//await new Promise(resolve => setTimeout(resolve, 15000));   
 
 
 
@@ -645,12 +624,13 @@ rival.party[0].moves = await Promise.all(
         console.log(player);
         const button = document.createElement('button');
         button.textContent = formatString(move.name);
+        //button.removeEventListener('click', () => playerTurn(index));
         button.addEventListener('click', () => playerTurn(index));
         controls.appendChild(button);
       });
       
 
-      let turnoAtual = 1; // Controla o número do turno
+      
       async function playerTurn(choice) {
         if (isBattleOver()) return; // Verifica se a batalha já acabou
 
@@ -696,6 +676,7 @@ rival.party[0].moves = await Promise.all(
           // Verifica se a batalha não acabou, então o rival ataca
           if (!isBattleOver()) {
             const rivalMove = getRandomMove(rival.party[0]);
+
             const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
             //dano = resultRival.damage;
             //vidaAntigaP = resultRival.vidaAntiga;
@@ -712,6 +693,7 @@ rival.party[0].moves = await Promise.all(
           console.log("rival.party[0]: e player.party[0]",rival.party[0],player.party[0]);
           console.log("Rival ataca primeiro");
           const rivalMove = getRandomMove(rival.party[0]);
+
           const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
           //dano = result.damage;
           //vidaAntigaP = result.vidaAntiga;
@@ -722,6 +704,7 @@ rival.party[0].moves = await Promise.all(
         
           // Verifica se a batalha não acabou, então o jogador ataca
           if (!isBattleOver()) {
+
             const dano = await executeAttack(player.party[0], rival.party[0], playerMove);
             //dano = resultPlayer.damage;
             //vidaAntigaO = resultPlayer.vidaAntiga;
@@ -736,14 +719,16 @@ rival.party[0].moves = await Promise.all(
         }
 
         // Aumenta o turno para a próxima rodada
-        console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+        console.log(`BTurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
         turnoAtual++;
         
         // Verifica o status da batalha no final do turno
         checkBattleStatus();
       }
       
-      async function executeAttack(attacker, defender, move) {
+        async function executeAttack(attacker, defender, move) {
+        //console.log("move",move,attacker);
+
         const { damage } = await calculateDamage(attacker, defender, move,turnoAtual);
         //const vidaAntiga = defender.name.hp;
         defender.name.hp -= damage;
@@ -771,7 +756,10 @@ rival.party[0].moves = await Promise.all(
             
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
-
+            
+            
+            //const reserva = player.party[0];
+            auxo = undefined; //sim isso envolve a troca de poke do rival
             rival.party[0] = rival.party[1];
             rival.party[1] = null;
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
@@ -784,8 +772,12 @@ rival.party[0].moves = await Promise.all(
 
             setTimeout(() => updateRivalHealth(null, null, "rival",rival.party[0].name), 1500);
             rival.party.pop();
-            AM = 1; //Adapatador de movimento
-            setTimeout(() => PBattle(player,rival), 1500);
+            //AM = 1; //Adapatador de movimento
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);
+
+            setTimeout(() => PBattle(player,rival,undefined,turnoAtual,0), 1500);
             
           }
           else{
@@ -817,19 +809,25 @@ function endBattle(winner) {
         const message = winner === 'player' ? 'Você venceu!' : 'Você perdeu!';
         console.log(message);
         alert(message);
-
+        //removeListener();        
         // Chama a função de finalização com base no vencedor
         if (winner === 'player') {
+          turnoAtual = 1
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;            
           }
-            
+          btn1.removeEventListener("click", handleBtn1Click);
+          btn2.removeEventListener("click", handleBtn2Click);
+          btn3.removeEventListener("click", handleBtn3Click);          
             //player.party[1].name.hp = player.party[1].name.TotalHP;
             endBattleF(0); // Finalização para jogador
         } else {
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;
           }
+          btn1.removeEventListener("click", handleBtn1Click);
+          btn2.removeEventListener("click", handleBtn2Click);
+          btn3.removeEventListener("click", handleBtn3Click);
             endBattleF(1); // Finalização para rival
         }
     }, 1000);
@@ -840,82 +838,14 @@ function endBattle(winner) {
         document.getElementById('pokeLv').innerHTML = 
         `<p><strong>Lv.${PokeP.level}</strong></p>
          `;
+        
+            }      
+
+
 }
 
-async function exampleUsage(he) {
-  console.log("Aguardando clique no botão btn1...");
-  setTimeout(() => {}, 100)
-  if (he === "btn1") {
-  await waitForClick("btn1"); // Aguarda o clique no botão btn1
-  console.log("Botão btn1 clicado! Agora a próxima ação será liberada.");
-  } else if (he === "btn2") {
-  await waitForClick("btn2"); // Aguarda o clique no botão btn2
-  console.log("Botão btn2 clicado! Agora a próxima ação será liberada.");
-  } else if (he === "btn3") {
-  await waitForClick("btn3"); // Aguarda o clique no botão btn3
-  console.log("Botão btn3 clicado! Agora a próxima ação será liberada.");
-  }
-  // Ação a ser executada após o clique
-  console.log("Ação executada!");
-  resolveTurn(he); // Substitua por sua lógica
-} 
 
-    }      
 
-// Função que aguarda o clique no botão btn1
-function waitForClick(buttonId) {
-  return new Promise((resolve) => {
-    const button = document.getElementById(buttonId);
-    if (!button) {
-      console.error(`Botão com ID "${buttonId}" não encontrado!`);
-      return;
-    }
 
-    // Adiciona um evento de clique que resolve a Promise
-    const handleClick = () => {
-      button.removeEventListener("click", handleClick); // Remove o listener após o clique
-      resolve(); // Libera a execução
-    };
 
-    button.addEventListener("click", handleClick);
-  });
-}
 
-async function resolveTurnoSideReason() { //para quando o jogador 
-// faz uma ação q não é escolher um movimento 
-// fazendo ele perder o turno
-  
-          // Rival ataca primeiro
-          console.log("rival.party[0]: e player.party[0]",rival.party[0],player.party[0]);
-          console.log("Rival ataca primeiro");
-          const rivalMove = getRandomMove(rival.party[0]);
-          const dano = await executeAttack(rival.party[0], player.party[0], rivalMove);
-          //dano = result.damage;
-          //vidaAntigaP = result.vidaAntiga;
-          atacante = "rival";
-        
-          // Atualiza o status após o ataque do rival
-          updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
-        
-          // Verifica se a batalha não acabou, então o jogador ataca
-          if (!isBattleOver()) {
-            const dano = await executeAttack(player.party[0], rival.party[0], playerMove);
-            //dano = resultPlayer.damage;
-            //vidaAntigaO = resultPlayer.vidaAntiga;
-            
-
-            atacante = "player";
-        
-            // Atualiza o status após o ataque do jogador
-
-            updateStatus(player.party[0].name, rival.party[0].name, dano, vidaAntigaP,vidaAntigaO,atacante);      // Atualize o status no início
-          }
-        
-
-        // Aumenta o turno para a próxima rodada
-        console.log(`Turno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
-        turnoAtual++;
-        
-        // Verifica o status da batalha no final do turno
-        checkBattleStatus();
-}

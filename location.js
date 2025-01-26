@@ -18,6 +18,8 @@ import { player } from './script.js';
 import { rival } from './script.js';
 
 
+
+
 export const locations = [
     {
         name: "town square",
