@@ -1,4 +1,4 @@
-import {captura, troca, bolsaPotion } from './script.js';
+import {captura, troca, bolsaPotion, trocatela } from './script.js';
 import './Batalha.js';
 import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha.js';
 import { endBattleF } from './pokeapiF.js'; 
@@ -6,24 +6,35 @@ import { endBattleF } from './pokeapiF.js';
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
+
 const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
+const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
+const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
+
+
 const oioioi = 0
 
 export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
-
   //player = player.party[0]
   //rival = rival.party[0]
+const P2 = document.getElementById("P2");
+const P3 = document.getElementById("P3");
+const P4 = document.getElementById("P4");
+const P5 = document.getElementById("P5");
+const P6 = document.getElementById("P6");
+  console.log("OI",btn,P2)
   let vidaAntigaP = player.name.hp;
   let vidaAntigaO = rival.name.hp;
 
          var AM = 1; //Adapatador de movimento
          
+         console.log("merda",btn)
 
          if (btn == btn3) {
           captura(rival); // Chama a função captura
-
+          console.log("ada",playerOG.party[5])
             const a = playerOG.party.length; // Calcula o comprimento da party no momento do clique
-            console.log("dsSF", playerOG.party[a - 1].name); // Exibe o nome do Pokémon recém-adicionado
+            //console.log("dsSF", playerOG.party[a - 1].name); // Exibe o nome do Pokémon recém-adicionado
 
             setTimeout(() => { }, 1000); // 1 segundo de cooldown
         logMessage(`Turno ${turnoAtual}:`);
@@ -42,7 +53,6 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
 
           // Associa a função 'updatePlayerHealth' ao evento de clique
           updatePlayerHealth(player.name, null, "rival", rival.name);
-          console.log("OPA 0: ");
 
             setTimeout(() => { }, 1000); // 1 segundo de cooldown
           
@@ -51,54 +61,60 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
           console.log("curou");
           //return { damage: 0 };
           exampleUsage("btn2");
-          console.log("OPA 2: ");
         }  
          else if (btn == btn1) {
-          console.log("MERDA",rival)
+          //console.log("MERDA",rival)
     // Remover o evento de clique para evitar a duplicação da função
           //btn1.addEventListener("click", () => exampleUsage("btn1"));
-          console.log("OPA 3: ");
           const ajuda = turnoAtual;
-          troca(playerOG.party,playerOG, rivalOG,ajuda); // Função anônima garante que 'captura' será chamada apenas no clique
-          
+          //troca(playerOG.party,playerOG, rivalOG,ajuda); // Função anônima garante que 'captura' será chamada apenas no clique
+          trocatela();
           setTimeout(() => {}, 100)
           AM = 0;
-
-          exampleUsage("btn1");
+        }else if ([P2, P3, P4, P5, P6].includes(btn))  {
+          console.log("merda",btn)
+          const id = btn.id; // Supondo que btn tenha um ID como "P2", "P3", etc.
+          const numero = Number(id.slice(1)); // Extrai o número e converte para número          exampleUsage("btn1");
+          const pokemonButtons = [P2, P3, P4, P5, P6];
+          if (pokemonButtons.includes(btn)) {
+            const index = pokemonButtons.indexOf(btn);
+            console.log(playerOG.party[numero])
+            troca(playerOG.party, numero-1, rivalOG, turnoAtual);
+          }
+          
           logMessage(`Turno ${turnoAtual}:`);
           logMessage(`${LetraM1(player.name.name)} trocou!`);
           turnoAtual = turnoAtual + 1;
         } else {
-          console.error("O botão 'menu' não foi encontrado!");
+          console.error("O botão não foi encontrado!");
         }
 
 
   
 
   async function exampleUsage(he) {
-    console.log("OPA 10");
   
     console.log("Aguardando clique no botão"+he+"...");
-    console.log(he);
+    //console.log(he);
     setTimeout(() => {}, 1000)
     if (he === "btn1" || he === btn1) {
     he = "btn1"
-    console.log("...");
+    //console.log("...");
     await waitForClick(he); // Aguarda o clique no botão btn1
-    console.log("Botão btn1 clicado! Agora a próxima ação será liberada.");
+    //console.log("Botão btn1 clicado! Agora a próxima ação será liberada.");
     } else if (he === "btn2" || he === btn2) {
     he = "btn2"
-    console.log("...");
+    //console.log("...");
     await waitForClick(he); // Aguarda o clique no botão btn2
-    console.log("Botão btn2 clicado! Agora a próxima ação será liberada.");
+    //console.log("Botão btn2 clicado! Agora a próxima ação será liberada.");
     } else if (he === "btn3" || he === btn3) {
     he = "btn3"
-    console.log("...");
+    //console.log("...");
     await waitForClick(he); // Aguarda o clique no botão bt)3
-    console.log("Botão btn3 clicado! Agora a próxima ação será liberada.");
+    //console.log("Botão btn3 clicado! Agora a próxima ação será liberada.");
     }
     // Ação a ser executada após o clique
-    console.log("Ação executada!");
+    //console.log("Ação executada!");
 
     resolveTurn(he); // Substitua por sua lógica
   } 
@@ -125,16 +141,15 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
     return new Promise((resolve) => {
       const button = document.getElementById(buttonId);
       if (!button) {
-        console.error(`Botão com ID "${buttonId}" não encontrado!`);
+        //console.error(`Botão com ID "${buttonId}" não encontrado!`);
         return;
       }
       else if(button){
-        console.log(`Botão com ID "${buttonId}" encontrado!`);
+        //console.log(`Botão com ID "${buttonId}" encontrado!`);
       }
       // Adiciona um evento de clique que resolve a Promise
       const handleClick = () => {
         button.removeEventListener("click", handleClick); // Remove o listener após o clique
-        console.log(`ois`);
         resolve(); // Libera a execução
       };
       handleClick();
@@ -148,14 +163,14 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
     if (isBattleOver()) return; // Verifica novamente se a batalha já acabou
   
     const playerSpeed = player.name.extra.stats.Speed;
-    console.log(playerSpeed);
+    //console.log(playerSpeed);
     const rivalSpeed = rival.name.extra.stats.Speed;
   
     //let dano, vidaAntiga, atacante;
     let vidaAntiga, atacante;
 
       // Jogador age primeiro já que botão tem prioridade
-      console.log("Jogador ataca primeiroS");
+      console.log("Jogador ataca primeiro");
       // Executa o ataque do jogador
       const dano = 0;
       //dano = result.damage;
@@ -187,8 +202,8 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
     
 
     // Aumenta o turno para a próxima rodada
-    console.log(`BTurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
-    console.log("Paerty ",playerOG);
+    //console.log(`BTurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+    //console.log("Paerty ",playerOG);
     turnoAtual++;
     
     // Verifica o status da batalha no final do turno
@@ -221,16 +236,16 @@ export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
           } else if (rival.name.hp <= 0) {
   
            
-          console.log("rival.party.length:",rival.party.length);
+          //console.log("rival.party.length:",rival.party.length);
             if (rival.party.length > 1) {
               
               XPDX(player.name.currentXP,player.name.levelType,rival.name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
-              console.log("rival.party[0]:",rival,player);
+              //console.log("rival.party[0]:",rival,player);
   
               //const reserva = player.party[0];
               rivalOG.party[0] = rivalOG.party[1];
               rivalOG.party[1] = null;
-              console.log("rival.party[0]:",rivalOG.party[0],playerOG.party[0]);
+              //console.log("rival.party[0]:",rivalOG.party[0],playerOG.party[0]);
   
               const div = document.getElementById("controls");
               const buttonsA = div.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>

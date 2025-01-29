@@ -7,7 +7,7 @@ import { Pokemon } from './Pokémon.js'
 import { menu} from './script.js';
 
 //btn2.addEventListener("click", () => exampleUsage("btn2"));
-btn2.addEventListener("click", () => console.log("OSJDODJ"));
+//btn2.addEventListener("click", () => console.log("OSJDODJ"));
 
 
 
@@ -86,7 +86,7 @@ export async function getPokemonStats(pokemonId,nível) {
     // Função para buscar detalhes de um movimento específico
 export async function getMoveDetails(moveName) {
       try {
-        console.log(`Buscando detalhes do movimentodS: ${moveName}`);
+        //console.log(`Buscando detalhes do movimentodS: ${moveName}`);
         if (moveName == "[object Object]") {
           console.log("Objeto");
           return null;
@@ -488,12 +488,19 @@ function removeAllButtons() {
 export async function PBattle(player, rival,auxo,TURNO,sla) {
   let turnoAtual
 
+
 if (TURNO != undefined) {
   turnoAtual = TURNO; // Controla o número do turno
 }else{
    turnoAtual = 1; // Controla o número do turno
 }
-      
+    //Deixar o ícone do Pokémon ativo desabilitado
+     let buttonP1 = document.getElementById("P1")
+     buttonP1.disabled = true;
+     buttonP1.cursor = "not-allowed";
+     buttonP1.style.pointerEvents = "none";
+     buttonP1.style.backgroundColor ="#105913";
+
       //var AM = 1; //Adapatador de movimento
       //(rivalSprite).style.display = "block";
       clearLog(); // Limpa o log após 5 segundos
@@ -504,6 +511,7 @@ if (TURNO != undefined) {
       document.getElementById('pokemonImage').style.display = 'none';
 
       removeAllButtons();
+      console.log("42",player.party)
       updatePlayerHealth(player.party[0].name, null, "rival", rival.party[0].name)
       updateRivalHealth(null, null, "rival",rival.party[0].name)
 
@@ -535,7 +543,6 @@ if (TURNO != undefined) {
          const btn1 = document.getElementById("btn1");
          const btn2 = document.getElementById("btn2");
          const btn3 = document.getElementById("btn3");
-        
 
          const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
          const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
@@ -548,21 +555,73 @@ if (TURNO != undefined) {
          //var AM = 1; //Adapatador de movimento
          let handleBtn1ClickAdded = sla;
          let handleBtn2ClickAdded = sla;
-
+         let handleBtn3ClickAdded = sla;
+         console.log("wtf",1);
          if (handleBtn1ClickAdded == undefined) {
+          console.log("wtf",3);
            btn1.addEventListener("click", handleBtn1Click);
            handleBtn1ClickAdded = undefined;
          }    
 
          if (handleBtn2ClickAdded == undefined) {
+          console.log("wtf",4);
           btn2.addEventListener("click", handleBtn2Click);
           handleBtn2ClickAdded = undefined;
         }       
-        btn3.addEventListener("click", handleBtn3Click);
+        if (handleBtn3ClickAdded == undefined) {
+          console.log("wtf",5);
+          btn3.addEventListener("click", handleBtn3Click);
+          handleBtn3ClickAdded = undefined;
+        } 
+        btn1.addEventListener("click", () => console.log(player.party.length))
+         if (player.party.length > 1) {
+          const handleP2Click = () => options(P2, turnoAtual, player.party[0], rival.party[0], player, rival);
+          const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
+          const handleP4Click = () => options(P4, turnoAtual, player.party[0], rival.party[0], player, rival);
+          const handleP5Click = () => options(P5, turnoAtual, player.party[0], rival.party[0], player, rival);
+          const handleP6Click = () => options(P6, turnoAtual, player.party[0], rival.party[0], player, rival);
 
-         btn1.addEventListener("click", () => turnoAtual++);
+          const P2 = document.getElementById("P2");
+          const P3 = document.getElementById("P3");
+          const P4 = document.getElementById("P4");
+          const P5 = document.getElementById("P5");
+          const P6 = document.getElementById("P6");
+          console.log("wtf",player.party.length);
+          if (P2 && sla == undefined) {
+            P2.removeEventListener("click", handleP2Click);
+            P2.removeEventListener("click", () => turnoAtual++);
+            P2.addEventListener("click", handleP2Click);
+            P2.addEventListener("click", () => turnoAtual++);
+          }
+          if (player.party.length > 2 && P3 && sla == undefined) {
+            P3.removeEventListener("click", handleP3Click);
+            P3.removeEventListener("click", () => turnoAtual++);
+            P3.addEventListener("click", handleP3Click);
+            P3.addEventListener("click", () => turnoAtual++);
+          if (player.party.length > 3 && P4 && sla == undefined) {
+            P4.removeEventListener("click", handleP4Click);
+            P4.removeEventListener("click", () => turnoAtual++);
+            P4.addEventListener("click", handleP4Click);
+            P4.addEventListener("click", () => turnoAtual++);
+          if (player.party.length > 4 && P5 && sla == undefined) {
+            P5.removeEventListener("click", handleP5Click);
+            P5.removeEventListener("click", () => turnoAtual++);
+            P5.addEventListener("click", handleP5Click);
+            P5.addEventListener("click", () => turnoAtual++);
+          if (player.party.length > 5 && P6 && sla == undefined) {
+            P6.removeEventListener("click", handleP6Click);
+            P6.removeEventListener("click", () => turnoAtual++);
+            P6.addEventListener("click", handleP6Click);
+            P6.addEventListener("click", () => turnoAtual++);
+          }
+          }
+          }
+         }
+        }
+
          btn2.addEventListener("click", () => turnoAtual++);
          btn3.addEventListener("click", () => turnoAtual++);
+         console.log("wtf",2);
 
 
         if (aux === 0) {
@@ -583,17 +642,17 @@ if (TURNO != undefined) {
 
         const movim = [];  // Cria o array para armazenar os detalhes dos movimentos
         const sd = []; // Declara e inicializa o array `a` vazio
-        console.log("hetero");
         for (let index = 0; index < player.party[0].moves.length; index++) {
           //console.log(":V",player.party[0])
           //console.log("A",player.party[0].moves[index])
 
           sd[index] = player.party[0].moves[index]
-          //console.log(":Q",player.party[0].moves[index])
+          console.log(":Q",player.party[0].moves[index])
           sd[index]= await getMoveDetails(sd[index]);
           
 
         }
+
 if (auxo === undefined) {
           //console.log("Analisando movimentos do "+rival.party[0].name.name+" rival");
 rival.party[0].moves = await Promise.all(
@@ -773,9 +832,9 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             setTimeout(() => updateRivalHealth(null, null, "rival",rival.party[0].name), 1500);
             rival.party.pop();
             //AM = 1; //Adapatador de movimento
-            btn1.removeEventListener("click", handleBtn1Click);
-            btn2.removeEventListener("click", handleBtn2Click);
-            btn3.removeEventListener("click", handleBtn3Click);
+            //btn1.removeEventListener("click", handleBtn1Click);
+            //btn2.removeEventListener("click", handleBtn2Click);
+            //btn3.removeEventListener("click", handleBtn3Click);
 
             setTimeout(() => PBattle(player,rival,undefined,turnoAtual,0), 1500);
             

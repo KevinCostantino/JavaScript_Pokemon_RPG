@@ -199,7 +199,7 @@ function calculateLevel(currentXP, gainedXP, levelType, level) {
     // Pega os valores da tabela para o nível atual e o próximo
     const currentLevelXP = table[level.toString()];
     const nextLevelXP = table[(level + 1).toString()];
-   console.log('faf',gainedXP)
+   //console.log('faf',gainedXP)
     // Verifica se a experiência acumulada ultrapassa o próximo nível
     if (newXP >= currentLevelXP) {
         // Aumenta o nível e continua recursivamente
@@ -255,9 +255,9 @@ function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
 }
 
 function upou(Nup) {
-    console.log("OLE",player.party[Nup].name);
+    //console.log("OLE",player.party[Nup].name);
     player.party[Nup].name.level = player.party[Nup].name.level + 1
-    console.log(player.party[Nup].name.level);
+    //console.log(player.party[Nup].name.level);
 }
 // Testando com valores de exemplo
 //const levelType = 'T_Fast'; // Tipo da tabela de experiência

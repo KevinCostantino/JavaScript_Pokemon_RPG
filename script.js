@@ -407,7 +407,6 @@ export async function IMFREE(A, elementId,a) {
 
 export async function PósInitB(a) {
 	document.getElementById('pokemonImage').style.display = 'block'
-console.log("sfsf");
 	update(locations[8]);
 
 	rivalIMAGE.innerHTML = `<img src="Sprites/Green-transformed.png" />`;
@@ -445,38 +444,52 @@ export async function menu() {
       buttonBox.style.display = 'grid';
     }
   }
+  export async function trocatela() {
+    const party = document.getElementById("party");
+    const displayStyle = party.style.display;
+  
+    if (displayStyle === 'grid') {
+      party.style.display = 'none';
+    } else {
+      party.style.display = 'grid';
+    }
+  }
+
 
   export async function troca(fh,playerTroca,rival,ajuda) {
     //player.party = fh;
-    console.log("playerTroca antes:",fh[0],fh[1]);
+    console.log("playerTroca antes:",fh[0],fh[playerTroca]);
     //console.log("inimigo antes:",rival);
     //await new Promise(resolve => setTimeout(resolve, 150000));
     const aux = fh[0];
     const TURNO = ajuda;
     const sla = 0
+
+    console.log("afaa",fh[0],fh[playerTroca])
     //await new Promise(resolve => setTimeout(resolve, 15000));
     if (fh.length > 1) {
     
-    fh[0] = fh[1];
-    fh[1] = aux;
+    fh[0] = fh[playerTroca];
+    fh[playerTroca] = aux;
     document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${fh[0].name.id}.png`; // URL do sprite do Pokémon escolhido
     const divtroca = document.getElementById("controls");
     const buttonsAtroca = divtroca.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
     buttonsAtroca.forEach(button => button.remove()); // Remove cada botão encontrado
-
+console.log(playerTroca)
     //setTimeout(() => updatePlayerHealth(null, null, "player",player.party[0].name), 1500);
-    setTimeout(() => PBattle(playerTroca,rival,0,TURNO,sla), 1500);
-    console.log("playerTroca depois:",fh[0],fh[1]);
+
+    setTimeout(() => PBattle(player,rival,0,TURNO,sla), 1500);
+
+    SwapIcons(fh[0],fh[playerTroca],1,playerTroca+1);
+    console.log("playerTroca depois:",fh[0],fh[playerTroca]);
     }else{
       logMessage("Pokémon insuficientes pra trocar");
       return;
     }
-
-
   }
 export async function bolsaPotion(fh) {
     //player.party[0]
-console.log("sdsdd",fh.name.hp);
+console.log("wtf",fh.name.hp);
  if (fh.name.hp+20 <= fh.name.TotalHP) {
    fh.name.hp = fh.name.hp+20;
    document.getElementById('playerPokemonHealth').innerHTML = `
@@ -493,20 +506,44 @@ else{
 
   export async function captura(fh) {
   //rival.party[0] = fh;
-  console.log("ds",player.party);
-    player.capturePokemon(player.name,fh.name,0,fh.name.level,
+
+  console.log("ds",);
+  console.log(player.party[5]); //!!
+
+    let verificaMaisQueSeis = player.capturePokemon(player.name,fh.name,0,fh.name.level,
         fh.moves[0], fh.moves[1], fh.moves[2], fh.moves[3],fh.NdeMov);
-  
+let ajudador = player.party.length;
+let pokeText = document.getElementById("PokeN°Text");
+let images = pokeText.getElementsByTagName("img");
+
+  console.log(verificaMaisQueSeis)
+if (verificaMaisQueSeis == undefined) {
+  document.getElementById("PokeN°Text").innerHTML += 
+  `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg" 
+        style="width: 3%; height: auto;" alt="${player.party[ajudador - 1].name.name}">`;
+    
+  insertIcon(fh)
+}else{
+  ajudador = verificaMaisQueSeis; 
+  images[verificaMaisQueSeis-1].src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg`;
+  images[verificaMaisQueSeis-1].alt = player.party[ajudador - 1].name.name;
+}
+
+
   //para adaptar a estrutura dos movimentos do npc pro player
   //lenght é temporário, não vai funcionar quando for capturar mais de
   //6 pokémon
-  const moves = player.party[player.party.length-1].moves;
+  const moves = player.party[ajudador-1].moves;
+  console.log("ds",moves);
+
   const filteredMoves = moves.filter(
     move => typeof move === "object" && move !== null && !Array.isArray(move)
   );
-  const moveNames = filteredMoves.map(move => move.name); 
-  player.party[1].moves = moveNames;
-  console.log("Switch",moveNames);    
+  const moveNames = filteredMoves.map(move => move.name);
+  //console.log("ds",player.party.length);
+  player.party[ajudador-1].moves = moveNames;
+console.log("Switch",moveNames); 
+     
   }
   export async function fugir() {
     const buttonBox = document.getElementById("button-box");
@@ -549,5 +586,140 @@ else{
 }
     
   }
-
+export function insertIcon(Pokemon,Substitui) {
   
+    
+  const partyDiv = document.getElementById("party");
+  const voltarButton = document.getElementById("Voltar button-box");
+  
+  
+  // Cria o novo elemento para adicionar
+  const botão = document.createElement("button");
+  if (Substitui != undefined) {
+    botão.id = `P${Substitui}`;
+  } else {botão.id = `P${player.party.length}`;}
+  if (player.party.length < 7) {
+  console.log(botão.id,Substitui)
+  const { x2, y2 } = iconfix(botão.id);
+  botão.innerHTML = `
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${Pokemon.name.id}.png" 
+         style="position: absolute; top: ${x2}px; left: ${y2}px;">
+  `;
+  
+  // Insere o novo elemento antes do botão "Voltar"
+  partyDiv.insertBefore(botão, voltarButton);
+
+  let a = document.getElementById("Voltar button-box");
+
+  if (player.party.length === 2 || player.party.length === 4 || player.party.length === 6) {
+    a.style.cssText = "grid-column: span 2; text-align: center;";
+  } else if (player.party.length === 3 || player.party.length === 5) {
+    a.style.cssText = "";  // This will remove the applied styles
+  }
+}
+}
+function iconfix(P) {
+  console.log("DO",P)
+
+  switch (P){
+    case "P1":
+      console.log("P1")
+      return {x1: -10, y1: 11};
+    case "P2":
+      return {x2: -10, y2: 91};
+    case "P3":
+      return {x2: 50, y2: 11};
+    case "P4":
+      return {x2: 50, y2: 91};
+    case "P5":
+      return {x2: 110, y2: 11};
+    case "P6":
+      return {x2: 110, y2: 91};;
+}
+}
+export function updateIcon(Pokemon, Substitui) {
+  const partyDiv = document.getElementById("party");
+  const voltarButton = document.getElementById("Voltar button-box");
+
+  // Define o ID do botão a ser atualizado
+  let botão;
+  if (Substitui != undefined) {
+    botão = document.getElementById(`P${Substitui}`);
+  } else {
+    // Se não houver Substitui, usa o índice baseado no tamanho do party
+    botão = document.getElementById(`P${player.party.length}`);
+  }
+console.log(Pokemon)
+  // Atualiza a imagem do Pokémon
+  const { x2, y2 } = iconfix(botão.id);
+  botão.innerHTML = ` 
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${Pokemon.id}.png" 
+         style="position: absolute; top: ${x2}px; left: ${y2}px;">
+  `;
+
+  // Altera o estilo do botão "Voltar"
+  let a = document.getElementById("Voltar button-box");
+
+  if (player.party.length === 2 || player.party.length === 4 || player.party.length === 6) {
+    a.style.cssText = "grid-column: span 2; text-align: center;";
+  } else if (player.party.length === 3 || player.party.length === 5) {
+    a.style.cssText = "";  // Remove a estilização
+  }
+}
+export function SwapIcons(Pokemon1, Pokemon2, Substitui1, Substitui2) {
+  const partyDiv = document.getElementById("party");
+  const voltarButton = document.getElementById("Voltar button-box");
+
+  // Define os IDs dos botões a serem atualizados
+  let botão1;
+  let botão2;
+  if (Substitui1 != undefined) {
+    botão1 = document.getElementById(`P${Substitui1}`);
+  } else {
+    // Se não houver Substitui1, usa o índice baseado no tamanho do party
+    botão1 = document.getElementById(`P${player.party.length}`);
+  }
+  if (Substitui2 != undefined) {
+    botão2 = document.getElementById(`P${Substitui2}`);
+  } else {
+    // Se não houver Substitui2, usa o índice baseado no tamanho do party
+    botão2 = document.getElementById(`P${player.party.length}`);
+  }
+  
+  // Atualiza as imagens dos ícone
+ 
+  const { x1, y1 } = iconfix(botão1.id);
+  const { x2, y2 } = iconfix(botão2.id);
+  console.log(x1, y1,x2, y2)
+  botão1.innerHTML = ` 
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${Pokemon1.name.id}.png" 
+         style="position: absolute; top: ${x1}px; left: ${y1}px;">
+  `;
+  botão2.innerHTML = ` 
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${Pokemon2.name.id}.png" 
+         style="position: absolute; top: ${x2}px; left: ${y2}px;">
+  `;
+
+  // Altera o estilo do botão "Voltar"
+  let a = document.getElementById("Voltar button-box");
+
+  if (player.party.length === 2 || player.party.length === 4 || player.party.length === 6) {
+    a.style.cssText = "grid-column: span 2; text-align: center;";
+  } else if (player.party.length === 3 || player.party.length === 5) {
+    a.style.cssText = "";  // Remove a estilização
+  }
+}
+export function AjustaMove(Pokemon) {
+    //para adaptar a estrutura dos movimentos do npc pro player
+  //lenght é temporário, não vai funcionar quando for capturar mais de
+  //6 pokémon
+  const moves = Pokemon.moves;
+  const filteredMoves = moves.filter(
+    move => typeof move === "object" && move !== null && !Array.isArray(move)
+  );
+  const moveNames = filteredMoves.map(move => move.name);
+  //console.log("ds",player.party.length);
+  Pokemon.moves = moveNames;
+  console.log("Switch",moveNames);    
+
+}

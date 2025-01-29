@@ -246,4 +246,34 @@ button.container:hover {
   cursor: pointer; /* Estilo do cursor */
 }
 
+#party {
+  position: absolute; /* Posiciona o quadrado relativo ao contêiner #game */
+  top: 42%; /* Centraliza verticalmente dentro do #game */
+  left: -162px; /* Coloca o quadrado colado ao lado esquerdo */
+  transform: translateY(-50%); /* Ajusta o centro vertical */
+  justify-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Define duas colunas iguais */
+  grid-gap: 10px; /* Espaçamento entre os botões */
+  flex-direction: column; /* Botões em coluna */
+  gap: 10px; /* Espaço entre botões */
+  width: 140px; /* Largura do quadrado */
+  border: 2px solid black;
+  background-color:rgb(75, 69, 69);
+  padding: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para destaque */
+}
+#party button {
+  width: 60px; /* Largura do botão */
+  height: 40px; /* Altura do botão */
+  font-size: 10px; /* Reduz o tamanho do texto */
+  padding: 2px; /* Ajusta o espaçamento interno */
+  line-height: 1; /* Controla a altura das linhas */
+  text-align: center; /* Centraliza o texto */
+  cursor: pointer; /* Estilo do cursor */
+}
 
+#Voltar {
+  grid-column: span 2; /* Faz o botão ocupar as duas colunas */
+  text-align: center;
+}
