@@ -451,6 +451,7 @@ export async function menu() {
     if (displayStyle === 'grid') {
       party.style.display = 'none';
     } else {
+      console.log("ABRIU");
       party.style.display = 'grid';
     }
   }

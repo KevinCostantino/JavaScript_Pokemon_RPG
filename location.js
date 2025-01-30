@@ -1,4 +1,4 @@
-import { goStore, treinadorBrock } from './script.js';
+import { goStore, treinadorBrock,Poke6,treinador1,treinador2 } from './script.js';
 import { goCave } from './script.js';
 import { goTown } from './script.js';
 import { buyHealth } from './script.js';
@@ -79,7 +79,7 @@ export const locations = [
 	{
 		name: "Prof_Carvalho",
 		"button text": ["Batalha rival"],
-		"button functions": [() => PBattle(player, treinadorBrock)],
+		"button functions": [() => PBattle(player, Poke6)],
 		text: "",
 		img: `./Sprites/Oak-transformed.png`
 	},

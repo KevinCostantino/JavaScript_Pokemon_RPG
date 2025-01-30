@@ -1,6 +1,6 @@
 import {captura, troca, bolsaPotion, trocatela } from './script.js';
 import './Batalha.js';
-import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha.js';
+import {logMessage,updateStatus,calculateDamage,updatePlayerHealth,turnaum} from './Batalha.js';
 import { endBattleF } from './pokeapiF.js'; 
 
 const btn1 = document.getElementById("btn1");
@@ -17,6 +17,9 @@ const oioioi = 0
 export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
   //player = player.party[0]
   //rival = rival.party[0]
+btn1.removeEventListener("click", handleBtn1Click);
+btn2.removeEventListener("click", handleBtn2Click);
+btn3.removeEventListener("click", handleBtn3Click);
 const P2 = document.getElementById("P2");
 const P3 = document.getElementById("P3");
 const P4 = document.getElementById("P4");

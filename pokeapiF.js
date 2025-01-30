@@ -165,7 +165,7 @@ function rivalF(player) {
 function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
-    PBattle(player,Poke6);
+    PBattle(player,treinadorBrock);
     //evento()
 
 }

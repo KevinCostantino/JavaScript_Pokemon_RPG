@@ -6,9 +6,6 @@ import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
 import { menu} from './script.js';
 
-//btn2.addEventListener("click", () => exampleUsage("btn2"));
-//btn2.addEventListener("click", () => console.log("OSJDODJ"));
-
 
 
 
@@ -487,6 +484,9 @@ function removeAllButtons() {
     // Função de batalha
 export async function PBattle(player, rival,auxo,TURNO,sla) {
   let turnoAtual
+  const party = document.getElementById("party");
+  party.style.display = 'none';
+  console.log(player, rival,auxo,TURNO,sla);
 
 
 if (TURNO != undefined) {
@@ -573,7 +573,7 @@ if (TURNO != undefined) {
           btn3.addEventListener("click", handleBtn3Click);
           handleBtn3ClickAdded = undefined;
         } 
-        btn1.addEventListener("click", () => console.log(player.party.length))
+        //btn1.addEventListener("click", () => console.log(player.party.length))
          if (player.party.length > 1) {
           const handleP2Click = () => options(P2, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
@@ -805,20 +805,25 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
       function checkBattleStatus() {
         if (player.party[0].name.hp <= 0) {
           logMessage('Você perdeu a batalha!');
-
+          btn1.removeEventListener("click", handleBtn1Click);
+          btn2.removeEventListener("click", handleBtn2Click);
+          btn3.removeEventListener("click", handleBtn3Click);  
           endBattle('rival');
         } else if (rival.party[0].name.hp <= 0) {
 
          
         console.log("rival.party.length:",rival.party.length);
           if (rival.party.length > 1) {
-            
+
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
             
             
             //const reserva = player.party[0];
             auxo = undefined; //sim isso envolve a troca de poke do rival
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);
             rival.party[0] = rival.party[1];
             rival.party[1] = null;
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
@@ -836,13 +841,13 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             //btn2.removeEventListener("click", handleBtn2Click);
             //btn3.removeEventListener("click", handleBtn3Click);
 
-            setTimeout(() => PBattle(player,rival,undefined,turnoAtual,0), 1500);
-            
+            setTimeout(() => PBattle(player,rival,undefined,turnoAtual), 1500);
+
           }
           else{
+            btn1.removeEventListener("click", handleBtn1Click);
+
             console.log("player.party[0]",player.party[0]);
-
-
 
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             logMessage('Você venceu a batalha!');
@@ -875,18 +880,20 @@ function endBattle(winner) {
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;            
           }
-          btn1.removeEventListener("click", handleBtn1Click);
-          btn2.removeEventListener("click", handleBtn2Click);
-          btn3.removeEventListener("click", handleBtn3Click);          
+          window.onerror = function(message, source, lineno, colno, error) {
+            if (message.includes(rival)) {
+                return true; // Retorna `true` para suprimir o erro no console
+            }
+        };
+             rival = null;
             //player.party[1].name.hp = player.party[1].name.TotalHP;
+            console.log("removeu?");
             endBattleF(0); // Finalização para jogador
         } else {
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;
           }
-          btn1.removeEventListener("click", handleBtn1Click);
-          btn2.removeEventListener("click", handleBtn2Click);
-          btn3.removeEventListener("click", handleBtn3Click);
+
             endBattleF(1); // Finalização para rival
         }
     }, 1000);
@@ -897,12 +904,15 @@ function endBattle(winner) {
         document.getElementById('pokeLv').innerHTML = 
         `<p><strong>Lv.${PokeP.level}</strong></p>
          `;
+
         
             }      
 
 
 }
-
+  export function turnaum() {
+return turnoAtual
+  }
 
 
 
