@@ -19,6 +19,12 @@ async function XPNovoLV(currentXP,levelType,gainedXP) {
         console.error('Falha ao carregar os dados de experiência.');
         return;
     }
+}
+function ajustandoM(levelType) {
+    if (levelType == "N_medium") {
+        levelType = "N_medium-fast";
+    }
+}
 // Função para encontrar a tabela de experiência pelo tipo de nível
 function getExperienceTable(levelType) {
     return XP.Pasta1.find(table => table.Level === levelType);
@@ -26,6 +32,7 @@ function getExperienceTable(levelType) {
 
 // Função para calcular o nível com base na experiência atual
 function calculateLevel(experience, levelType) {
+    ajustandoM(levelType);
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);
@@ -50,6 +57,8 @@ function calculateLevel(experience, levelType) {
 
 // Função para adicionar XP e verificar se o nível mudou
 function addExperience(currentXP, gainedXP, levelType) {
+    ajustandoM(levelType);
+
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);
@@ -113,7 +122,7 @@ try {
 } catch (error) {
     console.error(error.message);
 }
-}
+
 
 export function XPInicial(level, levelType) {
 // Função para encontrar a tabela de experiência pelo tipo de nível
@@ -123,6 +132,8 @@ function getExperienceTable(levelType) {
 
 // Função para obter a XP total de um nível e a necessária para o próximo nível
 function getExperienceDetails(level, levelType) {
+    ajustandoM(levelType);
+
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);
@@ -175,11 +186,14 @@ if (!XP) {
     return;
 }
 function getExperienceTable(NlevelType) {
+    ajustandoM(NlevelType);
     return XP.Pasta1.find(table => table.Level === NlevelType);
 }
 
 // Função para calcular o nível com base na experiência atual
 function calculateLevel(currentXP, gainedXP, levelType, level) {
+    ajustandoM(levelType);
+
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);
@@ -218,6 +232,8 @@ function calculateLevel(currentXP, gainedXP, levelType, level) {
 
 // Função para adicionar XP e verificar se o nível mudou
 function addExperience(currentXP, gainedXP, levelType, currentLevel,Elevel) {
+    ajustandoM(levelType);
+
     const table = getExperienceTable(levelType);
     if (!table) {
         throw new Error(`Tabela de experiência para o tipo "${levelType}" não encontrada.`);

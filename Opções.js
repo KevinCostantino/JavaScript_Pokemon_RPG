@@ -1,25 +1,29 @@
 import {captura, troca, bolsaPotion, trocatela } from './script.js';
 import './Batalha.js';
-import {logMessage,updateStatus,calculateDamage,updatePlayerHealth,turnaum} from './Batalha.js';
+import './Batalha copy.js';
+//import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha.js';
+import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha copy.js';
 import { endBattleF } from './pokeapiF.js'; 
 
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
 
-const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
-const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
-const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
+const handleBtn1Clic = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
+const handleBtn2Clic = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
+const handleBtn3Clic = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
 
 
 const oioioi = 0
 
-export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG) {
+export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG,handleBtn1Click,handleBtn2Click,handleBtn3Click,btt) {
   //player = player.party[0]
   //rival = rival.party[0]
-btn1.removeEventListener("click", handleBtn1Click);
-btn2.removeEventListener("click", handleBtn2Click);
-btn3.removeEventListener("click", handleBtn3Click);
+
+  
+console.log("1: "+handleBtn1Clic + " 2: "+handleBtn2Clic + 
+  " 3: "+handleBtn3Clic + " I: "+handleBtn1Click + " II: "+handleBtn2Click + 
+  " III: "+handleBtn3Click)
 const P2 = document.getElementById("P2");
 const P3 = document.getElementById("P3");
 const P4 = document.getElementById("P4");
@@ -74,7 +78,12 @@ const P6 = document.getElementById("P6");
           trocatela();
           setTimeout(() => {}, 100)
           AM = 0;
+          //return 25;
         }else if ([P2, P3, P4, P5, P6].includes(btn))  {
+          if (btt == "Batata") {
+            handleBtn3Click = btt;
+            console.log("???",btn);
+          }
           console.log("merda",btn)
           const id = btn.id; // Supondo que btn tenha um ID como "P2", "P3", etc.
           const numero = Number(id.slice(1)); // Extrai o número e converte para número          exampleUsage("btn1");
@@ -82,12 +91,18 @@ const P6 = document.getElementById("P6");
           if (pokemonButtons.includes(btn)) {
             const index = pokemonButtons.indexOf(btn);
             console.log(playerOG.party[numero])
-            troca(playerOG.party, numero-1, rivalOG, turnoAtual);
+            const b = await troca(playerOG.party, numero-1, rivalOG, turnoAtual,handleBtn3Click,btn,playerOG);
+            console.log(b)
+            if (b[1] == 25) {
+              console.log(";-;")
+            return b;
+            }
           }
-          
+
           logMessage(`Turno ${turnoAtual}:`);
           logMessage(`${LetraM1(player.name.name)} trocou!`);
           turnoAtual = turnoAtual + 1;
+
         } else {
           console.error("O botão não foi encontrado!");
         }
@@ -261,12 +276,15 @@ const P6 = document.getElementById("P6");
               //AM = 1; //Adapatador de movimento
               handleClick();
               setTimeout(() => PBattle(playerOG,rivalOG), 1500);
-              
+              btn1.removeEventListener("click", handleBtn1Click);
+              btn2.removeEventListener("click", handleBtn2Click);
+              btn3.removeEventListener("click", handleBtn3Click); 
             }
             else{
               console.log("player.party[0]",player );
-  
-  
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);  
   
               XPDX(player.name.currentXP,player.name.levelType,rival.name.base_exp,player.name.level,rival.name.level,0)
               logMessage('Você venceu a batalha! Parabéns!');

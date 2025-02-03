@@ -6,6 +6,10 @@ import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
 import { menu} from './script.js';
 
+const btn1 = document.getElementById("btn1");
+const btn2 = document.getElementById("btn2");
+const btn3 = document.getElementById("btn3");
+
 
 
 
@@ -78,8 +82,6 @@ export async function getPokemonStats(pokemonId,nível) {
 
   }
 }
-
-
     // Função para buscar detalhes de um movimento específico
 export async function getMoveDetails(moveName) {
       try {
@@ -105,19 +107,16 @@ export async function getMoveDetails(moveName) {
         console.error(`Erro ao buscar detalhes do movimento ${moveName}:`, error);
         return null; // Retorne null ou um valor padrão para evitar falhas
       }
-    }
-    
-
-
+}
     // Função para buscar informações sobre um tipo
-async function getTypeData(typeName) {
+export async function getTypeData(typeName) {
       const response = await fetch(`https://pokeapi.co/api/v2/type/${typeName}`);
     
       return response.json();
-    }
+}
 
         // Função para calcular vantagem de tipos
-async function getTypeMultiplier(moveType, defenderTypes) {
+export async function getTypeMultiplier(moveType, defenderTypes) {
       const typeData = await getTypeData(moveType);
       let multiplier = 1;
       //console.log("typeData:", typeData);
@@ -134,10 +133,9 @@ async function getTypeMultiplier(moveType, defenderTypes) {
       });
 
       return multiplier;
-    }
-
+}
     // Função para calcular dano
-export async function calculateDamage(attacker, defender, move,turnoAtual) {
+export async function calculateDamage(attacker, defender, move) {
     console.log("move",move,attacker.name.name);
     console.log("move",move.isStatus,attacker.name.name);
       if (move.isStatus) 
@@ -223,7 +221,7 @@ const [totalDamage, typeMultiplier] = await TotalDamageAndClass(move, attacker, 
 
     logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}! Causou ${totalDamage} de dano! ${effectivenessMessage}`);
     return { damage: totalDamage };
-      }  
+}  
       
 
     // Função para log de mensagens
@@ -234,15 +232,15 @@ export function logMessage(message) {
       newMessage.textContent = message;
       log.appendChild(newMessage);
       log.scrollTop = log.scrollHeight;
-    }
+}
 
-function clearLog() {
+export function clearLog() {
       const log = document.getElementById('battle-log');
       log.innerHTML = ''; // Remove todo o conteúdo
       log.style.display = 'none'; // Opcional: Esconde o log novamente
-    }
+}
     // Função para mostrar o status dos Pokémon 
-export function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante,opponentLV) {
+export function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
   //btn1.removeEventListener("click", handleBtn1Click);
 
           const status = document.getElementById('status');
@@ -291,7 +289,7 @@ document.getElementById('opponentName').innerHTML =
       updateRivalHealth(player, dano, atacante,opponent);
       return;
     }
-  }
+}
 export function updatePlayerHealth(player, dano, atacante,opponent) {
     
     const playerProgressBar = document.getElementById("PprogressBar");
@@ -301,7 +299,7 @@ export function updatePlayerHealth(player, dano, atacante,opponent) {
     let progressa = 200; // Porcentagem inicial da barra
     let pa = Math.round((progressa / pap) * 100); // Porcentagem inicial ajustada para 100%
 
-    updateProgressBar(100,playerProgressBar); // Inicializa a barra
+    updateProgressBar(pa,playerProgressBar); // Inicializa a barra
     //setTimeout(20000);
     //updateProgressBar(pa); // Inicializa a porcentagem da barra
 
@@ -367,7 +365,7 @@ export function updatePlayerHealth(player, dano, atacante,opponent) {
     //console.log("ps1!: ",ps)
     updateProgressBar(ps,Bar);
 
-  }
+}
   
 function updateRivalHealth(player, dano, atacante,opponent) {
 
@@ -442,9 +440,9 @@ function updateRivalHealth(player, dano, atacante,opponent) {
 
 
 //console.log("af",Math.max(ps, 0))
-  }
+}
 
-async function getPokemonData(pokemonName) {
+export async function getPokemonData(pokemonName) {
           const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
           const data = await response.json();
   
@@ -463,29 +461,53 @@ async function getPokemonData(pokemonName) {
             moves: data.moves.map(moveInfo => moveInfo.move.name),
             attackModifier: 1, // Modificador de ataque inicial
           };
-        }
-function LetraM1(str) {
+}
+export function LetraM1(str) {
           return str.charAt(0).toUpperCase() + str.slice(1);
-        }
-
-function updateProgressBar(pa,Bar) {
+}
+export function updateProgressBar(pa,Bar) {
           //console.log("Bar",Bar);
           Bar.style.width = `${pa}%`; // Atualiza a largura da barra dinamicamente
 
-        }
-
-function removeAllButtons() {
+}
+export function removeAllButtons() {
           const buttons = controls.querySelectorAll('button');
           buttons.forEach(button => button.remove()); // Remove todos os botões
-        }
+}
+
+
 
 
 
     // Função de batalha
-export async function PBattle(player, rival,auxo,TURNO,sla) {
-  let turnoAtual
+export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
+
+ async function testet() {
+    let a = await options(P2, turnoAtual, player.party[0], rival.party[0], player, rival);
+    if (a[1] == 25) {
+      btn1.removeEventListener("click", handleBtn1Click);
+      btn2.removeEventListener("click", handleBtn2Click);
+      btn3.removeEventListener("click", handleBtn3Click);
+      P2.removeEventListener("click", handleP2Click);
+      options(P2, turnoAtual, player.party[0], rival.party[0], player, rival,undefined,undefined,undefined,"Batata");
+      console.log("wtf chat",player);
+    }
+    console.log(a);
+    a = undefined
+  }
+  const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
+  const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
+  const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
+  const handleP2Click = () => testet();
+
+  btn1.removeEventListener("click", handleBtn1Click);
+  btn2.removeEventListener("click", handleBtn2Click);
+  btn3.removeEventListener("click", handleBtn3Click);
+
+  let turnoAtual = 0;
   const party = document.getElementById("party");
-  party.style.display = 'none';
+  //party.style.display = 'none';
+  
   console.log(player, rival,auxo,TURNO,sla);
 
 
@@ -502,7 +524,6 @@ if (TURNO != undefined) {
      buttonP1.style.backgroundColor ="#105913";
 
       //var AM = 1; //Adapatador de movimento
-      //(rivalSprite).style.display = "block";
       clearLog(); // Limpa o log após 5 segundos
 
       document.getElementById('text').style.display = 'none';
@@ -540,14 +561,10 @@ if (TURNO != undefined) {
          } else {
            console.error("O botão 'menu' não foi encontrado!");
          }
-         const btn1 = document.getElementById("btn1");
-         const btn2 = document.getElementById("btn2");
-         const btn3 = document.getElementById("btn3");
 
-         const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
-         const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
-         const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
+         function botones(){
 
+      
          btn1.removeEventListener("click", handleBtn1Click);
          btn2.removeEventListener("click", handleBtn2Click);
          btn3.removeEventListener("click", handleBtn3Click);
@@ -575,13 +592,12 @@ if (TURNO != undefined) {
         } 
         //btn1.addEventListener("click", () => console.log(player.party.length))
          if (player.party.length > 1) {
-          const handleP2Click = () => options(P2, turnoAtual, player.party[0], rival.party[0], player, rival);
+
           const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP4Click = () => options(P4, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP5Click = () => options(P5, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP6Click = () => options(P6, turnoAtual, player.party[0], rival.party[0], player, rival);
 
-          const P2 = document.getElementById("P2");
           const P3 = document.getElementById("P3");
           const P4 = document.getElementById("P4");
           const P5 = document.getElementById("P5");
@@ -590,7 +606,7 @@ if (TURNO != undefined) {
           if (P2 && sla == undefined) {
             P2.removeEventListener("click", handleP2Click);
             P2.removeEventListener("click", () => turnoAtual++);
-            P2.addEventListener("click", handleP2Click);
+            P2.addEventListener("click", handleP2Click,{once: true});
             P2.addEventListener("click", () => turnoAtual++);
           }
           if (player.party.length > 2 && P3 && sla == undefined) {
@@ -618,7 +634,13 @@ if (TURNO != undefined) {
           }
          }
         }
+      }
 
+      
+      if (ct == undefined) {
+        console.log("wafa");
+      botones()
+      }
          btn2.addEventListener("click", () => turnoAtual++);
          btn3.addEventListener("click", () => turnoAtual++);
          console.log("wtf",2);
@@ -704,6 +726,7 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
         await resolveTurn(playerMove);
       }
       
+
       async function resolveTurn(playerMove) {
 
         (player.party[0].name, rival.party[0].name);
@@ -821,9 +844,6 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             
             //const reserva = player.party[0];
             auxo = undefined; //sim isso envolve a troca de poke do rival
-            btn1.removeEventListener("click", handleBtn1Click);
-            btn2.removeEventListener("click", handleBtn2Click);
-            btn3.removeEventListener("click", handleBtn3Click);
             rival.party[0] = rival.party[1];
             rival.party[1] = null;
             console.log("rival.party[0]:",rival.party[0],player.party[0]);
@@ -842,12 +862,18 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             //btn3.removeEventListener("click", handleBtn3Click);
 
             setTimeout(() => PBattle(player,rival,undefined,turnoAtual), 1500);
-
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);
           }
           else{
-            btn1.removeEventListener("click", handleBtn1Click);
-
+            if (player.party.length > 1) {
+              P2.removeEventListener("click", handleP2Click);
+            }
             console.log("player.party[0]",player.party[0]);
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);  
 
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             logMessage('Você venceu a batalha!');
@@ -880,12 +906,7 @@ function endBattle(winner) {
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;            
           }
-          window.onerror = function(message, source, lineno, colno, error) {
-            if (message.includes(rival)) {
-                return true; // Retorna `true` para suprimir o erro no console
-            }
-        };
-             rival = null;
+        
             //player.party[1].name.hp = player.party[1].name.TotalHP;
             console.log("removeu?");
             endBattleF(0); // Finalização para jogador
@@ -904,15 +925,20 @@ function endBattle(winner) {
         document.getElementById('pokeLv').innerHTML = 
         `<p><strong>Lv.${PokeP.level}</strong></p>
          `;
-
         
             }      
 
 
 }
-  export function turnaum() {
-return turnoAtual
-  }
+export function removeClickEvent(btn, handler) {
+  btn.removeEventListener("click", handler);
+}
+
+
+export function chamarBatalha(A, B,C,D,E) {
+  btn3.removeEventListener("click", handleBtn3Click);
+  chamarBatalha2(A,B,C,D,E);
+}
 
 
 

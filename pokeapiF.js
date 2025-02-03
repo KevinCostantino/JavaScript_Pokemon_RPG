@@ -7,9 +7,11 @@ import { rival } from './script.js';
 import { Poke1, Poke2, Poke3, Poke4, Poke5,Poke6,treinador1,treinador2,treinador3,treinadorBrock } from './script.js';
 
 //import { startBattle } from './Batalha.js';
-import { getPokemonStats } from './Batalha.js';
+//import { getPokemonStats } from './Batalha.js';
 import { XPDX } from './XPf.js';
 import { PBattle } from './Batalha.js';
+import { PBattle2,getPokemonStats } from './Batalha copy.js';
+
 import { IMFREE } from './script.js';
 import { moves } from './moves.js';
 
@@ -69,7 +71,6 @@ export async function PokemonInicial(pokemonId, aux) {
     Poke3.capturePokemon("",await BatalhaSetup(16,getRandomInt(3,6)),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
     Poke4.capturePokemon("",await BatalhaSetup(19,getRandomInt(2,6)),0,getRandomInt(2,6),moves[0], moves[11], moves[12]);
     Poke5.capturePokemon("",await BatalhaSetup(114,getRandomInt(7,8)),0,getRandomInt(7,8),moves[4], moves[3]);
-
     Poke6.capturePokemon("",await BatalhaSetup(74,getRandomInt(4,6)),0,getRandomInt(7,8),moves[0], moves[23]);
 
     treinador1.capturePokemon("John",await BatalhaSetup(21,4),0,4,moves[13], moves[14], moves[15]);

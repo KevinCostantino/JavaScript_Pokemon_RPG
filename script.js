@@ -2,9 +2,10 @@ import { PokemonInicial } from './pokeapiF.js';
 import Player from './Player.js';
 import { askForName } from './pokeapiF.js';
 import { locations } from './location.js';
-import { PBattle,updatePlayerHealth,logMessage } from './Batalha.js';
+import { PBattle,updatePlayerHealth,logMessage,removeClickEvent } from './Batalha.js';
+import { clearLog,removeAllButtons,updateStatus,getMoveDetails,getPokemonData,calculateDamage} from './Batalha.js';
 import { options } from './Opções.js';
-
+import { PBattle2 } from './Batalha copy.js';
 
 
 let xp = 0;
@@ -21,6 +22,7 @@ const button3 = document.querySelector("#button3");
 const button4 = document.querySelector("#button4");
 const button5 = document.querySelector("#button5");
 const button6 = document.querySelector("#button6");
+const button7 = document.querySelector("#button7");
 const text = document.querySelector("#text");
 const xpText = document.querySelector("#xpText");
 const healthText = document.querySelector("#healthText");
@@ -88,11 +90,12 @@ export const Poke3 = new Player();
 export const Poke4 = new Player();
 export const Poke5 = new Player();
 export const Poke6 = new Player();
-
+const PokeInstances = { Poke1, Poke2, Poke3, Poke4, Poke5, Poke6 };
 export const treinador1 = new Player();
 export const treinador2 = new Player();
 export const treinador3 = new Player();
 export const treinadorBrock = new Player();
+const TrainerInstances = { treinador1, treinador2, treinador3 };
 
 
 button1.onclick = pokeapiF1;
@@ -108,21 +111,27 @@ button3.onclick = pokeapiF7;
 export function update(location) {
 	button5.style.display = "";
 	button6.style.display = "";
+  button7.style.display = "";
 
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
     button4.innerText = location["button text"][0];
     button5.innerText = location["button text"][1];
     button6.innerText = location["button text"][2];
+    button7.onclick = location["button functions"][3];
+
     button4.onclick = location["button functions"][0];
     button5.onclick = location["button functions"][1];
     button6.onclick = location["button functions"][2];
+    button7.onclick = location["button functions"][3];
+
     text.innerText = location.text;    
 }
 
 export function UniOp(location) {
 	button5.style.display = "none";
 	button6.style.display = "none";
+  button7.style.display = "none";
 
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
@@ -141,28 +150,38 @@ export function DiOp(location) {
     text.innerText = location.text;    
 }
 export function TriOp(location) {
+  button4.style.display = "";
+  button5.style.display = "";
+	button6.style.display = "";
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
     button4.innerText = location["button text"][0];
     button5.innerText = location["button text"][1];
     button6.innerText = location["button text"][2];
-    button4.onclick = location["button functions"][0];
-    button5.onclick = location["button functions"][1];
-    button6.onclick = location["button functions"][2];
-    text.innerText = location.text;    
-}
-export function QuadOp(location) {
-    monsterStats.style.display = "none";
-	PersonagemStats.style.display = "none";
-    button4.innerText = location["button text"][0];
-    button5.innerText = location["button text"][1];
-    button6.innerText = location["button text"][2];
-	button3.innerText = location["button text"][3];
 
     button4.onclick = location["button functions"][0];
     button5.onclick = location["button functions"][1];
     button6.onclick = location["button functions"][2];
-	button3.onclick = location["button functions"][3];
+
+    text.innerText = location.text;    
+}
+export function QuadOp(location) {
+	button4.style.display = "";
+  button5.style.display = "";
+	button6.style.display = "";
+  button7.style.display = "";
+
+    monsterStats.style.display = "none";
+	PersonagemStats.style.display = "none";
+    button4.innerText = location["button text"][0];
+    button5.innerText = location["button text"][1];
+    button6.innerText = location["button text"][2];
+    button7.innerText = location["button text"][3];
+
+    button4.onclick = location["button functions"][0];
+    button5.onclick = location["button functions"][1];
+    button6.onclick = location["button functions"][2];
+    button7.onclick = location["button functions"][3];
 
     text.innerText = location.text;    
 }
@@ -384,6 +403,7 @@ export function pick(guess) {
 }
 
 export async function IMFREE(A, elementId,a) {
+
     // Dynamically update the target element with starter Pokémon buttons
 	document.getElementById('text').style.display = 'block';
 	document.getElementById('battle-area').style.display = 'none';
@@ -402,12 +422,16 @@ export async function IMFREE(A, elementId,a) {
     // Call goStore() if A == 1
     if (A === 1) {
         PósInitB(a);
+        
     }
 }
+
+
 
 export async function PósInitB(a) {
 	document.getElementById('pokemonImage').style.display = 'block'
 	update(locations[8]);
+  UniOp(locations[8]);
 
 	rivalIMAGE.innerHTML = `<img src="Sprites/Green-transformed.png" />`;
 	if (a == 1) {
@@ -425,9 +449,40 @@ export async function PósInitProf() {
 
 		text.innerText = "Meu neto foi até a cidade de Pewter atrás da insígnia de ginásio, por quê não ir lá também?"
 	}
+  export async function PósInitProf2() {
+		document.getElementById('pokemonImage').style.display = 'block'
+		UniOp(locations[10]);
+	}
+  export async function Florestando(e) {
+    const sac = embaralharNumeros();
+    console.log(sac[e]);
 
+		document.getElementById('pokemonImage').style.display = 'block'
+    switch (sac[e]) {
+      case 1:
+        let A = randomIntFromInterval(1, 6);
+        let selectedPoke = PokeInstances[`Poke${A}`]; // Obtém o Pokémon correspondente
+        if (selectedPoke) {
+          PBattle(player, selectedPoke); // Passa o Pokémon para a batalha
+         } else {console.error(`Poke${A} não encontrado!`);}
+         break;
+      case 2:
+        let B = randomIntFromInterval(1, 3);
+        let selectedTrainer = TrainerInstances[`treinador${B}`]; // Obtém o Pokémon correspondente
+        if (selectedTrainer) {
+          PBattle(player, selectedTrainer); // Passa o Pokémon para a batalha
+         } else {console.error(`treinador${B} não encontrado!`);}
+         break;
+      case 3:
+        let C = randomIntFromInterval(1, 5);
+        Eventoso(C);
+        break;
+    }
+		//UniOp(locations[10]);
+	}
 export async function goFlorest() {
-	QuadOp(locations[11]);
+  document.getElementById('pokemonImage').style.display = 'block'
+	TriOp(locations[11]);
 	}
 export async function evento() {
     goldText.innerHTML = gold+200;
@@ -457,7 +512,15 @@ export async function menu() {
   }
 
 
-  export async function troca(fh,playerTroca,rival,ajuda) {
+  export async function troca(fh,playerTroca,rival,ajuda,handleBtn1Click,btn,pOG) {
+    
+    console.log(btn,handleBtn1Click)
+    if ((btn == P2 || btn == P3 || btn == P4 || btn == P5 || btn == P6) && handleBtn1Click != "Batata") {
+      console.log("ENTROU");
+      return [btn,25]
+    }
+    
+    
     //player.party = fh;
     console.log("playerTroca antes:",fh[0],fh[playerTroca]);
     //console.log("inimigo antes:",rival);
@@ -465,9 +528,11 @@ export async function menu() {
     const aux = fh[0];
     const TURNO = ajuda;
     const sla = 0
-
-    console.log("afaa",fh[0],fh[playerTroca])
+    const ct = 0
+    console.log("afaa",fh[0],fh[playerTroca],handleBtn1Click)
     //await new Promise(resolve => setTimeout(resolve, 15000));
+    
+
     if (fh.length > 1) {
     
     fh[0] = fh[playerTroca];
@@ -478,11 +543,12 @@ export async function menu() {
     buttonsAtroca.forEach(button => button.remove()); // Remove cada botão encontrado
 console.log(playerTroca)
     //setTimeout(() => updatePlayerHealth(null, null, "player",player.party[0].name), 1500);
-
-    setTimeout(() => PBattle(player,rival,0,TURNO,sla), 1500);
+console.log("pOG:",pOG)
+    setTimeout(() => PBattle(pOG,rival,0,TURNO), 1500);
 
     SwapIcons(fh[0],fh[playerTroca],1,playerTroca+1);
     console.log("playerTroca depois:",fh[0],fh[playerTroca]);
+    return 25;
     }else{
       logMessage("Pokémon insuficientes pra trocar");
       return;
@@ -723,4 +789,21 @@ export function AjustaMove(Pokemon) {
   Pokemon.moves = moveNames;
   console.log("Switch",moveNames);    
 
+}
+export function embaralharNumeros() {
+  let numeros = [1, 2, 3];
+
+  // Embaralhando os números usando o algoritmo de Fisher-Yates
+  for (let i = numeros.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [numeros[i], numeros[j]] = [numeros[j], numeros[i]];
+  }
+
+  return numeros; // Retorna o array embaralhado
+}
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function Eventoso() {
+  console.log("Eventoso");
 }
