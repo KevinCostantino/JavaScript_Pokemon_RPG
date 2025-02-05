@@ -1,11 +1,13 @@
 import { PokemonInicial } from './pokeapiF.js';
 import Player from './Player.js';
-import { askForName } from './pokeapiF.js';
+import { askForName,vaiproScript2 } from './pokeapiF.js';
 import { locations } from './location.js';
-import { PBattle,updatePlayerHealth,logMessage,removeClickEvent } from './Batalha.js';
+import { PBattle,updatePlayerHealth,logMessage,removeClickEvent,getPokemonStats } from './Batalha.js';
 import { clearLog,removeAllButtons,updateStatus,getMoveDetails,getPokemonData,calculateDamage} from './Batalha.js';
 import { options } from './Opções.js';
 import { PBattle2 } from './Batalha copy.js';
+import {FF,addFF,zeraFF} from './pokeapiF.js';
+import { moves } from './moves.js';
 
 
 let xp = 0;
@@ -140,6 +142,8 @@ export function UniOp(location) {
     text.innerText = location.text;    
 }
 export function DiOp(location) {
+  button6.style.display = "none";
+  button7.style.display = "none";
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
     button4.innerText = location["button text"][0];
@@ -153,6 +157,8 @@ export function TriOp(location) {
   button4.style.display = "";
   button5.style.display = "";
 	button6.style.display = "";
+  button7.style.display = "none";
+
     monsterStats.style.display = "none";
 	PersonagemStats.style.display = "none";
     button4.innerText = location["button text"][0];
@@ -402,7 +408,7 @@ export function pick(guess) {
     }
 }
 
-export async function IMFREE(A, elementId,a) {
+export async function IMFREE(A, elementId,a,FF) {
 
     // Dynamically update the target element with starter Pokémon buttons
 	document.getElementById('text').style.display = 'block';
@@ -419,9 +425,27 @@ export async function IMFREE(A, elementId,a) {
 	button5.onclick = goStore;  //Troca o botão pra ser a loja
 	button6.onclick = goStore;  //Troca o botão pra ser a loja
 
-    // Call goStore() if A == 1
+
+console.log(FF);
+      // Call goStore() if A == 1
     if (A === 1) {
-        PósInitB(a);
+      switch (FF) {
+        case 0:
+          console.log("PósInitProf");
+          PósInitB(a);
+          break;
+        case 1:
+        case 2:
+          goFlorest();
+          break;
+        case 3:
+          //cidade(a); //criar ainda
+          console.log("Cidade");
+          FF = 0;
+          console.log("resetei,FF");
+          break;
+      }
+        
         
     }
 }
@@ -444,25 +468,34 @@ export async function PósInitB(a) {
 
 export async function PósInitProf() {
 		document.getElementById('pokemonImage').style.display = 'block'
+    update(locations[9]);
 		UniOp(locations[9]);
 		OakIMAGE.innerHTML = `<img src="Sprites/Oak-transformed.png" />`;
 
 		text.innerText = "Meu neto foi até a cidade de Pewter atrás da insígnia de ginásio, por quê não ir lá também?"
 	}
-  export async function PósInitProf2() {
-		document.getElementById('pokemonImage').style.display = 'block'
-		UniOp(locations[10]);
-	}
-  export async function Florestando(e) {
+export async function PósInitProf2() {
+  document.getElementById('pokemonImage').style.display = 'block'
+
+  UniOp(locations[10]);
+  text.innerText = "Professor Carvalho te dá 5 Poções. Você decide passar pela floresta para chegar em Pewter."
+
+
+}
+export async function Florestando(e) {
+
+  document.getElementById('text').style.display = 'block'
+
     const sac = embaralharNumeros();
     console.log(sac[e]);
 
-		document.getElementById('pokemonImage').style.display = 'block'
     switch (sac[e]) {
       case 1:
         let A = randomIntFromInterval(1, 6);
         let selectedPoke = PokeInstances[`Poke${A}`]; // Obtém o Pokémon correspondente
         if (selectedPoke) {
+          let C = randomIntFromInterval(1, 10);
+
           PBattle(player, selectedPoke); // Passa o Pokémon para a batalha
          } else {console.error(`Poke${A} não encontrado!`);}
          break;
@@ -470,25 +503,128 @@ export async function PósInitProf() {
         let B = randomIntFromInterval(1, 3);
         let selectedTrainer = TrainerInstances[`treinador${B}`]; // Obtém o Pokémon correspondente
         if (selectedTrainer) {
+          let C = randomIntFromInterval(1, 10);
+
           PBattle(player, selectedTrainer); // Passa o Pokémon para a batalha
          } else {console.error(`treinador${B} não encontrado!`);}
          break;
       case 3:
-        let C = randomIntFromInterval(1, 5);
+        let C = randomIntFromInterval(1, 10);
         Eventoso(C);
         break;
     }
 		//UniOp(locations[10]);
 	}
 export async function goFlorest() {
-  document.getElementById('pokemonImage').style.display = 'block'
-	TriOp(locations[11]);
-	}
-export async function evento() {
-    goldText.innerHTML = gold+200;
-    text.innerText = "Achou 200 conto karai"
-        }
+  document.getElementById('pokemonImage').style.display = 'none'
+  if (FF == 3) {
+    console.log(FF);
+    zeraFF();
+    UniOp(locations[16]);
+  } else {
+    update(locations[11]);
+    TriOp(locations[11]);
+  }
 
+
+	}
+export async function Eventoso(C) {
+  document.getElementById('pokemonImage').style.display = 'none';
+  document.getElementById('text').style.display = 'block';
+  console.log(FF);
+
+  update(locations[13]);
+
+  console.log("faa",C);
+  if (C <= 6) {
+    addFF()
+    UniOp(locations[13]);
+    text.innerText = "Você avançou na floresta sem problemas" ;
+
+  }else if (C <= 9 && C >= 7) {
+    addFF()
+    gold += 200; // Agora o ouro será realmente adicionado!
+    document.getElementById('goldText').innerHTML = gold; 
+
+    UniOp(locations[13]);
+    document.getElementById('text').innerText = "Achou 200 conto karai"; 
+
+  }else if (C == 10) {
+    addFF()
+    Togepi();
+    UniOp(locations[14]);
+    text.innerText = "Encontra uma pokebola em cima de uma pedra";
+  }
+}
+async function BatalhaSetup(id,lv) {
+    return await getPokemonStats(id,lv)
+}
+async function Togepi() {
+  text.innerText = "Após verificar descobre que dentro havia um Togepi"
+  player.capturePokemon(player.name,await BatalhaSetup(175,7),0,7,moves[0], moves[25]);
+}
+export async function goPewter(op) {
+  console.log(op);
+
+if (op == 1) {
+  text.innerText = "Você finalmente chega na cidade de Pewter";
+	UniOp(locations[16]);
+}
+else if (op == 2) {
+ QuadOp(locations[17]);
+ text.innerText = "O quê fazer?";
+}
+}
+export async function goCentroPokémon(op) {
+  const text = document.getElementById('text');
+  if (op == 1) {
+    text.innerText = "Olá! precisa de que seus Pokémon sejam cuidados?"
+    DiOp(locations[18]);
+  }
+  else if (op == 2) {
+    text.innerText = "Seus Pokémon foram curados!"
+    for (let i = 0; i < player.party.length; i++) {
+      player.party[i].health = player.party[i].TotalHP;
+      UniOp(locations[16]);
+    }
+  }}
+  export async function goPokéMart(op) {
+    if (op == 1) {
+      text.innerText = "Olá! Como posso ajudá-lo?"
+      TriOp(locations[19]);
+    }
+    else if (op == 2) {
+      text.innerText = "Uma poção foi comprada!"
+      UniOp(locations[16]);
+    }
+    else if (op == 3) {
+      text.innerText = "Uma pokébola foi comprada!"
+        UniOp(locations[16]);
+      }
+    }
+    export async function goGym(op) {
+  if (op == 1) {
+    text.innerText = "Deseja desafiar o líder de ginásio Brock?"
+    DiOp(locations[20]);
+  }
+  else if (op == 2) {
+    PBattle(player,treinadorBrock);
+  }
+}
+export async function goFinalBattle() {
+  text.innerText = "Estive esperando por nossa segunda batalha, prepare-se para perder!"
+  DiOp(locations[21]);
+}
+export async function Fim(op) {
+  if (op == 1){
+  text.innerText = "N-Não pode ser...eu perdi..."
+  DiOp(locations[22]);
+  }
+  else if (op == 2){
+  text.innerText = "Boa sorte na próxima hahaha!"
+  DiOp(locations[17]);
+}
+}
 export async function menu() {
     const buttonBox = document.getElementById("button-box");
     const displayStyle = buttonBox.style.display;
@@ -804,6 +940,4 @@ export function embaralharNumeros() {
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-function Eventoso() {
-  console.log("Eventoso");
-}
+

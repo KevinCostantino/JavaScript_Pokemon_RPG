@@ -24,4 +24,5 @@ export const moves = [
     "splash", //22
     "defense-curl", //23
     "rock-throw", //24
+    "fairy-wind", //25
 ];

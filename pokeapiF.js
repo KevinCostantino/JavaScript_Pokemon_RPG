@@ -1,4 +1,4 @@
-import { evento, update } from './script.js';
+import { goPewter, update } from './script.js';
 import { locations } from './location.js';
 import { goStore } from './script.js';
 import { Poke } from './pokeapi.js';
@@ -9,8 +9,8 @@ import { Poke1, Poke2, Poke3, Poke4, Poke5,Poke6,treinador1,treinador2,treinador
 //import { startBattle } from './Batalha.js';
 //import { getPokemonStats } from './Batalha.js';
 import { XPDX } from './XPf.js';
-import { PBattle } from './Batalha.js';
-import { PBattle2,getPokemonStats } from './Batalha copy.js';
+import { PBattle,getPokemonStats } from './Batalha.js';
+//import { PBattle2,getPokemonStats } from './Batalha copy.js';
 
 import { IMFREE } from './script.js';
 import { moves } from './moves.js';
@@ -57,7 +57,8 @@ export async function PokemonInicial(pokemonId, aux) {
 
     const initialRival = await getPokemonStats(inicialRival(player),5);
     const [MR1, MR2, MR3, MR4] = MovRival(player);
-    rival.capturePokemon(player.name,initialRival, 0, 5, MR1, MR2, MR3, MR4,4);    
+    rival.capturePokemon("Gary",initialRival, 0, 5, MR1, MR2, MR3, MR4,4);    
+    console.log(rival);
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
     
@@ -65,16 +66,16 @@ export async function PokemonInicial(pokemonId, aux) {
         return await getPokemonStats(id,lv)
     }
 
-
+    
     Poke1.capturePokemon("",await BatalhaSetup(10,getRandomInt(2,4)),0,getRandomInt(2,4),moves[0], moves[6], moves[7],null,3);
     Poke2.capturePokemon("",await BatalhaSetup(13,getRandomInt(2,4)),0,getRandomInt(2,4),moves[8], moves[6], moves[7]);
     Poke3.capturePokemon("",await BatalhaSetup(16,getRandomInt(3,6)),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
     Poke4.capturePokemon("",await BatalhaSetup(19,getRandomInt(2,6)),0,getRandomInt(2,6),moves[0], moves[11], moves[12]);
     Poke5.capturePokemon("",await BatalhaSetup(114,getRandomInt(7,8)),0,getRandomInt(7,8),moves[4], moves[3]);
-    Poke6.capturePokemon("",await BatalhaSetup(74,getRandomInt(4,6)),0,getRandomInt(7,8),moves[0], moves[23]);
+    Poke6.capturePokemon("",await BatalhaSetup(74,getRandomInt(4,6)),0,getRandomInt(4,6),moves[0], moves[23]);
 
     treinador1.capturePokemon("John",await BatalhaSetup(21,4),0,4,moves[13], moves[14], moves[15]);
-    treinador2.capturePokemon("Maria",await BatalhaSetup(23,9),0,6,moves[15], moves[8], moves[12]);
+    treinador2.capturePokemon("Maria",await BatalhaSetup(23,9),0,9,moves[15], moves[8], moves[12]);
     treinador3.capturePokemon("Leon",await BatalhaSetup(25,7),0,7,moves[16], moves[17], moves[14]);
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74,8),0,8,moves[0], moves[23], moves[24]);
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95,10),0,10,moves[1], moves[2], moves[23], moves[0]);
@@ -193,31 +194,55 @@ export function updateHealth(pokemon, damage,hp) {
       }
       return hp;
     }
-export function endBattleF(a) {
+export function endBattleF(a,treinadorNome) {
     //const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
     setTimeout(2000);
     alert(`EAE`);
     //document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
     // Aqui você pode adicionar lógica para o que acontece após a batalha
-    vaiproScript(a)
+    vaiproScript(a,treinadorNome)
 }
+export let FF = 0;
 
-function vaiproScript(a) {
+export function addFF() {
+    FF+= 1;
+}
+export function zeraFF() {
+    FF = 0;
+}
+function vaiproScript(a,treinadorNome) {
     button1.style.display = 'inline-block';
     button1.onclick = update(locations[0]);  // Atualiza para a próxima fase do jogo no script.js
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';
-    vaiproScript2(a);
+    const nomesPermitidos = [treinador1.treinador, treinador2.treinador, treinador3.treinador];
+    console.log(treinadorNome,nomesPermitidos);
+
+    if (nomesPermitidos.includes(treinadorNome) || treinadorNome == "") {
+        FF++
+        console.log(FF);
+        IMFREE(1,"Options",a,FF);
+        if (FF == 3) {
+            FF = 0
+            goPewter(1)
+        }
+    }else if (treinadorNome == "Brock") {
+        console.log(treinadorNome);
+        vaiproScript2(a)
+    }
+
 }
 
-function vaiproScript2(a) {
+export function vaiproScript2(a) {
+    // Chamamos a função, que ativará o evento automaticamente
+    console.log(a);
     button1.onclick = goStore;  //Troca o botão pra ser a loja
     button2.onclick = goStore;  //Troca o botão pra ser a loja
     button3.onclick = goStore;  //Troca o botão pra ser a loja
 
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';
-    IMFREE(1,"Options",a);
+    IMFREE(1,"Options",a,FF);
 }
 function askForAge() {
     const playerAge = prompt("Digite sua idade:");

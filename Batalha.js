@@ -638,7 +638,7 @@ if (TURNO != undefined) {
 
       
       if (ct == undefined) {
-        console.log("wafa");
+        //console.log("wafa");
       botones()
       }
          btn2.addEventListener("click", () => turnoAtual++);
@@ -909,7 +909,7 @@ function endBattle(winner) {
         
             //player.party[1].name.hp = player.party[1].name.TotalHP;
             console.log("removeu?");
-            endBattleF(0); // Finalização para jogador
+            endBattleF(0,rival.treinador); // Finalização para jogador
         } else {
           for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;

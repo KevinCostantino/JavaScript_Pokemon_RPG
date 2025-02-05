@@ -1,4 +1,4 @@
-import { goStore, treinadorBrock,Poke6,treinador1,treinador2 } from './script.js';
+import { goStore, treinadorBrock,Poke6,treinador1,treinador2, goFinalBattle } from './script.js';
 import { goCave } from './script.js';
 import { goTown } from './script.js';
 import { buyHealth } from './script.js';
@@ -18,6 +18,7 @@ import { PBattle2 } from './Batalha copy.js';
 import { player } from './script.js';
 import { rival } from './script.js';
 import { Poke1, Poke2, Poke3, Poke4, Poke5} from './script.js';
+import { goPewter,goCentroPokémon,goPokéMart,goGym } from './script.js';
 
 
 
@@ -85,7 +86,7 @@ export const locations = [
 		"button text": ["Continuar(Oak)"],
 		"button functions": [PósInitProf],
 		text: "",
-		img : `./Sprites/Green-transformed.png`
+		//img : `./Sprites/Green-transformed.png`
 	},
 	{
 		id: 9,
@@ -93,33 +94,110 @@ export const locations = [
 		"button text": ["Continuar(Floresta)"],
 		"button functions": [PósInitProf2],
 		text: "",
-		img: `./Sprites/Oak-transformed.png`
+		//img: `./Sprites/Oak-transformed.png`
 	},
 	{
 		id: 10,
 		name: "Floresta0",
 		"button text": ["Floresta"],
 		"button functions": [goFlorest],
-		text: "Professor Carvalho te dá 5 Poções. Você decide passar pela floresta para chegar em Pewter.",
+		text: "",
+		//img: `./Sprites/Oak-transformed.png`
 	},
 	{
 		id: 11,
 		name: "Floresta",
-		"button text": ["Curva à esquerda","Caminhar reto","Curva à direita"],
+		"button text": ["Curva à esquerda","Curva à direita","Caminhar reto"],
 		"button functions": [() =>Florestando(0),() =>Florestando(1),() =>Florestando(2)],
 		text: "",//1 Poke selvagem, 2 Treinador, 3 Evento
 	},
     {
-		name: "Floresta",
+		id: 12,
+		name: "Bug",
 		"button text": ["<- Voltar","Curva à esquerda","Curva à direita","Caminhar reto"],
 		"button functions": [goTown,goStore,goStore,goStore],
 		text: "",
 	},
-    {
-		name: "Evento",
+	{
+		id: 13,
+		name: "Nada",
 		"button text": ["Continuar"],
-		"button functions": [goTown],
+		"button functions": [goFlorest],
 		text: "",
 	},
-	
+    {
+		id: 14,
+		name: "Togepi",
+		"button text": ["Continuar"],
+		"button functions": [goFlorest],
+		text: "",
+	},
+	{
+		id: 15,
+		name: "PewterChegada",
+		"button text": ["Continuar"],
+		"button functions": [() => goPewter(1)],
+		text: "Você finalmente chega na cidade de Pewter",
+	},
+	{
+		id: 16,
+		name: "PewterChegada2",
+		"button text": ["Continuar"],
+		"button functions": [() => goPewter(2)],
+		text: "Você finalmente chega na cidade de Pewter",
+	},
+	{
+        id: 17,
+        name: "Pewter",
+        "button text": ["Centro Pokémon", "PokéMart", "Ginásio","Voltar"],
+        "button functions": [
+            () => goCentroPokémon(1), // Chama a função goCentroPokémon com argumento 1
+            () => goPokéMart(1), // Chama a função goPokéMart com argumento 1
+            () => goGym(1), // Chama a função goGym com argumento 1
+			() => goFlorest(), // Chama a função goFlorest
+        ],
+        text: "",
+	},
+	{
+		id: 18,
+		name: "CentroPokémon",
+		"button text": ["Voltar","Curar Pokémon"],
+		"button functions": [goPewter,() =>goCentroPokémon(2)],
+		text: "",
+	},
+	{
+		id: 19,
+		name: "Loja",
+		"button text": ["Voltar","Comprar Poção ($200)","Comprar Pokebola ($300)"],
+		"button functions": [goPewter,() =>goPokéMart(2), () =>goPokéMart(3)],
+		text: "",
+	},
+	{
+		id: 20,
+		name: "Ginasio",
+		"button text": ["Voltar","Começar Batalha"],
+		"button functions": [goPewter,() => goGym(2)],
+		text: "",
+	},
+	{
+		id: 21,
+		name: "BatalhaFinal",
+		"button text": ["Voltar","Começar Batalha"],
+		"button functions": [goPewter,goPewter],//PBattle(player, rival2)],
+		text: "",
+	},
+	//{
+	//	id: 21,
+	//	name: "Fim",
+	//	"button text": ["Continuar"],
+	//	"button functions": [TelaDeFimDaDemo],
+	//	text: "",
+	//},
+	{
+		id: 22,
+		name: "OuNão",
+		"button text": ["Voltar","Centro Pokémon","PokéMart","Enfrentar Rival"],
+		"button functions": [goFlorest,() => goCentroPokémon(1),() => goPokéMart(1),() => goFinalBattle],
+		text: "",
+	},
 ]
