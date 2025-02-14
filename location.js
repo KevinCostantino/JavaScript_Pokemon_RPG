@@ -14,9 +14,9 @@ import { PósInitProf,goFlorest,PósInitProf2,Florestando,embaralharNumeros} fro
 import { pickTwo } from './script.js';
 import { pickEight } from './script.js';
 import { PBattle } from './Batalha.js';
-import { PBattle2 } from './Batalha copy.js';
+//import { PBattle2 } from './Batalha copy.js';
 import { player } from './script.js';
-import { rival } from './script.js';
+import { rival,rival2 } from './script.js';
 import { Poke1, Poke2, Poke3, Poke4, Poke5} from './script.js';
 import { goPewter,goCentroPokémon,goPokéMart,goGym } from './script.js';
 
@@ -162,28 +162,28 @@ export const locations = [
 		id: 18,
 		name: "CentroPokémon",
 		"button text": ["Voltar","Curar Pokémon"],
-		"button functions": [goPewter,() =>goCentroPokémon(2)],
-		text: "",
+		"button functions": [() => goPewter(2),() =>goCentroPokémon(2)],
+		text: "Olá! precisa de que seus Pokémon sejam cuidados?",
 	},
 	{
 		id: 19,
 		name: "Loja",
 		"button text": ["Voltar","Comprar Poção ($200)","Comprar Pokebola ($300)"],
-		"button functions": [goPewter,() =>goPokéMart(2), () =>goPokéMart(3)],
-		text: "",
+		"button functions": [() => goPewter(2),() =>goPokéMart(2), () =>goPokéMart(3)],
+		text: "Olá! Como posso ajudá-lo?",
 	},
 	{
 		id: 20,
 		name: "Ginasio",
 		"button text": ["Voltar","Começar Batalha"],
-		"button functions": [goPewter,() => goGym(2)],
-		text: "",
+		"button functions": [() => goPewter(2),() => goGym(2)],
+		text: "Deseja desafiar o líder de ginásio Brock?",
 	},
 	{
 		id: 21,
 		name: "BatalhaFinal",
-		"button text": ["Voltar","Começar Batalha"],
-		"button functions": [goPewter,goPewter],//PBattle(player, rival2)],
+		"button text": ["Voltar","Começar Batalha."],
+		"button functions": [() => goPewter(2),() =>goFinalBattle(1)],
 		text: "",
 	},
 	//{
@@ -199,5 +199,12 @@ export const locations = [
 		"button text": ["Voltar","Centro Pokémon","PokéMart","Enfrentar Rival"],
 		"button functions": [goFlorest,() => goCentroPokémon(1),() => goPokéMart(1),() => goFinalBattle],
 		text: "",
+	},
+	{
+		id: 23,
+		name: "PokemonCenter",
+		"button text": ["Continuar"],
+		"button functions": [() => goPewter(2)],
+		text: "Seus Pokémon foram curados!",
 	},
 ]

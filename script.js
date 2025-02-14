@@ -5,7 +5,7 @@ import { locations } from './location.js';
 import { PBattle,updatePlayerHealth,logMessage,removeClickEvent,getPokemonStats } from './Batalha.js';
 import { clearLog,removeAllButtons,updateStatus,getMoveDetails,getPokemonData,calculateDamage} from './Batalha.js';
 import { options } from './Opções.js';
-import { PBattle2 } from './Batalha copy.js';
+//import { PBattle2 } from './Batalha copy.js';
 import {FF,addFF,zeraFF} from './pokeapiF.js';
 import { moves } from './moves.js';
 
@@ -85,6 +85,7 @@ const monsters = [
 // initialize buttons
 export const player = new Player();
 export const rival = new Player();
+export const rival2 = new Player();
 
 export const Poke1 = new Player();
 export const Poke2 = new Player();
@@ -111,6 +112,7 @@ button3.onclick = pokeapiF7;
 	//document.querySelector(`button[onclick="PokemonInicial(${id})"]`).onclick = () => PokemonInicial(id);});
 
 export function update(location) {
+  button4.style.display = "";
 	button5.style.display = "";
 	button6.style.display = "";
   button7.style.display = "";
@@ -131,6 +133,7 @@ export function update(location) {
 }
 
 export function UniOp(location) {
+  button4.style.display = "";
 	button5.style.display = "none";
 	button6.style.display = "none";
   button7.style.display = "none";
@@ -142,6 +145,8 @@ export function UniOp(location) {
     text.innerText = location.text;    
 }
 export function DiOp(location) {
+  button4.style.display = "";
+  button5.style.display = "";
   button6.style.display = "none";
   button7.style.display = "none";
     monsterStats.style.display = "none";
@@ -444,9 +449,11 @@ console.log(FF);
           FF = 0;
           console.log("resetei,FF");
           break;
-      }
-        
-        
+        case 4:
+          console.log("PósInitProf2");
+          goFinalBattle(0);
+          break;
+      } 
     }
 }
 
@@ -479,7 +486,13 @@ export async function PósInitProf2() {
 
   UniOp(locations[10]);
   text.innerText = "Professor Carvalho te dá 5 Poções. Você decide passar pela floresta para chegar em Pewter."
+  let botao = document.getElementById("btn2");
+    let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
+    let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
 
+      numero = numero + 5
+      console.log(numero)
+      botao.textContent = `Poções: ${numero}`;
 
 }
 export async function Florestando(e) {
@@ -494,7 +507,6 @@ export async function Florestando(e) {
         let A = randomIntFromInterval(1, 6);
         let selectedPoke = PokeInstances[`Poke${A}`]; // Obtém o Pokémon correspondente
         if (selectedPoke) {
-          let C = randomIntFromInterval(1, 10);
 
           PBattle(player, selectedPoke); // Passa o Pokémon para a batalha
          } else {console.error(`Poke${A} não encontrado!`);}
@@ -503,7 +515,6 @@ export async function Florestando(e) {
         let B = randomIntFromInterval(1, 3);
         let selectedTrainer = TrainerInstances[`treinador${B}`]; // Obtém o Pokémon correspondente
         if (selectedTrainer) {
-          let C = randomIntFromInterval(1, 10);
 
           PBattle(player, selectedTrainer); // Passa o Pokémon para a batalha
          } else {console.error(`treinador${B} não encontrado!`);}
@@ -551,7 +562,7 @@ export async function Eventoso(C) {
 
   }else if (C == 10) {
     addFF()
-    Togepi();
+    //Togepi();
     UniOp(locations[14]);
     text.innerText = "Encontra uma pokebola em cima de uma pedra";
   }
@@ -574,6 +585,7 @@ else if (op == 2) {
  QuadOp(locations[17]);
  text.innerText = "O quê fazer?";
 }
+
 }
 export async function goCentroPokémon(op) {
   const text = document.getElementById('text');
@@ -584,9 +596,10 @@ export async function goCentroPokémon(op) {
   else if (op == 2) {
     text.innerText = "Seus Pokémon foram curados!"
     for (let i = 0; i < player.party.length; i++) {
-      player.party[i].health = player.party[i].TotalHP;
-      UniOp(locations[16]);
+      player.party[i].name.hp = player.party[i].name.TotalHP;
     }
+    UniOp(locations[23]);
+
   }}
   export async function goPokéMart(op) {
     if (op == 1) {
@@ -594,8 +607,24 @@ export async function goCentroPokémon(op) {
       TriOp(locations[19]);
     }
     else if (op == 2) {
-      text.innerText = "Uma poção foi comprada!"
-      UniOp(locations[16]);
+      let botao = document.getElementById("btn2");
+      let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
+      let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
+  
+      if (gold >= 200) {
+        numero++
+        gold -= 200
+        document.getElementById('goldText').innerHTML = gold; 
+        console.log(numero)
+        botao.textContent = `Poções: ${numero}`;
+        UniOp(locations[16]);
+        text.innerText = "Uma poção foi comprada!"
+      } else{
+        text.innerText = "Dinheiro insuficiente"
+
+      }
+
+
     }
     else if (op == 3) {
       text.innerText = "Uma pokébola foi comprada!"
@@ -604,16 +633,26 @@ export async function goCentroPokémon(op) {
     }
     export async function goGym(op) {
   if (op == 1) {
-    text.innerText = "Deseja desafiar o líder de ginásio Brock?"
+    update(locations[20]);
     DiOp(locations[20]);
+    text.innerText = "Deseja desafiar o líder de ginásio Brock?"
+
   }
   else if (op == 2) {
     PBattle(player,treinadorBrock);
   }
 }
-export async function goFinalBattle() {
-  text.innerText = "Estive esperando por nossa segunda batalha, prepare-se para perder!"
+export async function goFinalBattle(op) {
+  console.log(op);
+  if (op == 0) { 
+  console.log("wgf");
+  update(locations[21]);
   DiOp(locations[21]);
+  text.innerText = "Estive esperando por nossa segunda batalha, prepare-se para perder!"
+  }else if (op == 1) {
+    console.log("wgf");
+    PBattle(player, rival2)
+  }
 }
 export async function Fim(op) {
   if (op == 1){
@@ -648,11 +687,11 @@ export async function menu() {
   }
 
 
-  export async function troca(fh,playerTroca,rival,ajuda,handleBtn1Click,btn,pOG) {
+  export async function troca(fh,playerTroca,rival,ajuda,handleBtn1Click,btn,pOG,handlerino) {
     
     console.log(btn,handleBtn1Click)
     if ((btn == P2 || btn == P3 || btn == P4 || btn == P5 || btn == P6) && handleBtn1Click != "Batata") {
-      console.log("ENTROU");
+      console.log("ENTROU",btn);
       return [btn,25]
     }
     
@@ -680,7 +719,11 @@ export async function menu() {
 console.log(playerTroca)
     //setTimeout(() => updatePlayerHealth(null, null, "player",player.party[0].name), 1500);
 console.log("pOG:",pOG)
-    setTimeout(() => PBattle(pOG,rival,0,TURNO), 1500);
+    
+    //o btn aí ferra com os botões de opções, só tirar pra
+    //voltar a funcionar (ok agora não pois consegui
+    //fazer as trocas entres 3 pokes funcionarem)
+    setTimeout(() => PBattle(pOG,rival,0,TURNO,btn,"A"), 1500);
 
     SwapIcons(fh[0],fh[playerTroca],1,playerTroca+1);
     console.log("playerTroca depois:",fh[0],fh[playerTroca]);
@@ -692,19 +735,38 @@ console.log("pOG:",pOG)
   }
 export async function bolsaPotion(fh) {
     //player.party[0]
-console.log("wtf",fh.name.hp);
- if (fh.name.hp+20 <= fh.name.TotalHP) {
-   fh.name.hp = fh.name.hp+20;
-   document.getElementById('playerPokemonHealth').innerHTML = `
-   <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
- <p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
-`;}
-else{
-  fh.name.hp = fh.name.TotalHP;
-  document.getElementById('playerPokemonHealth').innerHTML = `
-  <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
-<p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
-`;}
+    let botao = document.getElementById("btn2");
+
+    if (botao) {
+      let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
+      let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
+    
+      console.log(numero); // Exibe o número extraído
+      if (numero >= 1) {
+        console.log(numero)
+
+        numero--
+        console.log(numero)
+        botao.textContent = `Poções: ${numero}`;
+        
+        console.log("wtf",fh.name.hp);
+        if (fh.name.hp+20 <= fh.name.TotalHP) {
+          fh.name.hp = fh.name.hp+20;
+          document.getElementById('playerPokemonHealth').innerHTML = `
+          <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
+        <p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
+       `;}
+       else{
+         fh.name.hp = fh.name.TotalHP;
+         document.getElementById('playerPokemonHealth').innerHTML = `
+         <p><div id="${playerProgressBar}" style="width: ${fh.name.hp}%;"></div></p>
+       <p>${Math.max(fh.name.hp, 0)}/${fh.name.TotalHP} HP</p>
+       `;}
+      }
+
+    }
+    
+
 }
 
   export async function captura(fh) {
@@ -733,6 +795,7 @@ if (verificaMaisQueSeis == undefined) {
 }
 
 
+
   //para adaptar a estrutura dos movimentos do npc pro player
   //lenght é temporário, não vai funcionar quando for capturar mais de
   //6 pokémon
@@ -746,7 +809,14 @@ if (verificaMaisQueSeis == undefined) {
   //console.log("ds",player.party.length);
   player.party[ajudador-1].moves = moveNames;
 console.log("Switch",moveNames); 
-     
+
+let e = player.party.length; // Get the party length
+let boto = document.getElementById(`P${e}`); // Corrected template literal syntax
+console.log(boto)
+if (boto != P2) {
+  boto.style.backgroundColor = "#2f3331"; // Change button color
+}
+
   }
   export async function fugir() {
     const buttonBox = document.getElementById("button-box");
@@ -940,4 +1010,14 @@ export function embaralharNumeros() {
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+export function aumentargold(g) {
+  gold += g;
+  goldText.innerText = gold;
 
+}
+
+export function obtergold() {
+  return gold;
+}
+
+export { gold };

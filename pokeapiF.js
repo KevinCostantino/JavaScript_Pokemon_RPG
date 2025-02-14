@@ -1,9 +1,10 @@
-import { goPewter, update } from './script.js';
+import { goPewter, update, goFinalBattle } from './script.js';
 import { locations } from './location.js';
 import { goStore } from './script.js';
 import { Poke } from './pokeapi.js';
 import { player } from './script.js';
-import { rival } from './script.js';
+import {aumentargold } from "./script.js";
+import { rival,rival2 } from './script.js';
 import { Poke1, Poke2, Poke3, Poke4, Poke5,Poke6,treinador1,treinador2,treinador3,treinadorBrock } from './script.js';
 
 //import { startBattle } from './Batalha.js';
@@ -56,8 +57,11 @@ export async function PokemonInicial(pokemonId, aux) {
     console.log(player.party[0]);
 
     const initialRival = await getPokemonStats(inicialRival(player),5);
+    const initialRival2 = await getPokemonStats(inicialRival(player)+1,5);
     const [MR1, MR2, MR3, MR4] = MovRival(player);
-    rival.capturePokemon("Gary",initialRival, 0, 5, MR1, MR2, MR3, MR4,4);    
+    rival.capturePokemon("Gary",initialRival, 0, 5, MR1, MR2, MR3, MR4,4); 
+    
+
     console.log(rival);
     //captureRandomPokemon(player);
     console.log(`${initialPokemon.name} (Nível ${initialPokemon.level}) foi capturado!`);
@@ -81,7 +85,8 @@ export async function PokemonInicial(pokemonId, aux) {
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95,10),0,10,moves[1], moves[2], moves[23], moves[0]);
     console.log(treinadorBrock.party);
     console.log(Poke6.party);
-
+    rival2.capturePokemon("Gary",await BatalhaSetup(21,11), 0, 11,moves[9], moves[14], moves[15],4);    
+    rival2.capturePokemon("Gary",await BatalhaSetup(inicialRival(player)+1,13), 0, 13, MR1, MR2, MR3, MR4,4);
 
 
     console.log(rival.party[0]);
@@ -167,7 +172,8 @@ function rivalF(player) {
 function startBattleF(player) {
 
     document.getElementById("pokemonImage").style.display = "none"
-    PBattle(player,treinadorBrock);
+    console.log(rival,rival2);
+    PBattle(player, rival)
     //evento()
 
 }
@@ -195,6 +201,19 @@ export function updateHealth(pokemon, damage,hp) {
       return hp;
     }
 export function endBattleF(a,treinadorNome) {
+    console.log(treinadorNome);
+    if (treinadorNome == "Gary" || treinadorNome == "Brock") {
+        console.log("entrou");
+        for (let index = 0; index < player.party.length; index++) {
+            player.party[index].name.hp = player.party[index].name.TotalHP;
+          }
+    }
+
+    if (treinadorNome != "") {
+        if (treinadorNome != "Gary" && treinadorNome != "Brock") {
+            aumentargold(300);
+        }
+    }
     //const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
     setTimeout(2000);
     alert(`EAE`);
@@ -226,9 +245,12 @@ function vaiproScript(a,treinadorNome) {
             FF = 0
             goPewter(1)
         }
+    }else if (treinadorNome == "Gary") {
+
+        vaiproScript2(a)
     }else if (treinadorNome == "Brock") {
         console.log(treinadorNome);
-        vaiproScript2(a)
+        IMFREE(1,"Options",undefined,4);
     }
 
 }

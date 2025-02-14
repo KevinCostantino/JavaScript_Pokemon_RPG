@@ -1,8 +1,7 @@
 import {captura, troca, bolsaPotion, trocatela } from './script.js';
 import './Batalha.js';
-import './Batalha copy.js';
 //import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha.js';
-import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha copy.js';
+import {logMessage,updateStatus,calculateDamage,updatePlayerHealth} from './Batalha.js';
 import { endBattleF } from './pokeapiF.js'; 
 
 const btn1 = document.getElementById("btn1");
@@ -16,20 +15,17 @@ const handleBtn3Clic = () => options(btn3, turnoAtual, player.party[0], rival.pa
 
 const oioioi = 0
 
-export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG,handleBtn1Click,handleBtn2Click,handleBtn3Click,btt) {
+export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG,handleBtn1Click,handleBtn2Click,handleBtn3Click,btt,handlerino) {
   //player = player.party[0]
   //rival = rival.party[0]
 
-  
-console.log("1: "+handleBtn1Clic + " 2: "+handleBtn2Clic + 
-  " 3: "+handleBtn3Clic + " I: "+handleBtn1Click + " II: "+handleBtn2Click + 
-  " III: "+handleBtn3Click)
+
 const P2 = document.getElementById("P2");
 const P3 = document.getElementById("P3");
 const P4 = document.getElementById("P4");
 const P5 = document.getElementById("P5");
 const P6 = document.getElementById("P6");
-  console.log("OI",btn,P2)
+  console.log("OI",btn,btt)
   let vidaAntigaP = player.name.hp;
   let vidaAntigaO = rival.name.hp;
 
@@ -91,7 +87,11 @@ const P6 = document.getElementById("P6");
           if (pokemonButtons.includes(btn)) {
             const index = pokemonButtons.indexOf(btn);
             console.log(playerOG.party[numero])
-            const b = await troca(playerOG.party, numero-1, rivalOG, turnoAtual,handleBtn3Click,btn,playerOG);
+            const b = await troca(playerOG.party, numero-1, rivalOG, turnoAtual,handleBtn3Click,btn,playerOG,handlerino);
+
+            //console.log("btn e handlerino",btn,handlerino)
+            //btn.removeEventListener("click", handlerino);
+
             console.log(b)
             if (b[1] == 25) {
               console.log(";-;")
@@ -324,6 +324,8 @@ function endBattle(winner) {
           btn2.removeEventListener("click", handleBtn2Click);
           btn3.removeEventListener("click", handleBtn3Click);          
             //player.party[1].name.hp = player.party[1].name.TotalHP;
+            console.log("hih")
+
             endBattleF(0); // Finalização para jogador
         } else {
           for (let index = 0; index < player.party.length; index++) {
@@ -332,6 +334,7 @@ function endBattle(winner) {
           btn1.removeEventListener("click", handleBtn1Click);
           btn2.removeEventListener("click", handleBtn2Click);
           btn3.removeEventListener("click", handleBtn3Click);
+          console.log("hoh")
             endBattleF(1); // Finalização para rival
         }
     }, 1000);
@@ -342,5 +345,15 @@ function updateLV(PokeP) {
   `<p><strong>Lv.${PokeP.level}</strong></p>
    `;
   
-      }   
+      }
+function Poff(P) {
+        if (P) {
+          P.disabled = true;
+          P.style.cursor = "not-allowed";
+          P.style.pointerEvents = "none";
+          P.style.backgroundColor = "#105913";
+        } else {
+          console.error(`Element with ID "${P}" not found.`);
+        }
+      }  
 }

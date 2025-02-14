@@ -4,12 +4,12 @@ import { getXPGrowthRate } from './XPf.js';
 import { options } from './Opções.js';
 import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
-import { menu} from './script.js';
+import { menu, Poke1} from './script.js';
 
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
-
+//const P3 = document.getElementById("P3");
 
 
 
@@ -241,7 +241,6 @@ export function clearLog() {
 }
     // Função para mostrar o status dos Pokémon 
 export function updateStatus(player, opponent,dano,vidaAntigaP,vidaAntigaO,atacante) {
-  //btn1.removeEventListener("click", handleBtn1Click);
 
           const status = document.getElementById('status');
           status.style.display = 'block';
@@ -482,23 +481,46 @@ export function removeAllButtons() {
     // Função de batalha
 export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
 
- async function testet() {
-    let a = await options(P2, turnoAtual, player.party[0], rival.party[0], player, rival);
+ async function testet(Pb) {
+    let a = await options(Pb, turnoAtual, player.party[0], rival.party[0], player, rival);
     if (a[1] == 25) {
       btn1.removeEventListener("click", handleBtn1Click);
       btn2.removeEventListener("click", handleBtn2Click);
       btn3.removeEventListener("click", handleBtn3Click);
+      console.log(Pb,Pb.id);
+      if (Pb.id == "P2") {
+        console.log("wasff asft");
+        //P3.removeEventListener("click", window[`handleP3Click`]);
+        Pb.removeEventListener("click", window[`handle${Pb.id}Click`]);
+      }
+      if (Pb.id == "P3") {
+        //P2.removeEventListener("click", window[`handleP2Click`]);
+
+        Pb.removeEventListener("click", window[`handle${Pb.id}Click`]);
+
+      }
       P2.removeEventListener("click", handleP2Click);
-      options(P2, turnoAtual, player.party[0], rival.party[0], player, rival,undefined,undefined,undefined,"Batata");
-      console.log("wtf chat",player);
+      //P3.removeEventListener("click", handleP2Click);
+      
+      options(Pb, turnoAtual, player.party[0], rival.party[0], player, rival,undefined,undefined,undefined,"Batata",window[`handle${Pb.id}Click`]);
+      //console.log("wtf chat",P3);
+      
     }
+    btn1.removeEventListener("click", handleBtn1Click);
+    btn2.removeEventListener("click", handleBtn2Click);
+    btn3.removeEventListener("click", handleBtn3Click);
     console.log(a);
     a = undefined
   }
   const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
   const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
   const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
-  const handleP2Click = () => testet();
+  const handleP2Click = () => testet(P2);
+    const handleP3Click = () => testet(P3);
+  
+  //const handleP4Click = () => testet(P4);
+  //const handleP5Click = () => testet(P5);
+  //const handleP6Click = () => testet(P6);
 
   btn1.removeEventListener("click", handleBtn1Click);
   btn2.removeEventListener("click", handleBtn2Click);
@@ -509,6 +531,14 @@ export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
   //party.style.display = 'none';
   
   console.log(player, rival,auxo,TURNO,sla);
+function Poff(P) {
+  if (P) {
+    P.disabled = true;
+    P.style.cursor = "not-allowed";
+    P.style.pointerEvents = "none";
+    P.style.backgroundColor = "#105913";
+  }
+}
 
 
 if (TURNO != undefined) {
@@ -517,11 +547,8 @@ if (TURNO != undefined) {
    turnoAtual = 1; // Controla o número do turno
 }
     //Deixar o ícone do Pokémon ativo desabilitado
-     let buttonP1 = document.getElementById("P1")
-     buttonP1.disabled = true;
-     buttonP1.cursor = "not-allowed";
-     buttonP1.style.pointerEvents = "none";
-     buttonP1.style.backgroundColor ="#105913";
+    let buttonP1 = document.getElementById("P1")
+    Poff(buttonP1)
 
       //var AM = 1; //Adapatador de movimento
       clearLog(); // Limpa o log após 5 segundos
@@ -574,18 +601,18 @@ if (TURNO != undefined) {
          let handleBtn2ClickAdded = sla;
          let handleBtn3ClickAdded = sla;
          console.log("wtf",1);
-         if (handleBtn1ClickAdded == undefined) {
+         if (handleBtn1ClickAdded == undefined || ct == "A") {
           console.log("wtf",3);
            btn1.addEventListener("click", handleBtn1Click);
            handleBtn1ClickAdded = undefined;
          }    
 
-         if (handleBtn2ClickAdded == undefined) {
+         if (handleBtn2ClickAdded == undefined || ct == "A") {
           console.log("wtf",4);
           btn2.addEventListener("click", handleBtn2Click);
           handleBtn2ClickAdded = undefined;
         }       
-        if (handleBtn3ClickAdded == undefined) {
+        if (handleBtn3ClickAdded == undefined || ct == "A") {
           console.log("wtf",5);
           btn3.addEventListener("click", handleBtn3Click);
           handleBtn3ClickAdded = undefined;
@@ -593,7 +620,7 @@ if (TURNO != undefined) {
         //btn1.addEventListener("click", () => console.log(player.party.length))
          if (player.party.length > 1) {
 
-          const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
+          //const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP4Click = () => options(P4, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP5Click = () => options(P5, turnoAtual, player.party[0], rival.party[0], player, rival);
           const handleP6Click = () => options(P6, turnoAtual, player.party[0], rival.party[0], player, rival);
@@ -602,42 +629,75 @@ if (TURNO != undefined) {
           const P4 = document.getElementById("P4");
           const P5 = document.getElementById("P5");
           const P6 = document.getElementById("P6");
-          console.log("wtf",player.party.length);
-          if (P2 && sla == undefined) {
-            P2.removeEventListener("click", handleP2Click);
-            P2.removeEventListener("click", () => turnoAtual++);
-            P2.addEventListener("click", handleP2Click,{once: true});
+          console.log("wtf",P2);
+
+          Poff(P3)
+          Poff(P4)
+          Poff(P5)
+          Poff(P6)
+          
+          if ((P2 && sla == undefined)|| (sla == P2)) {
+            console.log("wtf",2);
+            //P2.removeEventListener("click", handleP2Click);
+            //P2.removeEventListener("click", () => turnoAtual++);
+            P2.addEventListener("click", handleP2Click);
             P2.addEventListener("click", () => turnoAtual++);
+            if(ct == P2){
+              P2.removeEventListener("click", handleP2Click);
+              P2.removeEventListener("click", () => turnoAtual++);
+            }
+            if(sla == P2){
+              //P3.removeEventListener("click", handleP3Click);
+              //P3.removeEventListener("click", () => turnoAtual++);
+              //P3.addEventListener("click", handleP3Click,{once: true});
+              //P3.addEventListener("click", () => turnoAtual++);
+              sla = P3;
+              //P2.removeEventListener("click", handleP2Click);
+              //P2.removeEventListener("click", () => turnoAtual++);
+            }
           }
-          if (player.party.length > 2 && P3 && sla == undefined) {
+          if (player.party.length > 2){
+           if(((P3 && sla == undefined))||(aux == 0 && sla == P3)) {
+            console.log("wtf",3);
+            //P2.removeEventListener("click", handleP2Click);
+            //P2.removeEventListener("click", () => turnoAtual++);
             P3.removeEventListener("click", handleP3Click);
             P3.removeEventListener("click", () => turnoAtual++);
-            P3.addEventListener("click", handleP3Click);
-            P3.addEventListener("click", () => turnoAtual++);
+            console.log("wtf",player.party.length,P3);
+
+            //P3.addEventListener("click", handleP3Click);
+            //P3.addEventListener("click", () => turnoAtual++);
+            if(sla == P3){
+              P3.removeEventListener("click", handleP3Click);
+              P3.removeEventListener("click", () => turnoAtual++);
+              P2.removeEventListener("click", handleP2Click);
+              P2.removeEventListener("click", () => turnoAtual++);
+            }
           if (player.party.length > 3 && P4 && sla == undefined) {
+            console.log("wtf",4);
             P4.removeEventListener("click", handleP4Click);
             P4.removeEventListener("click", () => turnoAtual++);
-            P4.addEventListener("click", handleP4Click);
-            P4.addEventListener("click", () => turnoAtual++);
+            //P4.addEventListener("click", handleP4Click);
+            //P4.addEventListener("click", () => turnoAtual++);
           if (player.party.length > 4 && P5 && sla == undefined) {
             P5.removeEventListener("click", handleP5Click);
             P5.removeEventListener("click", () => turnoAtual++);
-            P5.addEventListener("click", handleP5Click);
-            P5.addEventListener("click", () => turnoAtual++);
+            //P5.addEventListener("click", handleP5Click);
+            //P5.addEventListener("click", () => turnoAtual++);
           if (player.party.length > 5 && P6 && sla == undefined) {
             P6.removeEventListener("click", handleP6Click);
             P6.removeEventListener("click", () => turnoAtual++);
-            P6.addEventListener("click", handleP6Click);
-            P6.addEventListener("click", () => turnoAtual++);
+            //P6.addEventListener("click", handleP6Click);
+            //P6.addEventListener("click", () => turnoAtual++);
           }
           }
           }
          }
-        }
+        }}
       }
 
       
-      if (ct == undefined) {
+      if (ct == undefined || ct == P2 || ct == "A") {
         //console.log("wafa");
       botones()
       }
@@ -862,13 +922,27 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             //btn3.removeEventListener("click", handleBtn3Click);
 
             setTimeout(() => PBattle(player,rival,undefined,turnoAtual), 1500);
+            console.log("sd");
             btn1.removeEventListener("click", handleBtn1Click);
             btn2.removeEventListener("click", handleBtn2Click);
             btn3.removeEventListener("click", handleBtn3Click);
+            if(P2)
+            {
+              P2.removeEventListener("click", handleP2Click);
+            }
+
           }
           else{
+            //P2.removeEventListener("click", handleP2Click);
+            //P3.removeEventListener("click", handleP3Click);
+
             if (player.party.length > 1) {
+              console.log("hah")
               P2.removeEventListener("click", handleP2Click);
+              if (player.party.length > 2) {
+                console.log("heh")
+                P3.removeEventListener("click", handleP3Click);
+              }
             }
             console.log("player.party[0]",player.party[0]);
             btn1.removeEventListener("click", handleBtn1Click);
@@ -903,19 +977,17 @@ function endBattle(winner) {
         // Chama a função de finalização com base no vencedor
         if (winner === 'player') {
           turnoAtual = 1
-          for (let index = 0; index < player.party.length; index++) {
-            player.party[index].name.hp = player.party[index].name.TotalHP;            
-          }
+
         
             //player.party[1].name.hp = player.party[1].name.TotalHP;
             console.log("removeu?");
             endBattleF(0,rival.treinador); // Finalização para jogador
         } else {
-          for (let index = 0; index < player.party.length; index++) {
-            player.party[index].name.hp = player.party[index].name.TotalHP;
-          }
 
-            endBattleF(1); // Finalização para rival
+          for (let index = 0; index < player.party.length; index++) {
+            player.party[index].name.hp = player.party[index].name.TotalHP;            
+          }
+            endBattleF(1,rival.treinador); // Finalização para rival
         }
     }, 1000);
 }
