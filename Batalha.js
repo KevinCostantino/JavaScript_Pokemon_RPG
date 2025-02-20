@@ -4,11 +4,13 @@ import { getXPGrowthRate } from './XPf.js';
 import { options } from './Opções.js';
 import { Pokemon } from './Pokémon.js'
 //import { rival } from './script.js';
-import { menu, Poke1} from './script.js';
+import { menu, Poke1, SwapIcons, Fuga, fugir, player,iconfixDerrota, captura} from './script.js';
 
 const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
+const btn4 = document.getElementById("btn4");
+
 //const P3 = document.getElementById("P3");
 
 
@@ -482,11 +484,14 @@ export function removeAllButtons() {
 export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
 
  async function testet(Pb) {
+  console.log("fs")
     let a = await options(Pb, turnoAtual, player.party[0], rival.party[0], player, rival);
+    console.log(a)
     if (a[1] == 25) {
       btn1.removeEventListener("click", handleBtn1Click);
       btn2.removeEventListener("click", handleBtn2Click);
       btn3.removeEventListener("click", handleBtn3Click);
+
       console.log(Pb,Pb.id);
       if (Pb.id == "P2") {
         console.log("wasff asft");
@@ -509,18 +514,50 @@ export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
     btn1.removeEventListener("click", handleBtn1Click);
     btn2.removeEventListener("click", handleBtn2Click);
     btn3.removeEventListener("click", handleBtn3Click);
+
     console.log(a);
     a = undefined
   }
+
+  async function fugir(){
+      Fuga(rival.treinador)
+      if(rival.treinador == "")
+      {
+      btn1.removeEventListener("click", handleBtn1Click);
+      btn2.removeEventListener("click", handleBtn2Click);
+      btn3.removeEventListener("click", handleBtn3Click);
+      btn4.removeEventListener("click", handleBtn4Click);
+      P2.removeEventListener("click", handleP2Click);
+      }
+
+  }
+  
+  async function capturando(pokemono,rivalnome){
+    captura(pokemono,rivalnome)
+    if(rival.treinador == "")
+    {
+    btn1.removeEventListener("click", handleBtn1Click);
+    btn2.removeEventListener("click", handleBtn2Click);
+    btn3.removeEventListener("click", handleBtn3Click);
+    btn4.removeEventListener("click", handleBtn4Click);
+    P2.removeEventListener("click", handleP2Click);
+    }
+    else{
+      logMessage(`Turno ${turnoAtual}:`);
+      options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival)
+    }
+
+}
   const handleBtn1Click = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
   const handleBtn2Click = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
-  const handleBtn3Click = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival,handleBtn1Click,handleBtn2Click,handleBtn3Click);
+  const handleBtn3Click = () => capturando(rival.party[0],rival.treinador);
+  const handleBtn4Click = () => fugir();
+
   const handleP2Click = () => testet(P2);
-    const handleP3Click = () => testet(P3);
-  
-  //const handleP4Click = () => testet(P4);
-  //const handleP5Click = () => testet(P5);
-  //const handleP6Click = () => testet(P6);
+  const handleP3Click = () => testet(P3);
+  const handleP4Click = () => testet(P4);
+  const handleP5Click = () => testet(P5);
+  const handleP6Click = () => testet(P6);
 
   btn1.removeEventListener("click", handleBtn1Click);
   btn2.removeEventListener("click", handleBtn2Click);
@@ -536,7 +573,10 @@ function Poff(P) {
     P.disabled = true;
     P.style.cursor = "not-allowed";
     P.style.pointerEvents = "none";
-    P.style.backgroundColor = "#105913";
+    P.style.backgroundColor = "#2f3331";
+    if (P.id == "P1") {
+      P.style.backgroundColor = "#264a23";
+    }
   }
 }
 
@@ -595,11 +635,13 @@ if (TURNO != undefined) {
          btn1.removeEventListener("click", handleBtn1Click);
          btn2.removeEventListener("click", handleBtn2Click);
          btn3.removeEventListener("click", handleBtn3Click);
-         
+
          //var AM = 1; //Adapatador de movimento
          let handleBtn1ClickAdded = sla;
          let handleBtn2ClickAdded = sla;
          let handleBtn3ClickAdded = sla;
+         let handleBtn4ClickAdded = sla;
+
          console.log("wtf",1);
          if (handleBtn1ClickAdded == undefined || ct == "A") {
           console.log("wtf",3);
@@ -617,13 +659,18 @@ if (TURNO != undefined) {
           btn3.addEventListener("click", handleBtn3Click);
           handleBtn3ClickAdded = undefined;
         } 
-        //btn1.addEventListener("click", () => console.log(player.party.length))
+        if (handleBtn4ClickAdded == undefined || ct == "A") {
+          console.log("wtf",5);
+          btn4.addEventListener("click", handleBtn4Click,{once: true});
+          handleBtn4ClickAdded = undefined;
+        } 
+        btn1.addEventListener("click", () => console.log(player.party.length))
          if (player.party.length > 1) {
 
           //const handleP3Click = () => options(P3, turnoAtual, player.party[0], rival.party[0], player, rival);
-          const handleP4Click = () => options(P4, turnoAtual, player.party[0], rival.party[0], player, rival);
-          const handleP5Click = () => options(P5, turnoAtual, player.party[0], rival.party[0], player, rival);
-          const handleP6Click = () => options(P6, turnoAtual, player.party[0], rival.party[0], player, rival);
+          //const handleP4Click = () => options(P4, turnoAtual, player.party[0], rival.party[0], player, rival);
+          //const handleP5Click = () => options(P5, turnoAtual, player.party[0], rival.party[0], player, rival);
+          //const handleP6Click = () => options(P6, turnoAtual, player.party[0], rival.party[0], player, rival);
 
           const P3 = document.getElementById("P3");
           const P4 = document.getElementById("P4");
@@ -886,12 +933,87 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
       }
       
       function checkBattleStatus() {
+        
         if (player.party[0].name.hp <= 0) {
+          let P1l = document.getElementById("P1")
+          let P2l = document.getElementById("P2")
+          console.log(player.party.length)
+         if (player.party.length > 1) {
+          console.log(player.party[1].name.hp)
+          DefeatIconsOrder();
+          console.log("sf")
+          //SwapIcons(player.party[1],player.party[0],1,2)
+          if (player.party[1].name.hp > 0) {
+            let aux = player.party[0];
+            logMessage(player.party[0].name.name + ' foi derrotado, você utiliza seu próximo pokémon');
+            for (let index = 1; index < player.party.length+1; index++) {
+              player.party[index-1] = player.party[index];
+              if (index == player.party.length) {
+                player.party[index-1] = aux
+              }
+            }
+            console.log(aux)
+            btn1.removeEventListener("click", handleBtn1Click);
+            btn2.removeEventListener("click", handleBtn2Click);
+            btn3.removeEventListener("click", handleBtn3Click);
+            btn4.removeEventListener("click", handleBtn3Click);
+            P2.removeEventListener("click", handleP2Click);
+            auxo = undefined; //sim isso envolve a troca de poke do rival
+            setTimeout(() => PBattle(player,rival,0,turnoAtual), 1500);
+          
+          }else {
+            console.log(player.party);
+            
+            setTimeout(() => {
+              // Shift dos Pokémon no array
+              let aux = player.party[0]; // Salva o primeiro Pokémon antes da troca
+              for (let index = 1; index < player.party.length; index++) {
+                player.party[index - 1] = player.party[index];
+              }
+              player.party[player.party.length - 1] = aux; // Último recebe o primeiro
+          
+              logMessage('Você perdeu a batalha!');
+          
+              // Removendo event listeners corretamente
+              [btn1, btn2, btn3, btn4].forEach(btn => btn?.removeEventListener("click", handleBtn1Click));
+          
+              if (player.party.length > 1) {
+                console.log("hah");
+                P2?.removeEventListener("click", handleP2Click);
+                if (player.party.length > 2) {
+                  console.log("heh");
+                  P3?.removeEventListener("click", handleP3Click);
+                }
+              }
+          
+              // Encerrando a batalha
+              endBattle('rival');
+          
+            }, 300); 
+          }
+          
+        }else{
+          //DefeatIconsOrder();
+
           logMessage('Você perdeu a batalha!');
           btn1.removeEventListener("click", handleBtn1Click);
           btn2.removeEventListener("click", handleBtn2Click);
           btn3.removeEventListener("click", handleBtn3Click);  
+          btn4.removeEventListener("click", handleBtn4Click);  
+
+          if (player.party.length > 1) {
+            console.log("hah")
+            P2.removeEventListener("click", handleP2Click);
+            if (player.party.length > 2) {
+              console.log("heh")
+              P3.removeEventListener("click", handleP3Click);
+            }
+          }
           endBattle('rival');
+        }
+
+
+
         } else if (rival.party[0].name.hp <= 0) {
 
          
@@ -926,9 +1048,15 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             btn1.removeEventListener("click", handleBtn1Click);
             btn2.removeEventListener("click", handleBtn2Click);
             btn3.removeEventListener("click", handleBtn3Click);
-            if(P2)
-            {
+            btn4.removeEventListener("click", handleBtn4Click);
+
+            if (player.party.length > 1) {
+              console.log("hah")
               P2.removeEventListener("click", handleP2Click);
+              if (player.party.length > 2) {
+                console.log("heh")
+                P3.removeEventListener("click", handleP3Click);
+              }
             }
 
           }
@@ -948,6 +1076,7 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             btn1.removeEventListener("click", handleBtn1Click);
             btn2.removeEventListener("click", handleBtn2Click);
             btn3.removeEventListener("click", handleBtn3Click);  
+            btn4.removeEventListener("click", handleBtn4Click);
 
             XPDX(player.party[0].name.currentXP,player.party[0].name.levelType,rival.party[0].name.base_exp,player.party[0].name.level,rival.party[0].name.level,0)
             logMessage('Você venceu a batalha!');
@@ -985,8 +1114,11 @@ function endBattle(winner) {
         } else {
 
           for (let index = 0; index < player.party.length; index++) {
+            console.log(player.party)
+
+            console.log(player.party[index].name)
             player.party[index].name.hp = player.party[index].name.TotalHP;            
-          }
+          }//voltar ao hp completo
             endBattleF(1,rival.treinador); // Finalização para rival
         }
     }, 1000);
@@ -1012,7 +1144,58 @@ export function chamarBatalha(A, B,C,D,E) {
   chamarBatalha2(A,B,C,D,E);
 }
 
+export function DefeatIconsOrder() {
+  // Define os IDs dos botões a serem atualizados
+  let botoes = [
+    document.getElementById("P1"),
+    document.getElementById("P2"),
+    document.getElementById("P3"),
+    document.getElementById("P4"),
+    document.getElementById("P5"),
+    document.getElementById("P6")
+  ];
 
+
+  // Atualiza os ícones
+  for (let index = 0; index < botoes.length; index++) {
+    const botao = botoes[index];
+    if (botao == undefined) {
+      return
+    }
+    const { x2, y2 } = iconfixDerrota(botao.id);
+
+
+    if (index < player.party.length-1) {
+      // Obtém a posição corrigida
+      console.log(botao,botao.id)
+      botao.innerHTML = `
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${player.party[index+1].name.id}.png" 
+             style="position: absolute; top: ${x2}px; left: ${y2}px;">
+      `;
+      console.log(x2,y2)
+    } else {
+      console.log(botao,botao.id)
+      // Remove o ícone caso não tenha Pokémon suficiente
+      botao.innerHTML = `
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-viii/icons/${player.party[0].name.id}.png" 
+           style="position: absolute; top: ${x2}px; left: ${y2}px;">
+    `;
+    console.log(x2,y2)
+    }
+  }
+
+
+
+
+  // Altera o estilo do botão "Voltar"
+  let a = document.getElementById("Voltar button-box");
+
+  if (player.party.length === 2 || player.party.length === 4 || player.party.length === 6) {
+    a.style.cssText = "grid-column: span 2; text-align: center;";
+  } else if (player.party.length === 3 || player.party.length === 5) {
+    a.style.cssText = "";  // Remove a estilização
+  }
+}
 
 
 

@@ -31,34 +31,42 @@ class Player {
         }
     }
 
-    replacePokemon(newPokemon,currentTotalXP,level,move1,move2,move3,move4,type1,type2,NdeMov) {
-        
+    replacePokemon(newPokemon, currentTotalXP, level, move1, move2, move3, move4, type1, type2, NdeMov) {
         console.log("Escolha um Pokémon para substituir:");
         this.party.forEach((p, index) => {
             console.log(`${index + 1}: ${p.name}`);
         });
-
+    
         const choice = prompt("Digite o número do Pokémon que deseja substituir:");
-        setTimeout(() => {}, 150);
-        if (choice !== null) {
-            const indexToReplace = parseInt(choice) - 1;
-            if (indexToReplace >= 0 && indexToReplace < this.party.length) {
-                const replacedPokemon = this.party[indexToReplace];
-                this.party[indexToReplace] = new Pokemon(newPokemon, currentTotalXP,level,move1,move2,move3,move4,type1,type2,NdeMov); // Substitui o Pokémon escolhido
-                //AjustaMove(this.party[indexToReplace])
-                console.log(this.party[indexToReplace])
-                console.log(choice)
-                updateIcon(newPokemon,choice)
-                console.log(`${replacedPokemon.name} foi substituído por ${newPokemon.name}.`);
-                return choice
+    
+        const escolha = (choice) => {
+            setTimeout(() => {}, 150);
+            if (choice !== null) {
+                console.log(choice);
+                if (choice >= 1 && choice <= 6) { // Garante que seja um número válido
+                    const indexToReplace = parseInt(choice) - 1;
+                    if (indexToReplace >= 0 && indexToReplace < this.party.length) {
+                        const replacedPokemon = this.party[indexToReplace];
+                        this.party[indexToReplace] = new Pokemon(newPokemon, currentTotalXP, level, move1, move2, move3, move4, type1, type2, NdeMov);
+                        updateIcon(newPokemon, choice);
+                        console.log(`${replacedPokemon.name} foi substituído por ${newPokemon.name}.`);
+                        return choice; // Retorna a escolha feita
+                    } else {
+                        console.log("Escolha inválida! Nenhum Pokémon foi substituído.");
+                    }
+                } else {
+                    const choice2 = prompt("Escolha inválida! Por favor, selecione uma posição válida.");
+                    return escolha(choice2); // Recursão para garantir uma escolha válida
+                }
             } else {
-                console.log("Escolha inválida! Nenhum Pokémon foi substituído.");
+                console.log("Nenhuma escolha feita. Nenhum Pokémon foi substituído.");
             }
-        } else {
-            console.log("Nenhuma escolha feita. Nenhum Pokémon foi substituído.");
-        }
-      
+            return null; // Retorna null caso nenhuma escolha seja feita
+        };
+    
+        return escolha(choice); // Retorna o resultado de escolha() para `replacePokemon`
     }
+    
 
     showParty() {
         const str = "name";

@@ -109,7 +109,7 @@ export const locations = [
 		name: "Floresta",
 		"button text": ["Curva à esquerda","Curva à direita","Caminhar reto"],
 		"button functions": [() =>Florestando(0),() =>Florestando(1),() =>Florestando(2)],
-		text: "",//1 Poke selvagem, 2 Treinador, 3 Evento
+		text: "Por qual caminho seguir?",//1 Poke selvagem, 2 Treinador, 3 Evento
 	},
     {
 		id: 12,
@@ -183,7 +183,7 @@ export const locations = [
 		id: 21,
 		name: "BatalhaFinal",
 		"button text": ["Voltar","Começar Batalha."],
-		"button functions": [() => goPewter(2),() =>goFinalBattle(1)],
+		"button functions": [() => goPewter(3),() =>goFinalBattle(1)],
 		text: "",
 	},
 	//{
@@ -206,5 +206,17 @@ export const locations = [
 		"button text": ["Continuar"],
 		"button functions": [() => goPewter(2)],
 		text: "Seus Pokémon foram curados!",
+	},
+	{
+		id: 24,
+        name: "Pewter",
+        "button text": ["Centro Pokémon", "PokéMart", "Rival","Voltar"],
+        "button functions": [
+            () => goCentroPokémon(1), // Chama a função goCentroPokémon com argumento 1
+            () => goPokéMart(1), // Chama a função goPokéMart com argumento 1
+            () => goFinalBattle(1), // Chama a função goGym com argumento 1
+			() => goFlorest(), // Chama a função goFlorest
+        ],
+        text: "",
 	},
 ]

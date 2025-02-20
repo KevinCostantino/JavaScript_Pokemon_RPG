@@ -31,19 +31,15 @@ const P6 = document.getElementById("P6");
 
          var AM = 1; //Adapatador de movimento
          
-         console.log("merda",btn)
+         console.log("ss",btn)
+
 
          if (btn == btn3) {
-          captura(rival); // Chama a função captura
-          console.log("ada",playerOG.party[5])
-            const a = playerOG.party.length; // Calcula o comprimento da party no momento do clique
-            //console.log("dsSF", playerOG.party[a - 1].name); // Exibe o nome do Pokémon recém-adicionado
 
             setTimeout(() => { }, 1000); // 1 segundo de cooldown
-        logMessage(`Turno ${turnoAtual}:`);
-        logMessage(`${LetraM1(player.name.name)} capturou!`);
-        console.log("capturou");
-        //return { damage: 0 };
+        //logMessage(`Turno ${turnoAtual}:`);
+
+         
          exampleUsage("btn3");
 
         }

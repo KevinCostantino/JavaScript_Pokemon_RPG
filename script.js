@@ -1,4 +1,4 @@
-import { PokemonInicial } from './pokeapiF.js';
+import { endBattleF, PokemonInicial } from './pokeapiF.js';
 import Player from './Player.js';
 import { askForName,vaiproScript2 } from './pokeapiF.js';
 import { locations } from './location.js';
@@ -490,9 +490,18 @@ export async function PósInitProf2() {
     let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
     let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
 
+    let botao2 = document.getElementById("btn3");
+    let texto2 = botao2.textContent || botao2.innerText; // Pega o texto dentro do botão
+    let numero2 = parseInt(texto2.match(/\d+/)[0]); // Extrai o número do texto
+
+
+      numero2 = numero2 + 6
       numero = numero + 5
       console.log(numero)
+      console.log(numero2)
+
       botao.textContent = `Poções: ${numero}`;
+      botao2.textContent = `Pokébola: ${numero2}`;
 
 }
 export async function Florestando(e) {
@@ -501,6 +510,7 @@ export async function Florestando(e) {
 
     const sac = embaralharNumeros();
     console.log(sac[e]);
+    text.innerText = "Por qual caminho seguir?" ;
 
     switch (sac[e]) {
       case 1:
@@ -584,7 +594,10 @@ if (op == 1) {
 else if (op == 2) {
  QuadOp(locations[17]);
  text.innerText = "O quê fazer?";
-}
+}else if (op == 3) {
+  QuadOp(locations[24]);
+  text.innerText = "O quê fazer?";
+ }
 
 }
 export async function goCentroPokémon(op) {
@@ -611,6 +624,7 @@ export async function goCentroPokémon(op) {
       let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
       let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
   
+
       if (gold >= 200) {
         numero++
         gold -= 200
@@ -627,8 +641,23 @@ export async function goCentroPokémon(op) {
 
     }
     else if (op == 3) {
-      text.innerText = "Uma pokébola foi comprada!"
+      let botao2 = document.getElementById("btn3");
+      let texto2 = botao2.textContent || botao2.innerText; // Pega o texto dentro do botão
+      let numero2 = parseInt(texto2.match(/\d+/)[0]); // Extrai o número do texto
+
+      if (gold >= 300) {
+        numero2++
+        gold -= 300
+        document.getElementById('goldText').innerHTML = gold; 
+        text.innerText = "Uma pokébola foi comprada!"
+        botao2.textContent = `Pokébola: ${numero2}`;
         UniOp(locations[16]);
+        text.innerText = "Uma pokébola foi comprada!"
+      } else{
+        text.innerText = "Dinheiro insuficiente"
+
+      }
+
       }
     }
     export async function goGym(op) {
@@ -769,53 +798,88 @@ export async function bolsaPotion(fh) {
 
 }
 
-  export async function captura(fh) {
+  export async function captura(fh,nomedotrainer) {
   //rival.party[0] = fh;
+  let botao = document.getElementById("btn3");
 
-  console.log("ds",);
-  console.log(player.party[5]); //!!
+  const resultado = CapturaSaiSai(nomedotrainer,0)
 
-    let verificaMaisQueSeis = player.capturePokemon(player.name,fh.name,0,fh.name.level,
-        fh.moves[0], fh.moves[1], fh.moves[2], fh.moves[3],fh.NdeMov);
-let ajudador = player.party.length;
-let pokeText = document.getElementById("PokeN°Text");
-let images = pokeText.getElementsByTagName("img");
+  if(resultado == "Treinador")
+  {
+    return "Treinador"
+  }
 
-  console.log(verificaMaisQueSeis)
-if (verificaMaisQueSeis == undefined) {
-  document.getElementById("PokeN°Text").innerHTML += 
-  `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg" 
-        style="width: 3%; height: auto;" alt="${player.party[ajudador - 1].name.name}">`;
+  if (botao) {
+    let texto = botao.textContent || botao.innerText; // Pega o texto dentro do botão
+    let numero = parseInt(texto.match(/\d+/)[0]); // Extrai o número do texto
+  
+    console.log(numero); // Exibe o número extraído
+    if (numero >= 1) {
+      console.log(numero)
+
+      numero--
+      console.log(numero)
+      botao.textContent = `Pokébola: ${numero}`;
+
+      console.log("ds",);
+      console.log(player.party[5]); //!!
     
-  insertIcon(fh)
-}else{
-  ajudador = verificaMaisQueSeis; 
-  images[verificaMaisQueSeis-1].src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg`;
-  images[verificaMaisQueSeis-1].alt = player.party[ajudador - 1].name.name;
-}
+        let verificaMaisQueSeis = player.capturePokemon(player.name,fh.name,0,fh.name.level,
+            fh.moves[0], fh.moves[1], fh.moves[2], fh.moves[3],fh.NdeMov);
+    
+    let ajudador = player.party.length;
+    let pokeText = document.getElementById("PokeN°Text");
+    let images = pokeText.getElementsByTagName("img");
+    
+      console.log(verificaMaisQueSeis)
+    if (verificaMaisQueSeis == undefined) {
+      document.getElementById("PokeN°Text").innerHTML += 
+      `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg" 
+            style="width: 3%; height: auto;" alt="${player.party[ajudador - 1].name.name}">`;
+        insertIcon(fh)
+
+      
+    }else{
+      ajudador = verificaMaisQueSeis; 
+      images[verificaMaisQueSeis-1].src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${player.party[ajudador - 1].name.id}.svg`;
+      images[verificaMaisQueSeis-1].alt = player.party[ajudador - 1].name.name;
+    }
+    
+    
+    
+      //para adaptar a estrutura dos movimentos do npc pro player
+      //lenght é temporário, não vai funcionar quando for capturar mais de
+      //6 pokémon
+      const moves = player.party[ajudador-1].moves;
+      console.log("ds",moves);
+    
+      const filteredMoves = moves.filter(
+        move => typeof move === "object" && move !== null && !Array.isArray(move)
+      );
+      const moveNames = filteredMoves.map(move => move.name);
+      //console.log("ds",player.party.length);
+      player.party[ajudador-1].moves = moveNames;
+    console.log("Switch",moveNames); 
+    
+    let e = player.party.length; // Get the party length
+    let boto = document.getElementById(`P${e}`); // Corrected template literal syntax
+    console.log(boto)
+    if (boto != P2) {
+      boto.style.backgroundColor = "#2f3331"; // Change button color
+    }
+
+    }
+
+  }
+  CapturaSaiSai(nomedotrainer,1)
+  if(resultado == "Selvagem")
+    {
+      logMessage(`${LetraM1(playerOG.name)} capturou!`);
+      addFF()
+      console.log("capturou");
+    }
 
 
-
-  //para adaptar a estrutura dos movimentos do npc pro player
-  //lenght é temporário, não vai funcionar quando for capturar mais de
-  //6 pokémon
-  const moves = player.party[ajudador-1].moves;
-  console.log("ds",moves);
-
-  const filteredMoves = moves.filter(
-    move => typeof move === "object" && move !== null && !Array.isArray(move)
-  );
-  const moveNames = filteredMoves.map(move => move.name);
-  //console.log("ds",player.party.length);
-  player.party[ajudador-1].moves = moveNames;
-console.log("Switch",moveNames); 
-
-let e = player.party.length; // Get the party length
-let boto = document.getElementById(`P${e}`); // Corrected template literal syntax
-console.log(boto)
-if (boto != P2) {
-  boto.style.backgroundColor = "#2f3331"; // Change button color
-}
 
   }
   export async function fugir() {
@@ -891,13 +955,33 @@ export function insertIcon(Pokemon,Substitui) {
   }
 }
 }
-function iconfix(P) {
+export function iconfix(P) {
   console.log("DO",P)
 
   switch (P){
     case "P1":
       console.log("P1")
       return {x1: -10, y1: 11};
+    case "P2":
+      return {x2: -10, y2: 91};
+    case "P3":
+      return {x2: 50, y2: 11};
+    case "P4":
+      return {x2: 50, y2: 91};
+    case "P5":
+      return {x2: 110, y2: 11};
+    case "P6":
+      return {x2: 110, y2: 91};;
+}
+}
+
+export function iconfixDerrota(P) {
+  console.log("DO",P)
+
+  switch (P){
+    case "P1":
+      console.log("P1")
+      return {x2: -10, y2: 11};
     case "P2":
       return {x2: -10, y2: 91};
     case "P3":
@@ -1021,3 +1105,50 @@ export function obtergold() {
 }
 
 export { gold };
+
+const btn4 = document.getElementById("btn4");
+export function Fuga(nomeOponente) {
+  console.log("Fuga", nomeOponente);
+  if(nomeOponente != "")
+  {
+   logMessage("Você não pode fugir de uma batalha contra um treinador");
+  }else if (nomeOponente == "")
+  {
+    logMessage("Voce fugiu da batalha");
+    console.log("Voce fugiu da batalha");
+    const div = document.getElementById("controls");
+    const buttonsA = div.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
+    buttonsA.forEach(button => button.remove()); // Remove cada botão encontrado
+    addFF()
+    setTimeout(() => {
+      IMFREE(1,"Options",0,2);
+    },2000)
+    
+  }
+}
+
+export function CapturaSaiSai(nomeOponente,verificador) {
+  console.log("CapturaSaiSai", nomeOponente);
+  if(nomeOponente != "" && verificador == 0)
+  {
+   logMessage("Você não pode capturar o pokémon de um treinador");
+   return "Treinador"
+  }else if (nomeOponente == "" && verificador == 1)
+  {
+    logMessage("Você capturou o Pokémon!");
+    console.log("Você capturou o Pokémon!");
+    const div = document.getElementById("controls");
+    const buttonsA = div.querySelectorAll("button"); // Seleciona todos os <button> dentro do <div>
+    buttonsA.forEach(button => button.remove()); // Remove cada botão encontrado
+    setTimeout(() => {
+      IMFREE(1,"Options",0,2);
+    },5000)
+  }else{
+    return "Selvagem"
+  }
+}
+//btn4.removeEventListener("click", Fuga);
+//btn4.addEventListener("click", Fuga);
+function LetraM1(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
