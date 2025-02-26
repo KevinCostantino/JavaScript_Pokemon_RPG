@@ -340,7 +340,7 @@ button.container:hover {
        1px  1px 0 black; /* Contorno preto suave */
   padding: 8px 12px;
   display: inline-block;
-  background: transparent; /* Mantém o fundo transparente */
+  background: transparent; /* Mantém o fundo transparente */ 
   border-radius: 5px;
   text-align: center;
 }

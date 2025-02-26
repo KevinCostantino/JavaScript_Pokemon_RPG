@@ -1,5 +1,5 @@
 export const moves = [
-    "tackle", //0
+    "tackle", //0 
     "smack-down", //1
     "rock-polish", //2
     "screech", //3

@@ -1,18 +1,6 @@
-import { goStore, treinadorBrock,Poke6,treinador1,treinador2, goFinalBattle } from './script.js';
-import { goCave } from './script.js';
+import { treinadorBrock,Poke6,treinador1,treinador2, goFinalBattle } from './script.js';
 import { goTown } from './script.js';
-import { buyHealth } from './script.js';
-import { buyWeapon } from './script.js';
-import { fightSlime } from './script.js';
-import { fightBeast } from './script.js';
-import { fightDragon } from './script.js';
-import { attack } from './script.js';
-import { dodge } from './script.js';
-import { easterEgg } from './script.js';
-import { restart } from './script.js';
 import { PósInitProf,goFlorest,PósInitProf2,Florestando,embaralharNumeros} from './script.js';
-import { pickTwo } from './script.js';
-import { pickEight } from './script.js';
 import { PBattle } from './Batalha.js';
 //import { PBattle2 } from './Batalha copy.js';
 import { player } from './script.js';
@@ -22,63 +10,63 @@ import { goPewter,goCentroPokémon,goPokéMart,goGym } from './script.js';
 import { tocarMusica } from './pokeapiF.js';
 
 
-
+//goTown servindo somente como template, não tem uma função realmente 
 export const locations = [
     {
 		id: 0,
-        name: "town square",
-        "button text": ["Go to store", "Go to cave", "Fight dragon"],
-        "button functions": [goStore, goCave, fightDragon],
-        text: "You are in the town square. You see a sign that says \"Store.\""
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
     },
 	{
 		id: 1,
-		name: "store",
-		"button text": ["Buy 10 health (10 gold)", "Buy weapon (30 gold)", "Go to town square"],
-		"button functions": [buyHealth, buyWeapon, goTown],
-		text: "You enter the store."
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 2,
-		name: "cave",
-		"button text": ["Fight slime", "Fight fanged beast", "Go to town square"],
-		"button functions": [fightSlime, fightBeast, goTown],
-		text: "You enter the cave. You see some monsters."
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 3,
-		name: "fight",
-		"button text": ["Attack", "Dodge", "Run"],
-		"button functions": [attack, dodge, goTown],
-		text: "You are fighting a monster."
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 4,
-		name: "kill monster",
-		"button text": ["Go to town square", "Go to town square", "Go to town square"],
-		"button functions": [goTown, goTown, easterEgg],
-		text: 'The monster screams "Arg!" as it dies. You gain experience points and find gold.'
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 5,
-		name: "lose",
-		"button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
-		"button functions": [restart, restart, restart],
-		text: "You die. ☠️"
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 6,
-		name: "win",
-		"button text": ["REPLAY?", "REPLAY?", "REPLAY?"],
-		"button functions": [restart, restart, restart],
-		text: "You defeat the dragon! YOU WIN THE GAME! 🎉"
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
     },
 	{
 		id: 7,
-		name: "easter egg",
-		"button text": ["2", "8", "Go to town square?"],
-		"button functions": [pickTwo, pickEight, goTown],
-		text: "You find a secret game. Pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches one of the random numbers, you win!"
+        name: "",
+        "button text": ["", "", ""],
+        "button functions": [goTown, goTown, goTown],
+        text: ""
 	},
 	{
 		id: 8,
@@ -116,7 +104,7 @@ export const locations = [
 		id: 12,
 		name: "Bug",
 		"button text": ["<- Voltar","Curva à esquerda","Curva à direita","Caminhar reto"],
-		"button functions": [goTown,goStore,goStore,goStore],
+		"button functions": [goTown,goTown,goTown,goTown],
 		text: "",
 	},
 	{

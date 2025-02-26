@@ -25,7 +25,7 @@ function ajustandoM(levelType) {
         levelType = "N_medium-fast";
     }
 }
-// Função para encontrar a tabela de experiência pelo tipo de nível
+// Função para encontrar a tabela de experiência pelo tipo de nível 
 function getExperienceTable(levelType) {
     return XP.Pasta1.find(table => table.Level === levelType);
 }

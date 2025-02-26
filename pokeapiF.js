@@ -293,7 +293,7 @@ export function vaiproScript2(a) {
     console.log(a);
     button1.onclick = goStore;  //Troca o botão pra ser a loja
     button2.onclick = goStore;  //Troca o botão pra ser a loja
-    button3.onclick = goStore;  //Troca o botão pra ser a loja
+    button3.onclick = goStore;  //Troca o botão pra ser a loja 
 
     button2.style.display = 'inline-block';
     button3.style.display = 'inline-block';
@@ -306,12 +306,7 @@ function askForAge() {
     }
 }
 
-function askForGender() {
-    const playerGender = prompt("Digite seu sexo (M/F):");
-    if (playerGender) {
-        text.innerText = `Sexo inserido: ${playerGender}`;
-    }
-}
+
 
 
 async function captureRandomPokemon(player) {

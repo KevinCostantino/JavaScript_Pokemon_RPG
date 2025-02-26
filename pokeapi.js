@@ -6,6 +6,6 @@ export async function Poke(name) {
     return {
         name: data.name,
         level: 5, // Você pode adicionar lógica para determinar o nível, se necessário
-        // Adicione outros atributos conforme necessário
+        // Adicione outros atributos conforme necessário 
     };
 }

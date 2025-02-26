@@ -160,7 +160,6 @@ export async function calculateDamage(attacker, defender, move) {
         else if (move.name === 'growl') {
           logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque diminuiu um pouco.`);
           defender.name.mod.AtkMod =defender.name.mod.AtkMod*0.7072;
-          console.log("sfSsw",defender.name.mod.AtkMod);
           return { damage: 0 };
         }
         else if (move.name === 'screech') {
@@ -540,17 +539,17 @@ export async function PBattle(player,rivalfonte,auxo,TURNO,sla,ct) {
 
 
  async function testet(Pb) {
-  console.log("fs")
+  //console.log("fs")
     let a = await options(Pb, turnoAtual, player.party[0], rival.party[0], player, rival);
-    console.log(a)
+    //console.log(a)
     if (a[1] == 25) {
       btn1.removeEventListener("click", handleBtn1Click);
       btn2.removeEventListener("click", handleBtn2Click);
       btn3.removeEventListener("click", handleBtn3Click);
 
-      console.log(Pb,Pb.id);
+      //console.log(Pb,Pb.id);
       if (Pb.id == "P2") {
-        console.log("wasff asft");
+        //console.log("wasff asft");
         //P3.removeEventListener("click", window[`handleP3Click`]);
         Pb.removeEventListener("click", window[`handle${Pb.id}Click`]);
       }
@@ -623,7 +622,7 @@ export async function PBattle(player,rivalfonte,auxo,TURNO,sla,ct) {
   const party = document.getElementById("party");
   //party.style.display = 'none';
   
-  console.log(player, rival,auxo,TURNO,sla);
+  //console.log(player, rival,auxo,TURNO,sla);
 function Poff(P) {
   if (P) {
     P.disabled = true;
@@ -655,7 +654,7 @@ if (TURNO != undefined) {
       document.getElementById('pokemonImage').style.display = 'none';
 
       removeAllButtons();
-      console.log("42",player.party)
+      //console.log("42",player.party)
       updatePlayerHealth(player.party[0].name, null, "rival", rival.party[0].name)
       updateRivalHealth(null, null, "rival",rival.party[0].name)
 
@@ -693,7 +692,7 @@ if (TURNO != undefined) {
       updateStatus(player.party[0].name, rival.party[0].name, null, vidaAntigaP,vidaAntigaO,rival.party[0].level);   
          // Atualize o status no início
          const menuButton = document.getElementById("menuID");
-         console.log(player.party)
+         //console.log(player.party)
          if (menuButton) {
            menuButton.onclick = menu; // Garante que o evento está associado ao botão
          } else {
@@ -713,25 +712,25 @@ if (TURNO != undefined) {
          let handleBtn3ClickAdded = sla;
          let handleBtn4ClickAdded = sla;
 
-         console.log("wtf",1);
+         //console.log("wtf",1);
          if (handleBtn1ClickAdded == undefined || ct == "A") {
-          console.log("wtf",3);
+          //console.log("wtf",3);
            btn1.addEventListener("click", handleBtn1Click);
            handleBtn1ClickAdded = undefined;
          }    
 
          if (handleBtn2ClickAdded == undefined || ct == "A") {
-          console.log("wtf",4);
+          //console.log("wtf",4);
           btn2.addEventListener("click", handleBtn2Click);
           handleBtn2ClickAdded = undefined;
         }       
         if (handleBtn3ClickAdded == undefined || ct == "A") {
-          console.log("wtf",5);
+          //console.log("wtf",5);
           btn3.addEventListener("click", handleBtn3Click);
           handleBtn3ClickAdded = undefined;
         } 
         if (handleBtn4ClickAdded == undefined || ct == "A") {
-          console.log("wtf",5);
+          //console.log("wtf",5);
           btn4.addEventListener("click", handleBtn4Click,{once: true});
           handleBtn4ClickAdded = undefined;
         } 
@@ -747,7 +746,7 @@ if (TURNO != undefined) {
           const P4 = document.getElementById("P4");
           const P5 = document.getElementById("P5");
           const P6 = document.getElementById("P6");
-          console.log("wtf",P2);
+          //console.log("wtf",P2);
 
           Poff(P3)
           Poff(P4)
@@ -847,7 +846,7 @@ if (TURNO != undefined) {
           //console.log("A",player.party[0].moves[index])
 
           sd[index] = player.party[0].moves[index]
-          console.log(":Q",player.party[0].moves[index])
+          //console.log(":Q",player.party[0].moves[index])
           sd[index]= await getMoveDetails(sd[index]);
           
 
@@ -979,7 +978,7 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
         }
 
         // Aumenta o turno para a próxima rodada
-        console.log(`BTurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
+        //console.log(`BTurno ${turnoAtual} finalizado. Último ataque realizado por: ${atacante}`);
         turnoAtual++;
         
         // Verifica o status da batalha no final do turno
@@ -1012,7 +1011,7 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
          if (player.party.length > 1) {
           console.log(player.party[1].name.hp)
           DefeatIconsOrder();
-          console.log("sf")
+          //console.log("sf")
           //SwapIcons(player.party[1],player.party[0],1,2)
           if (player.party[1].name.hp > 0) {
             let aux = player.party[0];
@@ -1115,7 +1114,7 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             //btn3.removeEventListener("click", handleBtn3Click);
 
             setTimeout(() => PBattle(player,rival,undefined,turnoAtual), 1500);
-            console.log("sd");
+            //console.log("sd");
             btn1.removeEventListener("click", handleBtn1Click);
             btn2.removeEventListener("click", handleBtn2Click);
             btn3.removeEventListener("click", handleBtn3Click);

@@ -3,20 +3,14 @@ import Player from './Player.js';
 import { askForName,vaiproScript2 } from './pokeapiF.js';
 import { locations } from './location.js';
 import { PBattle,updatePlayerHealth,logMessage,removeClickEvent,getPokemonStats } from './Batalha.js';
-import { clearLog,removeAllButtons,updateStatus,getMoveDetails,getPokemonData,calculateDamage} from './Batalha.js';
-import { options } from './Opções.js';
 //import { PBattle2 } from './Batalha copy.js';
 import {FF,addFF,zeraFF} from './pokeapiF.js';
 import { moves } from './moves.js';
 
 
-let xp = 0;
-let health = 100;
+
 let gold = 1000;
-let currentWeapon = 0;
-let fighting;
-let monterHealth;
-let inventory = ["stick"];
+
 
 const button1 = document.querySelector("#button1");
 const button2 = document.querySelector("#button2");
@@ -26,13 +20,11 @@ const button5 = document.querySelector("#button5");
 const button6 = document.querySelector("#button6");
 const button7 = document.querySelector("#button7");
 const text = document.querySelector("#text");
-const xpText = document.querySelector("#xpText");
-const healthText = document.querySelector("#healthText");
+
 const goldText = document.querySelector("#goldText");
 const monsterStats = document.querySelector("#monsterStats");
 const PersonagemStats = document.querySelector("#PersonagemStats");
-const monsterNameText = document.querySelector("#monsterName");
-const monsterHealthText = document.querySelector("#monsterHealth");
+
 const rivalIMAGE = document.querySelector("#rivalSprite");
 const OakIMAGE = document.querySelector("#pokemonImage");
 //const menu = document.querySelector("#menuID");
@@ -44,7 +36,7 @@ const button4S = document.querySelector("#btn4");
 let audio = new Audio("./Audios/Welcome_to_the_world_of_Pokemon.mp3");
 audio.volume = 0.12; // Volume inicial %
 audio.loop = true;
-//audio.play();//
+//audio.play();// 
 const weapons = [
 	{
 		name: "stick",
@@ -206,7 +198,7 @@ function pokeapiF1() {
 	//console.log("sauy e "+ aux);
     //askForName(player)
 	if (aux < 1) {
-		update(locations[0]);
+		//update(locations[0]);
 	}
 	
 }
@@ -215,7 +207,7 @@ function pokeapiF4() {
 	PokemonInicial(4,aux);
 	//console.log("sauy")
 	if (aux < 1) {
-		update(locations[0]);
+		//update(locations[0]);
 	}
 	
 }
@@ -224,12 +216,12 @@ function pokeapiF7() {
 	PokemonInicial(7,aux);
 	//console.log("sauy")
 	if (aux < 1) {
-		update(locations[0]);
+		//update(locations[0]);
 	}
 	
 }
 export function goTown() {
-    update(locations[0]);
+   // update(locations[0]);
 }
 
 export function goStore() {
@@ -238,183 +230,6 @@ export function goStore() {
 	document.getElementById('pokemonImage').style.display = 'none'
 }
 
-export function goCave() {
-	console.log("afa");
-    update(locations[2]);
-}
-
-export function buyHealth() {
-    if (gold >= 10) {
-        gold -= 10;
-        health += 10;
-        goldText.innerText = gold;
-    	healthText.innerText = health;       
-    } else {
-        text.innerText = "You do not have enough gold to buy health.";
-    }
-
-}
-
-export function buyWeapon() {
-    if (currentWeapon < weapons.length - 1) {
-    	if (gold >= 30) {
-            gold -= 30;
-            currentWeapon++;
-            goldText.innerText = gold;
-            let newWeapon = weapons[currentWeapon].name;
-    		text.innerText = "You now have a " + newWeapon + ".";
-            inventory.push(newWeapon);
-            text.innerText += " In your inventory you have: " + inventory;
-    	} else {
-    		text.innerText = "You do not have enough gold to buy a weapon.";
-    	} 
-    } else {
-		text.innerText = "You already have the most powerful weapon!";
-        button2.innerText = "Sell weapon for 15 gold";
-		button2.onclick = sellWeapon;
-	}
-}
-
-export function sellWeapon() {
-	if (inventory.length > 1) {
-		gold += 15;
-		goldText.innerText = gold;
-        let currentWeapon = inventory.shift();
-        text.innerText = "You sold a " + currentWeapon + ".";
-        text.innerText += " In your inventory you have: " + inventory;
-	} else {
-    	text.innerText = "Don't sell your only weapon!";
-  	}
-}
-
-export function fightSlime() {
-	fighting = 0;
-	goFight();
-}
-
-export function fightBeast() {
-	fighting = 1;
-	goFight();    
-}
-
-export function fightDragon() {
-	fighting = 2;
-	goFight();
-}
-
-export function goFight() {
-    update(locations[3]);
-    monsterHealth = monsters[fighting].health;
-    monsterStats.style.display = "block";
-    monsterNameText.innerText = monsters[fighting].name;
-	monsterHealthText.innerText = monsterHealth;
-}
-
-export function attack() {
-    text.innerText = "The " + monsters[fighting].name + " attacks.";
-    text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
-    if (isMonsterHit()) {
-        health -= getMonsterAttackValue(monsters[fighting].level);
-    } else {
-		text.innerText += " You miss.";
-	}
-    
-  monsterHealth -= weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
-	healthText.innerText = health;
-	monsterHealthText.innerText = monsterHealth;   
-	if (health <= 0) {
-		lose();
-	} else if (monsterHealth <= 0) {
-		fighting === 2 ? winGame() : defeatMonster();
-	}
-
-	if (Math.random() <= .1 && inventory.length !== 1) {
-        text.innerText += " Your " + inventory.pop() + " breaks.";
-        currentWeapon--;
-	}
-}
-
-export function getMonsterAttackValue(level) {
-    let hit = (level * 5) - (Math.floor(Math.random() * xp));
-    console.log(hit);
-    return hit;
-}
-
-export function isMonsterHit() {
-	return Math.random() > .2 || health < 20;
-}
-
-
-export function dodge() {
-    text.innerText = "You dodge the attack from the " + monsters[fighting].name + ".";
-}
-
-export function defeatMonster() {
-    gold += Math.floor(monsters[fighting].level * 6.7)
-    xp += monsters[fighting].level;
-    goldText.innerText = gold;
-	xpText.innerText = xp;
-    update(locations[4]);
-}
-
-export function lose() {
-    update(locations[5]);
-}
-
-export function winGame() {
-  update(locations[6]);
-}
-
-export function restart() {
-	xp = 0;
-	health = 100;
-	gold = 50;
-	currentWeapon = 0;
-	inventory = ["stick"];
-	goldText.innerText = gold;
-	healthText.innerText = health;
-	xpText.innerText = xp;
-	goTown();
-}
-
-export function easterEgg() {
-	update(locations[7]);
-}
-
-
-export function pickTwo() {
- pick(2);
-}
-
-export function pickEight() {
- pick(8);
-}
-
-export function pick(guess) {
-    let numbers = [];
-    while (numbers.length < 10) {
-        numbers.push(Math.floor(Math.random() * 11));
-    }
-
-    text.innerText = "You picked " + guess + ". Here are the random numbers:\n";
-
-    for (let i = 0; i < 10; i++) {
-        text.innerText += numbers[i] + "\n";
-    }
-
-    if (numbers.indexOf(guess) !== -1) {
-        text.innerText += "Right! You win 20 gold!"
-        gold += 20;
-        goldText.innerText = gold;
-    } else {
-        text.innerText += "Wrong! You lose 10 health!"
-        health -= 10;
-        healthText.innerText = health
-        if (health <= 0) {
-          lose();
-        }
-    }
-}
 
 export async function IMFREE(A, elementId,a,FF) {
 

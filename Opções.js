@@ -8,12 +8,7 @@ const btn1 = document.getElementById("btn1");
 const btn2 = document.getElementById("btn2");
 const btn3 = document.getElementById("btn3");
 
-const handleBtn1Clic = () => options(btn1, turnoAtual, player.party[0], rival.party[0], player, rival);
-const handleBtn2Clic = () => options(btn2, turnoAtual, player.party[0], rival.party[0], player, rival);
-const handleBtn3Clic = () => options(btn3, turnoAtual, player.party[0], rival.party[0], player, rival);
 
-
-const oioioi = 0
 
 export async function options(btn,turnoAtual,player,rival,playerOG,rivalOG,handleBtn1Click,handleBtn2Click,handleBtn3Click,btt,handlerino) {
   //player = player.party[0]
@@ -25,13 +20,12 @@ const P3 = document.getElementById("P3");
 const P4 = document.getElementById("P4");
 const P5 = document.getElementById("P5");
 const P6 = document.getElementById("P6");
-  console.log("OI",btn,btt)
+  //console.log("OI",btn,btt)
   let vidaAntigaP = player.name.hp;
   let vidaAntigaO = rival.name.hp;
 
          var AM = 1; //Adapatador de movimento
          
-         console.log("ss",btn)
 
 
          if (btn == btn3) {
@@ -62,7 +56,6 @@ const P6 = document.getElementById("P6");
           exampleUsage("btn2");
         }  
          else if (btn == btn1) {
-          //console.log("MERDA",rival)
     // Remover o evento de clique para evitar a duplicação da função
           //btn1.addEventListener("click", () => exampleUsage("btn1"));
           const ajuda = turnoAtual;
@@ -76,7 +69,6 @@ const P6 = document.getElementById("P6");
             handleBtn3Click = btt;
             console.log("???",btn);
           }
-          console.log("merda",btn)
           const id = btn.id; // Supondo que btn tenha um ID como "P2", "P3", etc.
           const numero = Number(id.slice(1)); // Extrai o número e converte para número          exampleUsage("btn1");
           const pokemonButtons = [P2, P3, P4, P5, P6];
@@ -331,7 +323,7 @@ function endBattle(winner) {
           btn2.removeEventListener("click", handleBtn2Click);
           btn3.removeEventListener("click", handleBtn3Click);
           console.log("hoh")
-            endBattleF(1); // Finalização para rival
+            endBattleF(1); // Finalização para rival 
         }
     }, 1000);
 }
@@ -342,14 +334,5 @@ function updateLV(PokeP) {
    `;
   
       }
-function Poff(P) {
-        if (P) {
-          P.disabled = true;
-          P.style.cursor = "not-allowed";
-          P.style.pointerEvents = "none";
-          P.style.backgroundColor = "#105913";
-        } else {
-          console.error(`Element with ID "${P}" not found.`);
-        }
-      }  
+
 }

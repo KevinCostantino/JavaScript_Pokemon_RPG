@@ -7,7 +7,7 @@ class Player {
         constructor() {
             this.treinador = null;
             this.name = null;
-            this.party = []; // Inicializa a party como um array vazio
+            this.party = []; // Inicializa a party como um array vazio 
         }
 
     capturePokemon(treinador,pokemon,currentTotalXP,level,move1,move2,move3,move4,type1,type2,NdeMov) {
