@@ -37,7 +37,7 @@ export async function getPokemonStats(pokemonId,nível) {
     // Busca os tipos do Pokémon
     const typesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
     const typesData = await typesResponse.json();
-    let modifiers = {   AtkMod: 1,  SpaAtkMod: 1,  DefMod: 1,  SpaDefMod: 1,  SpeMod: 1 };
+    let modifiers = {   AtkMod: 1,  SpaAtkMod: 1,  DefMod: 1,  SpaDefMod: 1,  SpeMod: 1, AccMod: 1 };
     // Função auxiliar para pegar os stats do Pokémon
     const pokemonStats = await getPokemonStatsAux(pokemonId);
 
@@ -140,6 +140,12 @@ export async function getTypeMultiplier(moveType, defenderTypes) {
 export async function calculateDamage(attacker, defender, move) {
     console.log("move",move,attacker.name.name);
     console.log("move",move.isStatus,attacker.name.name);
+    let randAccFactor = Math.random() * 100;
+    if (randAccFactor > attacker.name.mod.AccMod*100) {
+      logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, porém ${LetraM1(defender.name.name)} desviou.`);
+      return { damage: 0 };
+    }
+
       if (move.isStatus) 
         {
         if (move.name === 'splash') {
@@ -155,7 +161,42 @@ export async function calculateDamage(attacker, defender, move) {
           logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque diminuiu um pouco.`);
           defender.name.mod.AtkMod =defender.name.mod.AtkMod*0.7072;
           console.log("sfSsw",defender.name.mod.AtkMod);
-
+          return { damage: 0 };
+        }
+        else if (move.name === 'screech') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua defesa diminuiu muito.`);
+          defender.name.mod.DefMod =defender.name.mod.DefMod*0.5;
+          return { damage: 0 };
+        }
+        else if (move.name === 'rock-polish') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua velocidade aumentou um pouco.`);
+          attacker.name.mod.SpeMod =attacker.name.mod.SpeMod*1.5;
+          return { damage: 0 };
+        }
+        else if (move.name === 'tickle') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, seu ataque e defesa diminuiram um pouco.`);
+          defender.name.mod.AtkMod =defender.name.mod.AtkMod*0.7072;
+          defender.name.mod.DefMod =defender.name.mod.DefMod*0.7072;
+          return { damage: 0 };
+        }
+        else if (move.name === 'string-shot') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua velocidade diminuiu um pouco.`);
+          defender.name.mod.SpeMod =defender.name.mod.SpeMod*0.7072;
+          return { damage: 0 };
+        }
+        else if (move.name === 'tail-whip' || move.name === 'leer') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua defesa diminuiu um pouco.`);
+          defender.name.mod.DefMod =defender.name.mod.DefMod*0.7072;
+          return { damage: 0 };
+        }
+        else if (move.name === 'defense-curl') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua defesa aumentou um pouco.`);
+          attacker.name.mod.DefMod =attacker.name.mod.DefMod*1.5;
+          return { damage: 0 };
+        }
+        else if (move.name === 'sand-attack') {
+          logMessage(`${LetraM1(attacker.name.name)} usou ${LetraM1(move.name)}, sua precisão diminuiu um pouco.`);
+          defender.name.mod.AccMod =defender.name.mod.AccMod*0.7072;
           return { damage: 0 };
         }
         else{
@@ -1133,8 +1174,22 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             turnoAtual = 1;
             for (let index = 0; index < rival.party.length; index++) {
                 rival.party[index].name.hp = rival.party[index].name.TotalHP;
+                rival.party[index].name.mod.AtkMod = 1;
+                rival.party[index].name.mod.DefMod = 1;
+                rival.party[index].name.mod.SpeMod = 1;
+                rival.party[index].name.mod.SpaAtkMod = 1;
+                rival.party[index].name.mod.SpaDefModMod = 1;
+                rival.party[index].name.mod.AccMod = 1;
             }
     
+            for (let index = 0; index < player.party.length; index++) {
+              player.party[index].name.mod.AtkMod = 1;
+              player.party[index].name.mod.DefMod = 1;
+              player.party[index].name.mod.SpeMod = 1;
+              player.party[index].name.mod.SpaAtkMod = 1;
+              player.party[index].name.mod.SpaDefModMod = 1;
+              player.party[index].name.mod.AccMod = 1;
+          }
             if (rivalfonte.treinador === "Gary_2") {
                 await showCustomAlert("Você terminou a demo. Obrigado por jogar"); // Outro alerta antes de prosseguir
                 location.reload();
@@ -1145,6 +1200,24 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
             for (let index = 0; index < player.party.length; index++) {
                 player.party[index].name.hp = player.party[index].name.TotalHP;
             }
+            for (let index = 0; index < rival.party.length; index++) {
+              rival.party[index].name.hp = rival.party[index].name.TotalHP;
+              rival.party[index].name.mod.AtkMod = 1;
+              rival.party[index].name.mod.DefMod = 1;
+              rival.party[index].name.mod.SpeMod = 1;
+              rival.party[index].name.mod.SpaAtkMod = 1;
+              rival.party[index].name.mod.SpaDefModMod = 1;
+              rival.party[index].name.mod.AccMod = 1;
+          }
+  
+          for (let index = 0; index < player.party.length; index++) {
+            player.party[index].name.mod.AtkMod = 1;
+            player.party[index].name.mod.DefMod = 1;
+            player.party[index].name.mod.SpeMod = 1;
+            player.party[index].name.mod.SpaAtkMod = 1;
+            player.party[index].name.mod.SpaDefModMod = 1;
+            player.party[index].name.mod.AccMod = 1;
+        }
             endBattleF(1, rival.treinador);
         }
     }

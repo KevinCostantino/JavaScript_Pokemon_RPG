@@ -247,13 +247,27 @@ function vaiproScript(a,treinadorNome) {
     console.log(treinadorNome,nomesPermitidos);
 
     if (nomesPermitidos.includes(treinadorNome) || treinadorNome == "") {
-        FF++
-        console.log(FF);
-        IMFREE(1,"Options",a,FF);
-        if (FF == 3) {
-            FF = 0
-            goPewter(1)
+        if (a == 0) {
+            FF++
+            console.log(FF);
+            IMFREE(1,"Options",a,FF);
+            if (FF == 3) {
+                FF = 0
+                goPewter(1)
+            }
+        }else if (a == 1) {
+            console.log(FF);
+            if (FF == 0) {
+                IMFREE(1,"Options",a,1);
+            }else{
+                IMFREE(1,"Options",a,FF);
+            }
+            if (FF == 3) {
+                FF = 0
+                goPewter(1)
+            }
         }
+
     }else if (treinadorNome == "Gary") {
 
         vaiproScript2(a)
