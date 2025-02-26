@@ -69,8 +69,11 @@ export async function PokemonInicial(pokemonId, aux) {
     async function BatalhaSetup(id,lv) {
         return await getPokemonStats(id,lv)
     }
+    removerFundo()
 
-    
+    trocarFundo("./Fundos/Laboratório_V2.png");
+    tocarMusica("./Audios/Welcome_to_the_world_of_Pokemon.mp3"); // Música de batalha
+
     Poke1.capturePokemon("",await BatalhaSetup(10,getRandomInt(2,4)),0,getRandomInt(2,4),moves[0], moves[6], moves[7],null,3);
     Poke2.capturePokemon("",await BatalhaSetup(13,getRandomInt(2,4)),0,getRandomInt(2,4),moves[8], moves[6], moves[7]);
     Poke3.capturePokemon("",await BatalhaSetup(16,getRandomInt(3,6)),0,getRandomInt(3,6),moves[0], moves[9], moves[10]);
@@ -81,12 +84,13 @@ export async function PokemonInicial(pokemonId, aux) {
     treinador1.capturePokemon("John",await BatalhaSetup(21,4),0,4,moves[13], moves[14], moves[15]);
     treinador2.capturePokemon("Maria",await BatalhaSetup(23,9),0,9,moves[15], moves[8], moves[12]);
     treinador3.capturePokemon("Leon",await BatalhaSetup(25,7),0,7,moves[16], moves[17], moves[14]);
+    
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(74,8),0,8,moves[0], moves[23], moves[24]);
     treinadorBrock.capturePokemon("Brock",await BatalhaSetup(95,10),0,10,moves[1], moves[2], moves[23], moves[0]);
     console.log(treinadorBrock.party);
     console.log(Poke6.party);
-    rival2.capturePokemon("Gary",await BatalhaSetup(21,11), 0, 11,moves[9], moves[14], moves[15],4);    
-    rival2.capturePokemon("Gary",await BatalhaSetup(inicialRival(player)+1,13), 0, 13, MR1, MR2, MR3, MR4,4);
+    rival2.capturePokemon("Gary_2",await BatalhaSetup(21,11), 0, 11,moves[9], moves[14], moves[15],4);    
+    rival2.capturePokemon("Gary_2",await BatalhaSetup(inicialRival(player)+1,13), 0, 13, MR1, MR2, MR3, MR4,4);
 
 
     console.log(rival.party[0]);
@@ -108,6 +112,8 @@ export async function PokemonInicial(pokemonId, aux) {
   
   
     changeButtonsToInput(player,aux);
+
+
 }
 
 function changeButtonsToInput(player,aux) {
@@ -133,26 +139,29 @@ function infos(player, aux) {
 }
 
 // Funções para capturar as informações do usuário
-export function askForName(player,aux) {
+export async function askForName(player, aux) {
     aux = 25;
-    player.name = prompt("Digite seu nome:");
+    player.name = await showInputAlert("Digite seu nome");
+
     if (player.name) {
         document.getElementById("NomeText").textContent = player.name;
-        text.innerText = `Prazer em te conhecer: ${player.name}`;
+        document.getElementById("text").innerText = `Prazer em te conhecer: ${player.name}`;
+
         const handleClick = () => {
-            rivalF(player)
+            rivalF(player);
             button1.removeEventListener("click", handleClick); // Remove o evento após a execução
         };
-    
+
         button1.addEventListener("click", handleClick);
         button1.innerText = "Continuar";
-
     }
 }
 function rivalF(player) {
     // Esconde o sprite do rival antes da batalha
     document.getElementById("charName").textContent = 'Green';
     document.getElementById("pokemonImage").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
+    tocarMusica("./Audios/Rival_Appears.mp3"); // Música de batalha
+
     document.getElementById("text").textContent = `Ei espera um momento ${player.name}! Não vai pensando que vai sair daqui sem uma batalha!`;
     const handleClick = () => {
         setTimeout(() => {
@@ -202,7 +211,7 @@ export function updateHealth(pokemon, damage,hp) {
     }
 export function endBattleF(a,treinadorNome) {
     console.log(treinadorNome);
-    if (treinadorNome == "Gary" || treinadorNome == "Brock") {
+    if (treinadorNome == "Gary" || treinadorNome == "Gary_2" || treinadorNome == "Brock") {
         console.log("entrou");
         for (let index = 0; index < player.party.length; index++) {
             player.party[index].name.hp = player.party[index].name.TotalHP;
@@ -210,13 +219,13 @@ export function endBattleF(a,treinadorNome) {
     }
 
     if (treinadorNome != "") {
-        if (treinadorNome != "Gary" && treinadorNome != "Brock") {
+        if (treinadorNome != "Gary" && treinadorNome != "Gary_2" && treinadorNome != "Brock") {
             aumentargold(300);
         }
     }
     //const winner = player.party[0].name.hp > rival.party[0].name.hp ? "Você venceu!" : "Você perdeu!";
     setTimeout(2000);
-    alert(`EAE`);
+    //alert(`EAE`);
     //document.getElementById("battle-area").style.display = "none"; // Esconde a área de batalha após o fim
     // Aqui você pode adicionar lógica para o que acontece após a batalha
     vaiproScript(a,treinadorNome)
@@ -248,9 +257,19 @@ function vaiproScript(a,treinadorNome) {
     }else if (treinadorNome == "Gary") {
 
         vaiproScript2(a)
-    }else if (treinadorNome == "Brock") {
+    
+    }else if(a == 1 && treinadorNome == "Gary_2"){
+      showInputAlert("Options")
+    }
+    else if (treinadorNome == "Brock") {
         console.log(treinadorNome);
-        IMFREE(1,"Options",undefined,4);
+        if (a == 0) {
+            IMFREE(1,"Options",undefined,4);
+
+        }else if (a == 1) {
+            IMFREE(1,"Options",undefined,5);
+
+        }
     }
 
 }
@@ -369,6 +388,127 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
   }
   
+  export let audio = null; // Variável global para armazenar o áudio
 
-//console.log(getRandomInt(2,8))
+  export function tocarMusica(caminho) {
+    if (audio) {
+        // Se já houver uma música tocando, faz o fade-out antes de trocar
+        let fadeOutInterval = setInterval(() => {
+            if (audio.volume > 0.05) {
+                audio.volume -= 0.05; // Reduz o volume gradualmente
+            } else {
+                clearInterval(fadeOutInterval); // Para o fade-out
+                audio.pause(); // Pausa a música antiga
+                iniciarNovaMusica(caminho); // Inicia a nova música com fade-in
+                console.log(caminho)
+
+            }
+        }, 100); // Diminui o volume a cada 100ms
+    } else {
+        // Se não houver música tocando, inicia diretamente com fade-in
+        iniciarNovaMusica(caminho);
+        console.log()
+    }
+}
+
+function iniciarNovaMusica(caminho) {
+    audio = new Audio(caminho);
+    audio.loop = true; // Música em loop
+    audio.volume = 0; // Começa silencioso
+    audio.play().catch(() => console.log("Autoplay bloqueado."));
+
+    // Fade-in gradual
+    let fadeInInterval = setInterval(() => {
+        if (audio.volume < 0.20) {
+            audio.volume += 0.05; // Aumenta o volume gradualmente
+        } else {
+            audio.volume = 0.25; // Garante que o volume fique no máximo
+            clearInterval(fadeInInterval); // Para o fade-in
+        }
+    }, 100); // Aumenta o volume a cada 100ms
+}
+let backgroundElement = document.body; // Alvo da troca de fundo
+let currentBackground = null;
+
+export function trocarFundo(caminho) {
+    let newBackground = document.createElement("div");
+    newBackground.style.position = "fixed";
+    newBackground.style.top = "0";
+    newBackground.style.left = "0";
+    newBackground.style.width = "100vw";
+    newBackground.style.height = "100vh";
+    newBackground.style.backgroundImage = `url(${caminho})`;
+    newBackground.style.backgroundSize = "cover";
+    newBackground.style.backgroundPosition = "center";
+    newBackground.style.backgroundRepeat = "no-repeat";
+    newBackground.style.backgroundAttachment = "fixed";
+    newBackground.style.opacity = "0";
+    newBackground.style.transition = "opacity 1s ease-in-out";
+    newBackground.style.zIndex = "-1"; // Coloca o fundo atrás de tudo
+    backgroundElement.appendChild(newBackground);
+    
+    // Inicia o fade-in
+    setTimeout(() => {
+        newBackground.style.opacity = "1";
+    }, 50);
+    
+    // Se já houver um fundo, faz o fade-out antes de removê-lo
+    if (currentBackground) {
+        let oldBackground = currentBackground;
+        setTimeout(() => {
+            oldBackground.style.opacity = "0";
+            setTimeout(() => {
+                backgroundElement.removeChild(oldBackground);
+            }, 1000); // Tempo do fade-out
+        }, 50);
+    }
+    
+    currentBackground = newBackground;
+}
+
+
+export function removerFundo() {
+    if (currentBackground) {
+        let opacity = 1;
+        let fadeOutInterval = setInterval(() => {
+            if (opacity > 0.05) {
+                opacity -= 0.05;
+                currentBackground.style.opacity = opacity;
+            } else {
+                clearInterval(fadeOutInterval);
+                backgroundElement.removeChild(currentBackground); // Remove o fundo dinâmico
+                currentBackground = null;
+            }
+        }, 100);
+    }
+    
+    // Remove qualquer background image definido diretamente no body
+    backgroundElement.style.backgroundImage = "none";
+}
+
+// Função para exibir um alerta de input e aguardar a resposta do jogador
+export function showInputAlert(message) {
+    return new Promise((resolve) => {
+        const alertBox = document.createElement("div");
+        alertBox.classList.add("custom-alert");
+
+        alertBox.innerHTML = `
+            <div class="alert-box">
+                <p>${message}</p>
+                <input type="text" id="alertInput" placeholder="Seu nome aqui">
+                <button id="confirmAlert">OK</button>
+            </div>
+        `;
+
+        document.body.appendChild(alertBox);
+        document.getElementById("alertInput").focus();
+
+        document.getElementById("confirmAlert").onclick = function () {
+            const name = document.getElementById("alertInput").value.trim();
+            alertBox.remove();
+            resolve(name || "Jogador"); // Retorna um nome padrão se vazio
+        };
+    });
+}
+
 

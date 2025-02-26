@@ -1,4 +1,4 @@
-import { endBattleF } from './pokeapiF.js'; 
+import { endBattleF,tocarMusica,trocarFundo,showInputAlert } from './pokeapiF.js'; 
 import { XPDX } from './XPf.js';
 import { getXPGrowthRate } from './XPf.js';
 import { options } from './Opções.js';
@@ -481,7 +481,22 @@ export function removeAllButtons() {
 
 
     // Função de batalha
-export async function PBattle(player, rival,auxo,TURNO,sla,ct) {
+export async function PBattle(player,rivalfonte,auxo,TURNO,sla,ct) {
+  console.log("Tipo de rivalfonte:", typeof rivalfonte);
+  if (rivalfonte.treinador == "Brock") {
+    tocarMusica("./Audios/Gym_Leader_Battle.mp3"); // Música de batalha
+    trocarFundo("./Fundos/BatalhaFundo3_V2.png");
+  }else{
+    tocarMusica("./Audios/Trainer_Battle.mp3"); // Música de batalha
+    if (rivalfonte.treinador == "Gary" || rivalfonte.treinador == "Gary_2") {
+    trocarFundo("./Fundos/BatalhaFundo1_V2.png");
+    }else if (rivalfonte.treinador == "") {
+    trocarFundo("./Fundos/BatalhaFundo2_V2.png");
+    }
+  }
+
+  let rival = JSON.parse(JSON.stringify(rivalfonte));
+
 
  async function testet(Pb) {
   console.log("fs")
@@ -608,7 +623,22 @@ if (TURNO != undefined) {
 
       document.getElementById("pokemonImage").style.display = "none"; 
       document.getElementById("battle-area").style.display = "block";
-      document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
+      //console.log(rivalfonte);
+
+      if(rivalfonte.treinador != "") {
+        console.log(rivalfonte.treinador);
+        if (rivalfonte.treinador != "Gary" && rivalfonte.treinador != "Gary_2") {
+        //document.getElementById("rival").innerHTML = `<img src="./Sprites/${rival.treinador}.png" alt="${rival.treinador}">`;
+        document.getElementById("rival").innerHTML = `<img src="./Sprites/${rivalfonte.treinador}.png" alt="${rivalfonte.treinador}">`;
+        //document.getElementById("rival").innerHTML = `<img src="${'./Sprites/${rival.treinador}.png'}" alt="${rival.treinador}">`;
+        }else{
+        document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
+        }
+
+      }else{
+        document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Nada.png'}" alt="${'Nada'}">`;
+      }
+      //document.getElementById("rival").innerHTML = `<img src="${'./Sprites/Green-transformed.png'}" alt="${'Green'}">`;
       document.getElementById("player-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${player.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
       document.getElementById("rival-pokemon-image").src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${rival.party[0].name.id}.png`; // URL do sprite do Pokémon escolhido
 
@@ -1093,36 +1123,85 @@ console.log("1 rival.party[0]: e player.party[0]",rival,player);
         return player.party[0].name.hp <= 0 || rival.party[0].name.hp <= 0;
       }
 
-function endBattle(winner) {
-    // Atualiza o nível do Pokémon do jogador com um pequeno atraso
-    setTimeout(() => updateLV(player.party[0].name), 100);
-
-    // Exibe o resultado da batalha após 1 segundo
-    setTimeout(() => {
+      async function endBattle(winner) {
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Aguarda 1 segundo antes do alerta
+    
         const message = winner === 'player' ? 'Você venceu!' : 'Você perdeu!';
-        console.log(message);
-        alert(message);
-        //removeListener();        
-        // Chama a função de finalização com base no vencedor
+        await showCustomAlert(message); // ESPERA até o jogador clicar "OK"
+    
         if (winner === 'player') {
-          turnoAtual = 1
-
-        
-            //player.party[1].name.hp = player.party[1].name.TotalHP;
-            console.log("removeu?");
-            endBattleF(0,rival.treinador); // Finalização para jogador
+            turnoAtual = 1;
+            for (let index = 0; index < rival.party.length; index++) {
+                rival.party[index].name.hp = rival.party[index].name.TotalHP;
+            }
+    
+            if (rivalfonte.treinador === "Gary_2") {
+                await showCustomAlert("Você terminou a demo. Obrigado por jogar"); // Outro alerta antes de prosseguir
+                location.reload();
+            }
+    
+            endBattleF(0, rival.treinador);
         } else {
-
-          for (let index = 0; index < player.party.length; index++) {
-            console.log(player.party)
-
-            console.log(player.party[index].name)
-            player.party[index].name.hp = player.party[index].name.TotalHP;            
-          }//voltar ao hp completo
-            endBattleF(1,rival.treinador); // Finalização para rival
+            for (let index = 0; index < player.party.length; index++) {
+                player.party[index].name.hp = player.party[index].name.TotalHP;
+            }
+            endBattleF(1, rival.treinador);
         }
-    }, 1000);
+    }
+    
+  
+function showCustomAlert(message) {
+    return new Promise((resolve) => {
+        console.log("Exibindo alerta..."); // Depuração
+
+        let alertBox = document.getElementById("customAlert");
+
+        // Se já existe um alerta, removê-lo antes de criar um novo
+        if (alertBox) {
+            alertBox.remove();
+        }
+
+        // Criando o alerta
+        alertBox = document.createElement("div");
+        alertBox.id = "customAlert";
+        alertBox.classList.add("alert-box");
+
+        const alertText = document.createElement("p");
+        alertText.id = "alertMessage";
+        alertText.textContent = message;
+        alertBox.appendChild(alertText);
+
+        const closeButton = document.createElement("button");
+        closeButton.id = "alertButton";
+        closeButton.textContent = "OK";
+
+        closeButton.onclick = () => {
+            console.log("Botão OK clicado"); // Depuração
+            alertBox.classList.remove("show"); // Inicia o fade-out
+            setTimeout(() => {
+                alertBox.remove(); // Remove o alerta após fade-out
+                resolve(); // Continua o código após o clique no botão
+            }, 500); // Tempo do fade-out
+        };
+
+        alertBox.appendChild(closeButton);
+        document.body.appendChild(alertBox);
+
+        // Garante que o alerta está visível
+        alertBox.style.display = "flex"; 
+
+        // Pequeno delay para garantir que o fade-in funcione
+        setTimeout(() => {
+            alertBox.classList.add("show");
+        }, 10);
+    });
 }
+
+
+  
+  
+    
+    
 
       function updateLV(PokeP) {
         console.log("UH?:",player.party[0].name.level);
@@ -1131,7 +1210,6 @@ function endBattle(winner) {
          `;
         
             }      
-
 
 }
 export function removeClickEvent(btn, handler) {

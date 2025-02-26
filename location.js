@@ -19,7 +19,7 @@ import { player } from './script.js';
 import { rival,rival2 } from './script.js';
 import { Poke1, Poke2, Poke3, Poke4, Poke5} from './script.js';
 import { goPewter,goCentroPokémon,goPokéMart,goGym } from './script.js';
-
+import { tocarMusica } from './pokeapiF.js';
 
 
 
@@ -94,6 +94,7 @@ export const locations = [
 		"button text": ["Continuar(Floresta)"],
 		"button functions": [PósInitProf2],
 		text: "",
+
 		//img: `./Sprites/Oak-transformed.png`
 	},
 	{
@@ -185,6 +186,8 @@ export const locations = [
 		"button text": ["Voltar","Começar Batalha."],
 		"button functions": [() => goPewter(3),() =>goFinalBattle(1)],
 		text: "",
+	    img: `./Sprites/Green-transformed.png`
+
 	},
 	//{
 	//	id: 21,

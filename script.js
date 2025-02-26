@@ -1,4 +1,4 @@
-import { endBattleF, PokemonInicial } from './pokeapiF.js';
+import { endBattleF, PokemonInicial,tocarMusica,trocarFundo } from './pokeapiF.js'; 
 import Player from './Player.js';
 import { askForName,vaiproScript2 } from './pokeapiF.js';
 import { locations } from './location.js';
@@ -41,7 +41,10 @@ const button1S = document.querySelector("#btn1");
 const button2S = document.querySelector("#btn2");
 const button3S = document.querySelector("#btn3");
 const button4S = document.querySelector("#btn4");
-
+let audio = new Audio("./Audios/Welcome_to_the_world_of_Pokemon.mp3");
+audio.volume = 0.12; // Volume inicial %
+audio.loop = true;
+//audio.play();//
 const weapons = [
 	{
 		name: "stick",
@@ -453,6 +456,14 @@ console.log(FF);
           console.log("PósInitProf2");
           goFinalBattle(0);
           break;
+        case 5:
+          //Perder contra o brock
+          goPewter(2);
+          break;
+        case 6:
+          QuadOp(locations[24]);
+          text.innerText = "O quê fazer?";
+          break;
       } 
     }
 }
@@ -465,15 +476,24 @@ export async function PósInitB(a) {
   UniOp(locations[8]);
 
 	rivalIMAGE.innerHTML = `<img src="Sprites/Green-transformed.png" />`;
+  trocarFundo("./Fundos/Laboratório_V2.png");
+
 	if (a == 1) {
+    tocarMusica("./Audios/Rival_Appears.mp3"); // Música de batalha
+
 		text.innerText = "Fracote! Tente me derrotar após obter uma insígia."}
 	    else{
+    tocarMusica("./Audios/Rival_Appears.mp3"); // Música de batalha
+
 		text.innerText = "Droga! Te venceirei na próxima vez"}
 	
 	}
 
 
 export async function PósInitProf() {
+  trocarFundo("./Fundos/Cidade_Inicial_V2.png");
+  tocarMusica("./Audios/Welcome_to_the_world_of_Pokemon.mp3"); // Música de batalha
+
 		document.getElementById('pokemonImage').style.display = 'block'
     update(locations[9]);
 		UniOp(locations[9]);
@@ -511,8 +531,11 @@ export async function Florestando(e) {
     const sac = embaralharNumeros();
     console.log(sac[e]);
     text.innerText = "Por qual caminho seguir?" ;
-
+    if(e != 3){
+    trocarFundo("./Fundos/Floresta_V2.png");
+    }
     switch (sac[e]) {
+      
       case 1:
         let A = randomIntFromInterval(1, 6);
         let selectedPoke = PokeInstances[`Poke${A}`]; // Obtém o Pokémon correspondente
@@ -537,6 +560,10 @@ export async function Florestando(e) {
 		//UniOp(locations[10]);
 	}
 export async function goFlorest() {
+
+  trocarFundo("./Fundos/Floresta_V2.png");
+
+  tocarMusica("./Audios/Viridian_Forest.mp3"); // Música de batalha
   document.getElementById('pokemonImage').style.display = 'none'
   if (FF == 3) {
     console.log(FF);
@@ -585,13 +612,18 @@ async function Togepi() {
   player.capturePokemon(player.name,await BatalhaSetup(175,7),0,7,moves[0], moves[25]);
 }
 export async function goPewter(op) {
+
   console.log(op);
 
 if (op == 1) {
+  trocarFundo("./Fundos/Pewter_V2.png");
+  tocarMusica("./Audios/Viridian_City.mp3"); // Música de batalha
   text.innerText = "Você finalmente chega na cidade de Pewter";
 	UniOp(locations[16]);
 }
 else if (op == 2) {
+  trocarFundo("./Fundos/Pewter_V2.png");
+  tocarMusica("./Audios/Viridian_City.mp3"); // Música de batalha
  QuadOp(locations[17]);
  text.innerText = "O quê fazer?";
 }else if (op == 3) {
@@ -602,6 +634,8 @@ else if (op == 2) {
 }
 export async function goCentroPokémon(op) {
   const text = document.getElementById('text');
+  trocarFundo("./Fundos/PokemonCenter_V2.png");
+
   if (op == 1) {
     text.innerText = "Olá! precisa de que seus Pokémon sejam cuidados?"
     DiOp(locations[18]);
@@ -614,7 +648,9 @@ export async function goCentroPokémon(op) {
     UniOp(locations[23]);
 
   }}
-  export async function goPokéMart(op) {
+export async function goPokéMart(op) {
+    trocarFundo("./Fundos/PokeMart_V2.png");
+
     if (op == 1) {
       text.innerText = "Olá! Como posso ajudá-lo?"
       TriOp(locations[19]);
@@ -672,13 +708,21 @@ export async function goCentroPokémon(op) {
   }
 }
 export async function goFinalBattle(op) {
+  trocarFundo("./Fundos/Pewter_V2.png");
+
   console.log(op);
   if (op == 0) { 
+  tocarMusica("./Audios/Rival_Appears.mp3"); // Música de batalha
+
+  document.getElementById('pokemonImage').style.display = 'block'
   console.log("wgf");
   update(locations[21]);
   DiOp(locations[21]);
+  OakIMAGE.innerHTML = `<img src="Sprites/Green-transformed.png" />`;
   text.innerText = "Estive esperando por nossa segunda batalha, prepare-se para perder!"
   }else if (op == 1) {
+    document.getElementById('pokemonImage').style.display = 'none'
+
     console.log("wgf");
     PBattle(player, rival2)
   }
@@ -874,7 +918,7 @@ export async function bolsaPotion(fh) {
   CapturaSaiSai(nomedotrainer,1)
   if(resultado == "Selvagem")
     {
-      logMessage(`${LetraM1(playerOG.name)} capturou!`);
+      logMessage(`${LetraM1(player.name)} capturou!`);
       addFF()
       console.log("capturou");
     }

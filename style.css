@@ -1,12 +1,17 @@
 body {
-  background-color: darkblue;
-
-  /*background-color: #282c34; /* Fundo escuro para contraste */
+  background-image: url('./Fundos/Laboratório_V2.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: white; /* Cor da fonte branca */
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 0;
   padding: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 }
 
 
@@ -277,3 +282,123 @@ button.container:hover {
   grid-column: span 2; /* Faz o botão ocupar as duas colunas */
   text-align: center;
 }
+
+.custom-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alert-box {
+  background: #ccffcc; /* Verde claro */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+
+.alert-box input {
+  width: 80%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 2px solid black; /* Borda preta */
+  border-radius: 5px;
+  background: white;
+  font-size: 16px;
+  text-align: center;
+}
+
+
+.alert-box button {
+  padding: 8px 15px;
+  border: none;
+  background: #006400; /* Verde escuro */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.alert-box button:hover {
+  background: #004d00; /* Um verde ainda mais escuro ao passar o mouse */
+}
+.alert-box p {
+  font-size: 18px;
+  font-weight: bold;
+  color: white; /* Mantém a cor original do texto */
+  text-shadow: 
+      -1px -1px 0 black,  
+       1px -1px 0 black,  
+      -1px  1px 0 black,  
+       1px  1px 0 black; /* Contorno preto suave */
+  padding: 8px 12px;
+  display: inline-block;
+  background: transparent; /* Mantém o fundo transparente */
+  border-radius: 5px;
+  text-align: center;
+}
+
+#customAlert {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  border: 2px solid white;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#customAlert.show {
+  opacity: 1;
+}
+
+#customAlert p {
+  font-size: 18px;
+  font-weight: bold;
+  color: white; 
+  text-shadow: 
+      -1px -1px 0 black,  
+       1px -1px 0 black,  
+      -1px  1px 0 black,  
+       1px  1px 0 black; 
+  padding: 8px 12px;
+  display: inline-block;
+  background: transparent;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#alertButton {
+  padding: 10px;
+  border: none;
+  background: green;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+#alertButton:hover {
+  background: darkgreen;
+}
+
+
+
